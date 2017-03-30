@@ -74,7 +74,7 @@
         <input type="submit" name="submit" value="{$smarty.const.SUBMIT}" />
     </form>
     <br /><br />
-    <div style="text-align:center">{if $ondelete}<a href="?section=account&action=delaccount">{$smarty.const.ACCOUNT_DEL_DISABLE}</a>{else}<a href="?section=account&action=delaccount">{$smarty.const.ACCOUNT_DEL}</a>{/if}</div>
+    <div style="text-align:center">{if $ondelete}<a href="?section=account&amp;action=delaccount">{$smarty.const.ACCOUNT_DEL_DISABLE}</a>{else}<a href="?section=account&amp;action=delaccount">{$smarty.const.ACCOUNT_DEL}</a>{/if}</div>
 {if $smarty.const.GOOGLE_API_KEY != ""}
 <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=false&amp;key={$smarty.const.GOOGLE_API_KEY}" type="text/javascript"></script>
 {/if}

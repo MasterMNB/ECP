@@ -1,7 +1,7 @@
 <?php
 	require('db.daten.php');
 	require('classes.php');
-	$db = new db();
+//	$db = new db();
 	$db->query('SELECT ID, bedeutung, filename FROM '.DB_PRE.'ecp_smilies');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

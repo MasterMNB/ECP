@@ -27,9 +27,9 @@ if(@$_SESSION['rights']['public']['fightus']['submit'] OR @$_SESSION['rights']['
  			global $db;
  			$sql = sprintf('INSERT INTO '.DB_PRE.'ecp_fightus 	(`gID`, `mID`, `teamID`, `clanname`, `homepage`, `email`, `icq`, `skype`, `msn`, `wardatum`, `serverip`, `info`, `IP`, datum) VALUES 
  																(%d, %d, %d, \'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',%d,\'%s\',\'%s\',\'%s\', %d)',
- 																(int)$_POST['gameID'],(int)$_POST['matchtypeID'],(int)$_POST['teamID'],strsave(htmlspecialchars($_POST['clanname'])),
- 																strsave(check_url(htmlspecialchars($_POST['homepage']))),strsave($_POST['email']),strsave(htmlspecialchars($_POST['icq'])),strsave(htmlspecialchars($_POST['skype'])),
- 																strsave(htmlspecialchars($_POST['msn'])),strtotime($_POST['datum']),strsave(htmlspecialchars($_POST['serverip'])), strsave(comment_save($_POST['info'])), $_SERVER['REMOTE_ADDR'], time());
+ 																(int)$_POST['gameID'],(int)$_POST['matchtypeID'],(int)$_POST['teamID'],strsave(charhtmlconvert($_POST['clanname'])),
+ 																strsave(check_url(charhtmlconvert($_POST['homepage']))),strsave($_POST['email']),strsave(charhtmlconvert($_POST['icq'])),strsave(charhtmlconvert($_POST['skype'])),
+ 																strsave(charhtmlconvert($_POST['msn'])),strtotime($_POST['datum']),strsave(charhtmlconvert($_POST['serverip'])), strsave(comment_save($_POST['info'])), $_SERVER['REMOTE_ADDR'], time());
  			if($db->query($sql)) {
 				$id = $db->last_id();
 				$result = $db->query('SELECT groupID FROM '.DB_PRE.'ecp_groups WHERE admin LIKE "%fightus:view%"');
@@ -45,7 +45,7 @@ if(@$_SESSION['rights']['public']['fightus']['submit'] OR @$_SESSION['rights']['
 				}
 				while($row = mysql_fetch_assoc($result)) {
 					$search = array('{username}', '{from_clan}', '{id}');
-					$replace = array(strsave($row['username']), strsave(htmlspecialchars($_POST['clanname'])), $id);
+					$replace = array(strsave($row['username']), strsave(charhtmlconvert($_POST['clanname'])), $id);
 					if(!isset($text[$row['country']]))	$row['country'] = DEFAULT_LANG;
 					message_send($row['userID'], 0, $text[$row['country']]['content2'], str_replace($search, $replace, $text[$row['country']]['content']), 0, 1);							
 				}

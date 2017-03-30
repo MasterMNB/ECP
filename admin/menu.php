@@ -24,7 +24,7 @@ function admin_menu() {
 		$db->query('SELECT suche, ersetze, linkID FROM '.DB_PRE.'ecp_menu_links WHERE sprache = "'.strsave($value['lang']).'" ORDER BY suche ASC');
 		$links = array();
 		while($row = $db->fetch_assoc()) {
-			$row['ersetze'] = htmlspecialchars($row['ersetze']);
+			$row['ersetze'] = charhtmlconvert($row['ersetze']);
 			$links[] =$row;			
 		}
 		ob_start();
@@ -127,7 +127,7 @@ function admin_menu_edit($id) {
 		} else {
 			$menu = $db->fetch_assoc('SELECT * FROM '.DB_PRE.'ecp_menu WHERE menuID = '.$id);
 			$tpl = new smarty;
-			$menu['headline'] =  htmlentities($menu['headline']);
+			$menu['headline'] =  htmlconvert($menu['headline']);
 			foreach($menu AS $key =>$value) $tpl->assign($key, $value);
 			$tpl->assign('func', 'edit&id='.$id);
 			$tpl->assign('module', get_module($menu['modul']));

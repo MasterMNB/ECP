@@ -104,7 +104,7 @@ function clanwars_view($id) {
 		}
 		$db->query('SELECT username, ID FROM '.DB_PRE.'ecp_user WHERE ID = 0'.@$search.' ORDER BY username ASC');
 		while($subrow = $db->fetch_assoc()) {
-			@$players .= '<a href="?section=user&id='.$subrow['ID'].'">'.htmlspecialchars($subrow['username']).'</a>, ';
+			@$players .= '<a href="?section=user&id='.$subrow['ID'].'">'.charhtmlconvert($subrow['username']).'</a>, ';
 		}
 		$row['ownplayers'] = substr(@$players, 0, strlen(@$players)-2);	
 		foreach($row AS $key => $value) $tpl->assign($key, $value);

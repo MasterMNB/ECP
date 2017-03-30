@@ -43,7 +43,7 @@ function news($topicID = 0) {
 			@$slids .= 	'news_toogle_'.$row['newsID'].' = new Fx.Slide(\'news_'.$row['newsID'].'\'); news_toogle_'.$row['newsID'].'.hide();';
 		}
 		if($seiten[0] > 1)
-		table(PAGES,'<div style="text-align:center">'.NEWS.': '.$anzahl.' | <a href="?section=news&amp;action=archiv">'.NEWS_ARCHIV.'</a> | '.PAGES.': '.makepagelink('?section=news&action=topic&id='.$topicID, $_GET['page'], $seiten[0]).'</div>');
+		table(PAGES,'<div style="text-align:center">'.NEWS.': '.$anzahl.' | <a href="?section=news&amp;action=archiv">'.NEWS_ARCHIV.'</a> | '.PAGES.': '.makepagelink('?section=news&amp;action=topic&amp;id='.$topicID, $_GET['page'], $seiten[0]).'</div>');
 		if(isset($slids)) echo '<script type="text/javascript">window.addEvent(\'domready\', function() { '.@$slids.' } );</script>';
 	} else {
 		table(INFO, NO_ENTRIES);
@@ -94,7 +94,7 @@ function news_archiv($topicID = 0) {
 		ob_end_clean();
 		main_content(NEWS_ARCHIV, $content, '', 1);
 		if($seiten[0] > 1)
-		table(PAGES,'<div style="text-align:center">'.NEWS.': '.$anzahl.' | '.PAGES.': '.makepagelink('?section=news&action=archiv&tid='.$topicID, $_GET['page'], $seiten[0]).'</div>');
+		table(PAGES,'<div style="text-align:center">'.NEWS.': '.$anzahl.' | '.PAGES.': '.makepagelink('?section=news&amp;action=archiv&amp;tid='.$topicID, $_GET['page'], $seiten[0]).'</div>');
 	} else {
 		table(INFO, NO_ENTRIES);
 	}
@@ -151,7 +151,7 @@ if(isset($_GET['action'])) {
 			if(@$_SESSION['rights']['public']['news']['com_view'] OR @$_SESSION['rights']['superadmin']) {
 				news_once((int)$_GET['id']);
 				$conditions['action'] = 'add';
-				$conditions['link'] = '?section=news&action=comments&id='.(int)$_GET['id'];
+				$conditions['link'] = '?section=news&amp;action=comments&amp;id='.(int)$_GET['id'];
 				comments_get('news', (int)$_GET['id'], $conditions);
 			} else
 				echo table(ACCESS_DENIED, NO_ACCESS_RIGHTS);
@@ -159,14 +159,14 @@ if(isset($_GET['action'])) {
 		case 'addcomment':
 			if(@$_SESSION['rights']['public']['news']['com_add'] OR @$_SESSION['rights']['superadmin']) {		
 				$conditions['action'] = 'add';
-				$conditions['link'] = '?section=news&action=comments&id='.(int)$_GET['id'];
+				$conditions['link'] = '?section=news&amp;action=comments&amp;id='.(int)$_GET['id'];
 				comments_add('news', (int)$_GET['id'], $conditions);
 			} else
 				echo table(ACCESS_DENIED, NO_ACCESS_RIGHTS);			
 		break;
 		case 'editcomment':
 			$conditions['action'] = 'edit';
-			$conditions['link'] = '?section=news&action=comments&id='.(int)$_GET['subid'];
+			$conditions['link'] = '?section=news&amp;action=comments&amp;id='.(int)$_GET['subid'];
 			comments_edit('news', (int)$_GET['subid'], (int)$_GET['id'], $conditions);		
 		break;		
 		default:

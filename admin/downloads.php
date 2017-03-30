@@ -199,10 +199,10 @@ function admin_downloads_kate_del($id) {
 			echo 'ok';
 			die();					
 		} else {
-			echo htmlentities(NO_ENTRIES_ID);
+			echo htmlconvert(NO_ENTRIES_ID);
 		}
 	} else {
-		echo htmlentities(NO_ADMIN_RIGHTS);    	
+		echo htmlconvert(NO_ADMIN_RIGHTS);    	
 	}	
 }
 function del_sub_kate($id) {

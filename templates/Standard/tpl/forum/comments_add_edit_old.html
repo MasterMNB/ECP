@@ -1,12 +1,12 @@
 <span id="swf"></span>
-<form name="com_add" id="com_add" method="post" enctype="multipart/form-data" action="?section=forum&action={$func}replay&threadID={$smarty.get.threadID}&boardID={$smarty.get.boardID}&rand={$rand}{$func2}">
+<form name="com_add" id="com_add" method="post" enctype="multipart/form-data" action="?section=forum&amp;action={$func}replay&amp;threadID={$smarty.get.threadID}&amp;boardID={$smarty.get.boardID}&amp;rand={$rand}{$func2}">
 <fieldset>
    <legend> {$smarty.const.FORUM_POST_REPLAY} </legend>
    {if $title}<div><label for="content">{$smarty.const.NAME}:</label><input type="text" name="title" class="required" id="title" value="{$title}" maxlength="100" /></div>{/if}   
    {if (!$smarty.session.userID AND !$func) OR $username}<div><label for="content">{$smarty.const.USERNAME}:</label><input type="text" name="username" class="required" id="username" value="{$username}" maxlength="25" /></div>{/if}
    <div><label for="content">{$smarty.const.CONTENT}:</label><textarea name="comment" class="com_input required" id="comment" rows="10" cols="50">{$comment}</textarea></div>
 	  {if !$smarty.session.userID AND !$func}    
-      <div><label for="captcha">{$smarty.const.CAPTCHA}:</label><div style="float: left;"><img id="captcha_pic" src="captcha.php?chars=4&minsize=22&maxsize=26" alt="" title="{$smarty.const.CAPTCHA}" /> <img src="templates/{$smarty.const.DESIGN}/images/refresh.png" alt="" title="{$smarty.const.CAPTCHA_RELOAD}" style="cursor:pointer" onclick="reload_captcha('captcha_pic', 'chars=4&minsize=22&maxsize=26', 'captcha');" /><br /><input name="captcha" type="text" class="required validate-captcha smallinput" id="captcha"/></div></div>{/if}         
+      <div><label for="captcha">{$smarty.const.CAPTCHA}:</label><div style="float: left;"><img id="captcha_pic" src="captcha.php?chars=4&qmp;minsize=22&amp;maxsize=26" alt="" title="{$smarty.const.CAPTCHA}" /> <img src="templates/{$smarty.const.DESIGN}/images/refresh.png" alt="" title="{$smarty.const.CAPTCHA_RELOAD}" style="cursor:pointer" onclick="reload_captcha('captcha_pic', 'chars=4&amp;minsize=22&amp;maxsize=26', 'captcha');" /><br /><input name="captcha" type="text" class="required validate-captcha smallinput" id="captcha"/></div></div>{/if}         
       {if $attach}
       <div>
       <div id="tabBoxExample">

@@ -13,11 +13,14 @@
 		<div id="innerwrap">
         	<div id="header"><div id="lang_div">{langchanger}</div>
             <?php if(!isset($_SESSION['userID'])) echo '
-            <div id="login_header"><form style="maring: 0px; padding: 25px 0 0 10px" action="?section=account&action=login&mini=1" method="post">
-                <input maxlength="30" type="text" name="mini_username" class="overtext" id="mini_username" alt="'.USERNAME.'" tabindex="1" /> 
-                <input type="checkbox" tabindex="3" name="autologin" class="checkbox" value="1" /><br />
-                <input type="password" name="mini_passwort" class="overtext" tabindex="2" id="mini_passwort" alt="'.PASSWORD.'" /><input type="submit" tabindex="4" value="'.LOGIN.'" />
-            </form>
+            <div id="login_header">
+            	<form style="margin: 0px; padding: 25px 0 0 10px" action="?section=account&amp;action=login&amp;mini=1" method="post">
+                	<input maxlength="30" type="text" name="mini_username" class="overtext" id="mini_username" alt="'.USERNAME.'" tabindex="1" /> 
+                	<input type="checkbox" tabindex="3" name="autologin" class="checkbox" value="1" /><br />
+                	<input type="password" name="mini_passwort" class="overtext" tabindex="2" id="mini_passwort" alt="'.PASSWORD.'" /><input type="submit" tabindex="4" value="'.LOGIN.'" />
+                	<br />
+					&nbsp;<a href="?section=account">Jetzt registrieren</a>
+            	</form>
 			</div>'; ?>
                 <div id="last_wars">
                 	<?php include('inc/module/modul_lastwars.php'); ?>

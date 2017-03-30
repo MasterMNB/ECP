@@ -2,7 +2,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="1">
 {foreach from=$wars item=n}
   <tr class="Tips" title="{$smarty.const.CLANWAR}">
-    <td><img src="images/games/{$n.icon}" alt="" title="{$n.gamename}" /> <a href="?section=clanwars&action=view&id={$n.warID}">{$smarty.const.CLAN_NAME_SHORT} {$smarty.const.VS} {$n.oppshort}</a><span class="tipcontents"><table width="250" border="0" cellspacing="0" cellpadding="1">
+    <td><img src="images/games/{$n.icon}" alt="" title="{$n.gamename}" /> <a href="?section=clanwars&amp;action=view&amp;id={$n.warID}">{$smarty.const.CLAN_NAME_SHORT} {$smarty.const.VS} {$n.oppshort}</a><span class="tipcontents"><table width="250" border="0" cellspacing="0" cellpadding="1">
   <tr>
     <td width="100"><strong>{$smarty.const.CLANWAR_OPP_NAME}:</strong></td>
     <td width="150"><img src="images/flaggen/{$n.country}.gif" alt="" title="{$n.countryname}" /> {$n.oppname}</td>

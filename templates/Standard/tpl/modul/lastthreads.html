@@ -1,5 +1,5 @@
 {foreach from=$threads item=n}
-<div class="Tips" title="{$n.threadname}"><img src="templates/{$smarty.const.DESIGN}/images/dot.gif" alt="" /> <a href="?section=forum&action=thread&boardID={$n.bID}&threadID={$n.threadID}">{$n.threadname|truncate:24:"...":true}</a></strong>
+<div class="Tips" title="{$n.threadname}"><img src="templates/{$smarty.const.DESIGN}/images/dot.gif" alt="" /> <a href="?section=forum&amp;action=thread&amp;boardID={$n.bID}&amp;threadID={$n.threadID}">{$n.threadname|truncate:24:"...":true}</a></strong>
 <span class="tipcontents"><table width="300" border="0" cellspacing="0" cellpadding="1">
   <tr>
     <td width="100"><strong>{$smarty.const.FORUM_LAST_POST}:</strong></td>

@@ -10,8 +10,8 @@
   {foreach from=$messagesout item=o}
   <tr class="{cycle values="row_odd, row_even"}" id="msg_{$o.msgID}">
     <td>{$o.datum}</td>
-    <td><img src="images/flaggen/{$o.country}.gif" alt="" /> <a href="?section=user&id={$o.touser}">{$o.username}</a></td>
-    <td>{if $o.readed == 1}<img src="templates/{$smarty.const.DESIGN}/images/accept.png" alt="" title="{$smarty.const.UNREAD_TO}" /> {/if}<a href="?section=account&action=readmsg&id={$o.msgID}">{if $o.title}{$o.title}{else}{$smarty.const.NO_TITLE}{/if}</a></td>
+    <td><img src="images/flaggen/{$o.country}.gif" alt="" /> <a href="?section=user&amp;id={$o.touser}">{$o.username}</a></td>
+    <td>{if $o.readed == 1}<img src="templates/{$smarty.const.DESIGN}/images/accept.png" alt="" title="{$smarty.const.UNREAD_TO}" /> {/if}<a href="?section=account&amp;action=readmsg&amp;id={$o.msgID}">{if $o.title}{$o.title}{else}{$smarty.const.NO_TITLE}{/if}</a></td>
     <td align="right"><input type="checkbox" value="{$o.msgID}" name="delmsg[]" /><img src="templates/{$smarty.const.DESIGN}/images/delete.png" class="imgpointer" onclick="del_message({$o.msgID}, 'out')" alt="" title="{$smarty.const.MSG_DELETE}" /></td>
   </tr>
   {/foreach}

@@ -690,6 +690,8 @@ $language_array = array(
   define('ACCOUNT_USERPIC_TO_BIG2',	'The resolution of your userpicture is to high.');  
   define('TOWN',					'Town');
   define('PERSONAL_INFO',			'Personal Info');
+  define('USERGAMES',					'My Games');
+  define('ALSO_PLAY',             	'also playing');
   define('BIRTHDAY',				'Birthday');
   define('MESSEGENER',				'Messenger');
   define('YAHOO',					'Yahoo');

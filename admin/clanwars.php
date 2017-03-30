@@ -48,8 +48,8 @@ function get_opps($id = 0) {
 	$db->query('SELECT oppID, oppname FROM '.DB_PRE.'ecp_wars_opp ORDER BY oppname ASC');
 	$str = '<option value="0">'.CHOOSE.'</option>';
 	while($row = $db->fetch_assoc()) {
-		($row['oppID'] == $id) ? $sub = 'selected="selected"' : $sub = '';
-		$str .= '<option '.$sub.' value="'.$row['oppID'].'">'.htmlspecialchars($row['oppname']).'</option>';
+		($row['oppID'] == $id) ? $sub = 'selected' : $sub = '';
+		$str .= '<option '.$sub.' value="'.$row['oppID'].'">'.charhtmlconvert($row['oppname']).'</option>';
 	}
 	return $str;
 }
@@ -110,7 +110,7 @@ function admin_clanwars_add($id = 0) {
 					} else {
 						$db->query('UPDATE '.DB_PRE.'ecp_wars SET result = "win", resultscore = \''.$own.':'.$opp.'\' WHERE warID = '.$warid);
 					}					
-					header1('?section=admin&site=clanwars');
+					header1('?section=admin&amp;site=clanwars');
 				}
 			}
 		} else {
@@ -231,7 +231,7 @@ function admin_clanwars_edit($id) {
 						$db->query('DELETE FROM '.DB_PRE.'ecp_wars_scores WHERE scoreID = '.$ids[$i]);
 						@$i++;
 					}
-					header1('?section=admin&site=clanwars');
+					header1('?section=admin&amp;site=clanwars');
 				}
 			}
 		} else {
@@ -255,8 +255,8 @@ function admin_clanwars_edit($id) {
 				$row['i'] = @++$i;
 				$db->query('SELECT locationID, locationname FROM '.DB_PRE.'ecp_wars_locations WHERE gID = '.$data['gID']);
 				while($subrow = $db->fetch_assoc()) {
-					($subrow['locationID'] == $row['lID']) ? $sub = 'selected="selected"' : $sub = '';
-					@$row['maps'] .= '<option '.$sub.' value="'.$subrow['locationID'].'">'.htmlspecialchars($subrow['locationname']).'</option>';
+					($subrow['locationID'] == $row['lID']) ? $sub = 'selected' : $sub = '';
+					@$row['maps'] .= '<option '.$sub.' value="'.$subrow['locationID'].'">'.charhtmlconvert($subrow['locationname']).'</option>';
 				}
 				$maps[] = $row;
 			}
@@ -269,7 +269,7 @@ function admin_clanwars_edit($id) {
 			}
 			$db->query('SELECT username FROM '.DB_PRE.'ecp_user WHERE ID = 0'.$search.' ORDER BY username ASC');
 			while($row = $db->fetch_assoc()) {
-				@$players .= htmlspecialchars($row['username']).', ';
+				@$players .= charhtmlconvert($row['username']).', ';
 			}
 			$tpl->assign('ownplayers', substr($players, 0, strlen($players)-2));
 			ob_start();
@@ -341,18 +341,18 @@ function admin_clanwars_addnext($id = 0) {
 						if($_POST['messagemode'] == 1) {
 							foreach($players AS $value) {
 								$db->query('INSERT INTO '.DB_PRE.'ecp_wars_teilnehmer (warID, userID) VALUES ('.$warid.', '.(int)$value.')');
-								message_send($value, $_SESSION['userID'], $text['content2'], str_replace('{link}', '<a href="'.SITE_URL.'?section=clanwars&action=nextwar&id='.$warid.'">'.SITE_URL.'?section=clanwars&action=nextwar&id='.$warid.'</a>', $text['content']), 0,1);
+								message_send($value, $_SESSION['userID'], $text['content2'], str_replace('{link}', '<a href="'.SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$warid.'">'.SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$warid.'</a>', $text['content']), 0,1);
 							}
 						} elseif ($_POST['messagemode'] == 2) {
 							foreach($players AS $value) {
 								$db->query('INSERT INTO '.DB_PRE.'ecp_wars_teilnehmer (warID, userID) VALUES ('.$warid.', '.(int)$value.')');
-								send_email($db->result(DB_PRE.'ecp_user', 'email', 'ID = '.(int)$value), $text['content2'], str_replace('{link}', SITE_URL.'?section=clanwars&action=nextwar&id='.$warid, $text['content']), 1);
+								send_email($db->result(DB_PRE.'ecp_user', 'email', 'ID = '.(int)$value), $text['content2'], str_replace('{link}', SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$warid, $text['content']), 1);
 							}
 						} elseif ($_POST['messagemode'] == 3) {
 							foreach($players AS $value) {
 								$db->query('INSERT INTO '.DB_PRE.'ecp_wars_teilnehmer (warID, userID) VALUES ('.$warid.', '.(int)$value.')');
-								message_send($value, $_SESSION['userID'], $text['content2'], str_replace('{link}', '<a href="'.SITE_URL.'?section=clanwars&action=nextwar&id='.$warid.'">'.SITE_URL.'?section=clanwars&action=nextwar&id='.$warid.'</a>', $text['content']), 0,1);
-								send_email($db->result(DB_PRE.'ecp_user', 'email', 'ID = '.(int)$value), $text['content2'], str_replace('{link}', SITE_URL.'?section=clanwars&action=nextwar&id='.$warid, $text['content']), 1);
+								message_send($value, $_SESSION['userID'], $text['content2'], str_replace('{link}', '<a href="'.SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$warid.'">'.SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$warid.'</a>', $text['content']), 0,1);
+								send_email($db->result(DB_PRE.'ecp_user', 'email', 'ID = '.(int)$value), $text['content2'], str_replace('{link}', SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$warid, $text['content']), 1);
 							}
 						} else {
 							foreach($players AS $value) {
@@ -360,7 +360,7 @@ function admin_clanwars_addnext($id = 0) {
 							}
 						}
 					}
-					header1('?section=admin&site=clanwars');
+					header1('?section=admin&amp;site=clanwars');
 				}
 			}
 		} else {
@@ -499,7 +499,7 @@ function admin_clanwars_finish($id) {
 						$db->query('DELETE FROM '.DB_PRE.'ecp_wars_scores WHERE scoreID = '.$ids[$i]);
 						@$i++;
 					}
-					header1('?section=admin&site=clanwars');
+					header1('?section=admin&amp;site=clanwars');
 				}
 			}
 		} else {
@@ -523,8 +523,8 @@ function admin_clanwars_finish($id) {
 				$row['i'] = @++$i;
 				$db->query('SELECT locationID, locationname FROM '.DB_PRE.'ecp_wars_locations WHERE gID = '.$data['gID']);
 				while($subrow = $db->fetch_assoc()) {
-					($subrow['locationID'] == $row['lID']) ? $sub = 'selected="selected"' : $sub = '';
-					@$row['maps'] .= '<option '.$sub.' value="'.$subrow['locationID'].'">'.htmlspecialchars($subrow['locationname']).'</option>';
+					($subrow['locationID'] == $row['lID']) ? $sub = 'selected' : $sub = '';
+					@$row['maps'] .= '<option '.$sub.' value="'.$subrow['locationID'].'">'.charhtmlconvert($subrow['locationname']).'</option>';
 				}
 				$maps[] = $row;
 			}
@@ -532,7 +532,7 @@ function admin_clanwars_finish($id) {
 			
 			$db->query('SELECT username FROM '.DB_PRE.'ecp_wars_teilnehmer LEFT JOIN '.DB_PRE.'ecp_user ON (ID = userID) WHERE warID = '.$id.' ORDER BY username ASC');
 			while($row = $db->fetch_assoc()) {
-				@$players .= htmlspecialchars($row['username']).', ';
+				@$players .= charhtmlconvert($row['username']).', ';
 			}
 			$tpl->assign('ownplayers', substr($players, 0, strlen($players)-2));
 			ob_start();
@@ -648,7 +648,7 @@ function admin_clanwars_editnext($id) {
 							foreach($players AS $value) {
 								if(!isset($aktive[(int)$value])) {
 									$db->query('INSERT INTO '.DB_PRE.'ecp_wars_teilnehmer (warID, userID) VALUES ('.$id.', '.(int)$value.')');
-									message_send($value, 0, $text['content2'], str_replace('{link}', '<a href="'.SITE_URL.'?section=clanwars&action=nextwar&id='.$id.'">'.SITE_URL.'?section=clanwars&action=nextwar&id='.$id.'</a>', $text['content']), 0,1);
+									message_send($value, 0, $text['content2'], str_replace('{link}', '<a href="'.SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$id.'">'.SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$id.'</a>', $text['content']), 0,1);
 								} else {
 									$aktive[(int)$value] = false;
 								}
@@ -657,7 +657,7 @@ function admin_clanwars_editnext($id) {
 							foreach($players AS $value) {
 								if(!isset($aktive[(int)$value])) {
 									$db->query('INSERT INTO '.DB_PRE.'ecp_wars_teilnehmer (warID, userID) VALUES ('.$id.', '.(int)$value.')');
-									send_email($db->result(DB_PRE.'ecp_user', 'email', 'ID = '.(int)$value), $text['content2'], str_replace('{link}', SITE_URL.'?section=clanwars&action=nextwar&id='.$id, $text['content']), 1);
+									send_email($db->result(DB_PRE.'ecp_user', 'email', 'ID = '.(int)$value), $text['content2'], str_replace('{link}', SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$id, $text['content']), 1);
 								} else {
 									$aktive[(int)$value] = false;
 								}								
@@ -666,8 +666,8 @@ function admin_clanwars_editnext($id) {
 							foreach($players AS $value) {
 								if(!isset($aktive[(int)$value])) {
 									$db->query('INSERT INTO '.DB_PRE.'ecp_wars_teilnehmer (warID, userID) VALUES ('.$id.', '.(int)$value.')');
-									message_send($value, 0, $text['content2'], str_replace('{link}', '<a href="'.SITE_URL.'?section=clanwars&action=nextwar&id='.$id.'">'.SITE_URL.'?section=clanwars&action=nextwar&id='.$id.'</a>', $text['content']), 0,1);
-									send_email($db->result(DB_PRE.'ecp_user', 'email', 'ID = '.(int)$value), $text['content2'], str_replace('{link}', SITE_URL.'?section=clanwars&action=nextwar&id='.$id, $text['content']), 1);
+									message_send($value, 0, $text['content2'], str_replace('{link}', '<a href="'.SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$id.'">'.SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$id.'</a>', $text['content']), 0,1);
+									send_email($db->result(DB_PRE.'ecp_user', 'email', 'ID = '.(int)$value), $text['content2'], str_replace('{link}', SITE_URL.'?section=clanwars&amp;action=nextwar&amp;id='.$id, $text['content']), 1);
 								} else {
 									$aktive[(int)$value] = false;
 								}									
@@ -683,7 +683,7 @@ function admin_clanwars_editnext($id) {
 						}
 					}
 					foreach($aktive AS $key=>$value) if($value == true) $db->query('DELETE FROM '.DB_PRE.'ecp_wars_teilnehmer WHERE userID = '.$key.' AND warID = '.$id);
-					header1('?section=admin&site=clanwars');
+					header1('?section=admin&amp;site=clanwars');
 				}
 			}
 		} else {
@@ -708,8 +708,8 @@ function admin_clanwars_editnext($id) {
 				$row['i'] = @++$i;
 				$db->query('SELECT locationID, locationname FROM '.DB_PRE.'ecp_wars_locations WHERE gID = '.$data['gID']);
 				while($subrow = $db->fetch_assoc()) {
-					($subrow['locationID'] == $row['lID']) ? $sub = 'selected="selected"' : $sub = '';
-					@$row['maps'] .= '<option '.$sub.' value="'.$subrow['locationID'].'">'.htmlspecialchars($subrow['locationname']).'</option>';
+					($subrow['locationID'] == $row['lID']) ? $sub = 'selected' : $sub = '';
+					@$row['maps'] .= '<option '.$sub.' value="'.$subrow['locationID'].'">'.charhtmlconvert($subrow['locationname']).'</option>';
 				}
 				$maps[] = $row;
 			}

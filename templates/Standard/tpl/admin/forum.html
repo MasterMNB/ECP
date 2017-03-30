@@ -11,7 +11,7 @@
          </div>
          <div id="subs_{$f.boardID}">
          {foreach from=$f.subs item=s}
-             <div class="foren_admin_sub" id="f_{$s.boardID}"><div style="float: left;width:80%;"><img src="templates/{$smarty.const.DESIGN}/images/forum_icon{if $s.closed}_closed{/if}.png" style="float: left; margin-right: 5px" /> 
+             <div class="foren_admin_sub" id="f_{$s.boardID}"><div style="float: left;width:85%;"><img src="templates/{$smarty.const.DESIGN}/images/forum_icon{if $s.closed}_closed{/if}.png" style="float: left; margin-right: 5px" /> 
              	<strong>{$s.name}</strong><br />&nbsp; {$s.beschreibung}</div>
                  <div style="float: right;">
                     <a href="?section=admin&site=forum&func=edit&id={$s.boardID}"><img src="templates/{$smarty.const.DESIGN}/images/forum_edit.png" alt="" title="{$smarty.const.EDIT}" /></a> 

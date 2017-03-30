@@ -1,7 +1,7 @@
 <div align="center">{$pfad}</div>
 <div style="overflow:auto">
     <div class="download">
-    	<div class="download_head"><a href="?section=downloads&action=viewdl&id={$dID}"><img src="templates/{$smarty.const.DESIGN}/images/download_button.png" style="vertical-align: bottom" alt="" title="{$smarty.const.DOWNLOAD_START}" /></a> <a href="?section=downloads&action=viewdl&id={$dID}">{$name}</a></div>
+    	<div class="download_head"><a href="?section=downloads&amp;action=viewdl&amp;id={$dID}"><img src="templates/{$smarty.const.DESIGN}/images/download_button.png" style="vertical-align: bottom" alt="" title="{$smarty.const.DOWNLOAD_START}" /></a> <a href="?section=downloads&amp;action=viewdl&amp;id={$dID}">{$name}</a></div>
         <!--<div class="download_vote">
 			<span class="vote"></span>
         </div> -->
@@ -29,8 +29,8 @@
     </div>
     <div align="center">
     <br />
-    <a href="?section=downloads&action=viewdl&id={$dID}">{$smarty.const.NO_DIRECT_LINK}</a>
+    <a href="?section=downloads&amp;action=viewdl&amp;id={$dID}">{$smarty.const.NO_DIRECT_LINK}</a>
 	<br /><br />
-    <input type="button" value="{$smarty.const.DOWNLOAD_START}" onclick="javasrcipt:location.href = '?section=downloads&action=getfile&id={$dID}';" >    
+    <input type="button" value="{$smarty.const.DOWNLOAD_START}" onclick="javasrcipt:location.href = '?section=downloads&amp;action=getfile&amp;id={$dID}';" >    
     </div>
 </div>

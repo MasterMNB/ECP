@@ -1,4 +1,7 @@
 <div class="div_headline">{$smarty.const.EVENTS}</div>
+<table width="200px">
+<tr>
+<td>
 <div>
       {foreach from=$data item=e}
 	   <div class="div_headline">{$e.eventname}</div>
@@ -6,4 +9,5 @@
        {$e.inhalt}
       {/foreach}
 </div>
-</span></a>
+</td></tr></table>
+

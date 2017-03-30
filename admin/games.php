@@ -2,6 +2,7 @@
 function admin_games() {
 	$tpl = new smarty();
 	$tpl->assign('icons', get_icons());
+	$tpl->assign('icons_big', get_icons_big());
 	$tpl->assign('games', get_games());
 	ob_start();
 	$tpl->display(DESIGN.'/tpl/admin/games.html');
@@ -17,6 +18,14 @@ function get_icons() {
 	}
 	return $string;
 }
+function get_icons_big() {
+	$files = scan_dir('images/games_big', true);
+	$string = '<option value="0">'.CHOOSE.'</option>';
+	foreach($files AS $value) {
+		$string .= '<option value="'.$value.'">'.$value.'</option>';
+	}
+	return $string;
+}
 function admin_games_add() {
 	ob_end_clean();
 	global $db;
@@ -26,7 +35,7 @@ function admin_games_add() {
 		if($_POST['name'] == '' OR $_POST['icon'] == '' OR $_POST['short'] == '') {
 			echo NOT_NEED_ALL_INPUTS;
 		} else {
-			$sql = sprintf('INSERT INTO '.DB_PRE.'ecp_wars_games (`gamename`, `gameshort`, `icon`, `fightus`) VALUES (\'%s\', \'%s\', \'%s\', %d)', strsave($_POST['name']), strsave($_POST['short']),strsave($_POST['icon']), (int)@$_POST['fightus']);
+			$sql = sprintf('INSERT INTO '.DB_PRE.'ecp_wars_games (`gamename`, `gameshort`, `icon`, `icon_big`, `fightus`) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', %d)', strsave($_POST['name']), strsave($_POST['short']),strsave($_POST['icon']),strsave($_POST['icon_big']), (int)@$_POST['fightus']);
 			if($db->query($sql)) {
 				echo 'ok';
 			}
@@ -45,7 +54,7 @@ function admin_games_edit($id) {
 		if($_POST['name'] == '' OR $_POST['icon'] == '' OR $_POST['short'] == '') {
 			echo NOT_NEED_ALL_INPUTS;
 		} else {
-			$sql = sprintf('UPDATE '.DB_PRE.'ecp_wars_games SET `gamename` = \'%s\', `gameshort` = \'%s\', `icon` = \'%s\', `fightus` = %d  WHERE gameID = %d', strsave($_POST['name']), strsave($_POST['short']),strsave($_POST['icon']), (int)@$_POST['fightus'], $id);
+			$sql = sprintf('UPDATE '.DB_PRE.'ecp_wars_games SET `gamename` = \'%s\', `gameshort` = \'%s\', `icon` = \'%s\', `icon_big` = \'%s\', `fightus` = %d  WHERE gameID = %d', strsave($_POST['name']), strsave($_POST['short']),strsave($_POST['icon']),strsave($_POST['icon_big']), (int)@$_POST['fightus'], $id);
 			if($db->query($sql)) {
 				echo 'ok';
 				die();
@@ -58,7 +67,7 @@ function admin_games_edit($id) {
 }
 function get_games() {
 	global $db;
-	$db->query('SELECT gamename, gameID, gameshort, icon FROM '.DB_PRE.'ecp_wars_games ORDER BY gamename');
+	$db->query('SELECT gamename, gameID, gameshort, icon, icon_big FROM '.DB_PRE.'ecp_wars_games ORDER BY gamename');
 	$games = array();
 	while($row = $db->fetch_assoc()) {
 		$games[] = $row;

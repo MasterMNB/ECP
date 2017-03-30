@@ -1,13 +1,10 @@
-
      <div id="tabBoxExample">
         <ul class="tabSet">    
-			<li class="off"><a>{$smarty.const.PERSONAL_INFO}</a></li>
+	     <li class="off"><a>{$smarty.const.PERSONAL_INFO}</a></li>
+	     <li class="off"><a>{$smarty.const.USERGAMES}</a></li>
             <li class="off"><a>{$smarty.const.GUESTBOOK}</a></li>
             <li class="off"><a>{$smarty.const.BUDDYLIST}</a></li>
             <li class="off"><a>{$smarty.const.STATS}</a></li>
-            <li class="off"><a>Xbox Live</a></li>
-            
-
   </ul>
         <div class="panelSet">             
           <div class="panel">
@@ -39,11 +36,11 @@
               </tr>
               <tr class="{cycle values="row_odd, row_even"}">
                 <td><strong>{$smarty.const.TOWN}:</strong></td>
-                <td>{$wohnort}</td>
+                <td>{if $smarty.session.groups1.4 != 1}{$wohnort}{/if}</td>
               </tr>
               <tr class="{cycle values="row_odd, row_even"}">
                 <td><strong>{$smarty.const.BIRTHDAY}:</strong></td>
-                <td>{$geburtstag}</td>
+                <td>{if $smarty.session.groups1.4 != 1}{$geburtstag}{/if}</td>
               </tr>
               <tr class="{cycle values="row_odd, row_even"}">
                 <td><strong>{$smarty.const.AGE}:</strong></td>
@@ -51,7 +48,7 @@
               </tr>
               <tr class="{cycle values="row_odd, row_even"}">
                 <td><strong>{$smarty.const.NEXT_BIRTHDAY}:</strong></td>
-                <td>{if $next}{$next}{/if}</td>
+                <td>{if $smarty.session.groups1.4 != 1}{if $next}{$next}{/if}{/if}</td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
@@ -135,9 +132,76 @@
                 <td><strong>{$smarty.const.XFIRE}:</strong></td>
                 <td>{if $xfire}<a href="http://profile.xfire.com/{$xfire}" target="_blank" class="Tips" title="XFire {$xfire}">{$xfire}<div class="tipcontents"><img src="http://miniprofile.xfire.com/bg/bg/type/0/{$xfire}.png" width="440" height="111" /></div></a>{/if}                </td>
               </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td colspan="2">&nbsp;</td>
+              </tr>
+              <tr>
+                <td colspan="3"><span style="font-size:14px; font-weight:bold">{$smarty.const.PC_CONF}:</span></td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.CPU}:</strong></td>
+                <td colspan="2">{$cpu}</td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.MAINBOARD}:</strong></td>
+                <td colspan="2">{$mainboard}</td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.RAM}:</strong></td>
+                <td colspan="2">{$ram}</td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.GRAPHICC}:</strong></td>
+                <td colspan="2">{$gkarte}</td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.SOUNDC}:</strong></td>
+                <td colspan="2">{$skarte}</td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.PC_DISPLAY}:</strong></td>
+                <td colspan="2">{$monitor}</td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.MOUSE}:</strong></td>
+                <td colspan="2">{$maus}</td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.KEYBOARD}:</strong></td>
+                <td colspan="2">{$tastatur}</td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.MOUSEPAD}:</strong></td>
+                <td colspan="2">{$mauspad}</td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.I_CONNECTION}:</strong></td>
+                <td colspan="2">{$internet}</td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.HDD}:</strong></td>
+                <td colspan="2">{$festplatte}</td>
+              </tr>
+              <tr class="{cycle values="row_odd, row_even"}">
+                <td><strong>{$smarty.const.HEADSET}:</strong></td>
+                <td colspan="2">{$headset}</td>
+              </tr>
             </table>
-
-          </div>   
+          </div>
+	<div class="panel">
+		<div style="width: 99%">
+			<table width="100%" border="0" cellspacing="0" cellpadding="1" style="table-layout:fixed">
+				<tr>
+					<td>
+						{foreach from=$user_games item=ug}
+							<img src="images/games_big/{$ug.icon_big}" border="0" title="{$ug.gamename}">
+						{/foreach}
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>   
           <div class="panel">
           		<div style="width: 99%">
 				{$guestbook}
@@ -164,51 +228,8 @@
           <div class="panel">
 			{$stats}
           </div>                               
-          <div class="panel">
-          {if !$XBLive}<b><font color="red">Keine Daten vorhanden!</font></b><br /><br />Dafür gibt es 2 mögliche Ursachen:<br /> - der Benutzername entspricht keinem Live Konto<br /> - dieser User hat sich noch nicht eingeloggt{else}
-          <table width="100%" border="0" cellspacing="2" cellpadding="1">
-              <tr>
-                <td width="20%" class="{cycle values="row_odd, row_even"}"><strong>AccountStatus:</strong></td>
-                <td width="35%" class="row_odd">{$XBLive.xbl_Account}</td>
-                <td width="45%" rowspan="11" align="center" valign="middle"><img src="http://avatar.xboxlive.com/avatar/{$username}/avatar-body.png" class="user_pic_border" /></td>
-              </tr>
-              <tr class="{cycle values="row_odd, row_even"}">
-                <td><strong>Status:</strong></td>
-                <td>{$XBLive.xbl_Status}</td>
-              </tr>
-              <tr class="{cycle values="row_odd, row_even"}">
-                <td><strong>Zuletzt gesehen:</strong></td>
-                <td>{$XBLive.xbl_LastSeen}</td>
-              </tr>
-              <tr class="{cycle values="row_odd, row_even"}">
-                <td><strong>Info:</strong></td>
-                <td>{$XBLive.xbl_Info}</td>
-              </tr>
-              <tr class="{cycle values="row_odd, row_even"}">
-                <td><strong>GamerScore:</strong></td>
-                <td>{$XBLive.xbl_Gamerscore}</td>
-              </tr>
-              <tr class="{cycle values="row_odd, row_even"}">
-                <td><strong>Bio:</strong></td>
-                <td>{$XBLive.xbl_Bio}</td>
-              </tr>
-              <tr class="{cycle values="row_odd, row_even"}"><td>&nbsp;</td><td>&nbsp;</td></tr>
-              <tr class="row_odd"><td>&nbsp;</td><td>&nbsp;</td></tr>
-              <tr class="row_odd"><td>&nbsp;</td><td>&nbsp;</td></tr>
-              <tr class="row_odd"><td>&nbsp;</td><td>&nbsp;</td></tr>
-              <tr class="row_odd"><td>&nbsp;</td><td>&nbsp;</td></tr>
-          </table>
-          <table width ="100%">
-          <tr class="{cycle values="row_odd, row_even"}"><td width=100%"><strong>Bisher {$XBLive.Game|@count} Spiele eingetragen:</strong>                                   (lastupdate:{$XBLive.xbl_lastupdate})</td></tr>
-          </table>
-              {foreach from=$XBLive.Game item=XB}
-                <img src="{$XB.gIcon}" title="[{$XB.gameplay}] {$XB.gTitel}"/>
-              {/foreach}
-
-          {/if}
-          </div>
   </div>
-        </div>
+      </div>
       <div id="user_sub_menu" style="display:none">
       	{if $smarty.session.rights.admin.user.edit OR $smarty.session.rights.superadmin}
         <div class="comments_menu_link" onclick="location.href='?section=admin&site=user&func=edit&id={$smarty.get.id}';">

@@ -24,8 +24,8 @@ if (!isset($_SESSION['rights']['admin']['texte']['edit']) AND !isset($_SESSION['
 			while($row = $db->fetch_assoc()) {
 				foreach($lang AS $key=>$value) {
 					if($value['lang'] == $row['lang']) {
-						$lang[$key]['data'][$row['name']] = htmlspecialchars($row['content']);
-						$lang[$key]['headline'][$row['name']] = htmlspecialchars($row['content2']);
+						$lang[$key]['data'][$row['name']] = charhtmlconvert($row['content']);
+						$lang[$key]['headline'][$row['name']] = charhtmlconvert($row['content2']);
 					}
 				}
 			}

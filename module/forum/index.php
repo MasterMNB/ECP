@@ -308,15 +308,15 @@ function forum_new_thread($bid) {
 					main_content(FORUM_NEW_TOPIC, $content, '',1);  									
 				} else {
 					if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_forum_threads (`bID`, `datum`, `threadname`, `preview`, `vonID`, vonname, `lastuserID`, lastusername, `lastreplay`) VALUES (%d, %d, \'%s\', \'%s\', %d, \'%s\', %d, \'%s\', %d)', 
-										(int)$_GET['boardID'], time(), strsave(htmlspecialchars($_POST['name'])), make_forum_pre($_POST['comment']), (int)$_SESSION['userID'], strsave(htmlspecialchars(@$_POST['username'])), (int)$_SESSION['userID'], strsave(htmlspecialchars(@$_POST['username'])), time()))) {
+										(int)$_GET['boardID'], time(), strsave(charhtmlconvert($_POST['name'])), make_forum_pre($_POST['comment']), (int)$_SESSION['userID'], strsave(charhtmlconvert(@$_POST['username'])), (int)$_SESSION['userID'], strsave(charhtmlconvert(@$_POST['username'])), time()))) {
 						$thread = $db->last_id();
-						if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_forum_comments (`tID`, `boardID`, `userID`, `postname`, `adatum`, `comment`, `IP`) VALUES (%d, %d, %d, \'%s\', %d, \'%s\', \'%s\')', $thread, (int)$_GET['boardID'], @(int)$_SESSION['userID'], strsave(htmlspecialchars(@$_POST['username'])),time(), strsave(comment_save($_POST['comment'])), $_SERVER['REMOTE_ADDR']))) {																			
+						if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_forum_comments (`tID`, `boardID`, `userID`, `postname`, `adatum`, `comment`, `IP`) VALUES (%d, %d, %d, \'%s\', %d, \'%s\', \'%s\')', $thread, (int)$_GET['boardID'], @(int)$_SESSION['userID'], strsave(charhtmlconvert(@$_POST['username'])),time(), strsave(comment_save($_POST['comment'])), $_SERVER['REMOTE_ADDR']))) {																			
 							$comid = $db->last_id();
 							if(isset($_SESSION['userID'])) {
 								$db->query('UPDATE '.DB_PRE.'ecp_user_stats SET comments = comments + '.$board['commentsperpost'].', money = money + '.$board['moneyperpost'].' WHERE userID = '.$_SESSION['userID']);
 								update_rank($_SESSION['userID']);
 							}
-							$db->query('UPDATE '.DB_PRE.'ecp_forum_boards SET threads = threads +1, posts = posts +1, lastpost = '.time().', lastthreadID = '.$thread.', lastpostuserID = '.(int)@$_SESSION['userID'].', lastpostuser = \''.strsave(htmlspecialchars(@$_POST['username'])).'\' WHERE boardID = '.(int)$_GET['boardID'].' OR boardID = '.$board['boardparentID']);
+							$db->query('UPDATE '.DB_PRE.'ecp_forum_boards SET threads = threads +1, posts = posts +1, lastpost = '.time().', lastthreadID = '.$thread.', lastpostuserID = '.(int)@$_SESSION['userID'].', lastpostuser = \''.strsave(charhtmlconvert(@$_POST['username'])).'\' WHERE boardID = '.(int)$_GET['boardID'].' OR boardID = '.$board['boardparentID']);
 							if(find_access($board['attachfiles'])) {
 								if(UPLOAD_METHOD == 'old') {
 									$maxattach = $board['attachments'];
@@ -345,12 +345,12 @@ function forum_new_thread($bid) {
 							}
 							if(find_access($board['startsurvey'])) {
 								if(@$_POST['frage'] != '' AND $_POST['answer_1'] != '') {
-									if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_forum_survey (`boardID`, `threadID`, `comID`, `ende`, `frage`, `antworten`) VALUES (%d, %d, %d, %d, \'%s\', %d)', (int)$_GET['boardID'], $thread, $comid, strtotime($_POST['ende']), strsave(htmlspecialchars($_POST['frage'])), (int)$_POST['antworten']))) {
+									if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_forum_survey (`boardID`, `threadID`, `comID`, `ende`, `frage`, `antworten`) VALUES (%d, %d, %d, %d, \'%s\', %d)', (int)$_GET['boardID'], $thread, $comid, strtotime($_POST['ende']), strsave(charhtmlconvert($_POST['frage'])), (int)$_POST['antworten']))) {
 										$sid = $db->last_id();
 										$db->query('UPDATE '.DB_PRE.'ecp_forum_threads SET fsurveyID = '.$sid.' WHERE threadID = '.$thread);
 										foreach($_POST as $key =>$value) {
 											if(strpos($key,'answer_') !== false AND $value != '') {
-												$db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_forum_survey_answers (`fsID`, `answer`) VALUES (%d, \'%s\')', $sid, strsave(htmlspecialchars($value))));
+												$db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_forum_survey_answers (`fsID`, `answer`) VALUES (%d, \'%s\')', $sid, strsave(charhtmlconvert($value))));
 											}
 										}										
 									} 
@@ -740,14 +740,14 @@ function forum_new_replay($bid, $id) {
 					ob_end_clean();
 					main_content(FORUM_POST_REPLAY, $content, '',1);  						
 				} else {
-					if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_forum_comments (`tID`, `boardID`, `userID`, `postname`, `adatum`, `comment`, `IP`) VALUES (%d, %d, %d, \'%s\', %d, \'%s\', \'%s\')', $id, $thread['bID'], @(int)$_SESSION['userID'], strsave(htmlspecialchars(@$_POST['username'])),time(), strsave(comment_save($_POST['comment'])), $_SERVER['REMOTE_ADDR']))) {																			
+					if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_forum_comments (`tID`, `boardID`, `userID`, `postname`, `adatum`, `comment`, `IP`) VALUES (%d, %d, %d, \'%s\', %d, \'%s\', \'%s\')', $id, $thread['bID'], @(int)$_SESSION['userID'], strsave(charhtmlconvert(@$_POST['username'])),time(), strsave(comment_save($_POST['comment'])), $_SERVER['REMOTE_ADDR']))) {																			
 						$comid = $db->last_id();
 						if(isset($_SESSION['userID'])) {
 							$db->query('UPDATE '.DB_PRE.'ecp_user_stats SET comments = comments + '.$thread['commentsperpost'].', money = money + '.$thread['moneyperpost'].' WHERE userID = '.$_SESSION['userID']);
 							update_rank($_SESSION['userID']);
 						}
-						$db->query('UPDATE '.DB_PRE.'ecp_forum_boards SET posts = posts +1, lastpost = '.time().', lastthreadID = '.$id.', lastpostuserID = '.(int)@$_SESSION['userID'].', lastpostuser = \''.strsave(htmlspecialchars(@$_POST['username'])).'\' WHERE boardID = '.$thread['bID'].' OR boardID = '.$thread['boardparentID']);
-						$db->query('UPDATE '.DB_PRE.'ecp_forum_threads SET posts = posts +1, lastreplay = '.time().', lastuserID = '.(int)@$_SESSION['userID'].', lastusername = \''.strsave(htmlspecialchars(@$_POST['username'])).'\' WHERE threadID = '.$id);
+						$db->query('UPDATE '.DB_PRE.'ecp_forum_boards SET posts = posts +1, lastpost = '.time().', lastthreadID = '.$id.', lastpostuserID = '.(int)@$_SESSION['userID'].', lastpostuser = \''.strsave(charhtmlconvert(@$_POST['username'])).'\' WHERE boardID = '.$thread['bID'].' OR boardID = '.$thread['boardparentID']);
+						$db->query('UPDATE '.DB_PRE.'ecp_forum_threads SET posts = posts +1, lastreplay = '.time().', lastuserID = '.(int)@$_SESSION['userID'].', lastusername = \''.strsave(charhtmlconvert(@$_POST['username'])).'\' WHERE threadID = '.$id);
 						if(find_access($thread['attachfiles'])) {
 							if(UPLOAD_METHOD == 'old') {
 								$maxattach = $thread['attachments'];
@@ -861,7 +861,7 @@ function forum_edit_replay($id, $bid, $tid) {
 				ob_end_clean();
 				main_content(FORUM_POST_EDIT, $content, '',1);   	  	 	
 			} else {
-				if($db->query(sprintf('UPDATE '.DB_PRE.'ecp_forum_comments SET postname = \'%s\', comment = \'%s\', edits =edits +1, editdatum = %d, edituserID = %d WHERE comID = %d', strsave(htmlspecialchars(@$_POST['username'])), strsave(comment_save($_POST['comment'])), time(), @(int)$_SESSION['userID'], $id))) {																			
+				if($db->query(sprintf('UPDATE '.DB_PRE.'ecp_forum_comments SET postname = \'%s\', comment = \'%s\', edits =edits +1, editdatum = %d, edituserID = %d WHERE comID = %d', strsave(charhtmlconvert(@$_POST['username'])), strsave(comment_save($_POST['comment'])), time(), @(int)$_SESSION['userID'], $id))) {																			
 					if(find_access($thread['attachfiles'])) {
 						if(UPLOAD_METHOD == 'old') {
 							$maxattach = $thread['attachments']-$db->result(DB_PRE.'ecp_forum_attachments', 'COUNT(attachID)', 'bID = '.$bid.' AND mID = '.$id);
@@ -889,7 +889,7 @@ function forum_edit_replay($id, $bid, $tid) {
 						}
 					}
 					if($db->result(DB_PRE.'ecp_forum_comments', 'COUNT(comID)', 'tID = '.$tid.' AND adatum < '.$thread['adatum'].' ORDER BY adatum ASC') == 0) {
-						$db->query('UPDATE '.DB_PRE.'ecp_forum_threads SET threadname = \''.strsave(htmlspecialchars($_POST['title'])).'\', vonname = \''.strsave(htmlspecialchars(@$_POST['username'])).'\' WHERE threadID = '.$tid);
+						$db->query('UPDATE '.DB_PRE.'ecp_forum_threads SET threadname = \''.strsave(charhtmlconvert($_POST['title'])).'\', vonname = \''.strsave(charhtmlconvert(@$_POST['username'])).'\' WHERE threadID = '.$tid);
 					}
 					$last = $db->fetch_assoc('SELECT userID,postname,adatum, tID FROM '.DB_PRE.'ecp_forum_comments WHERE boardID = '.$bid.' ORDER BY adatum DESC LIMIT 1');
 					$db->query('UPDATE '.DB_PRE.'ecp_forum_boards SET `lastpostuserID` =  '.(int)$last['userID'].', `lastpostuser` = \''.$last['postname'].'\', `lastpost` = '.(int)$last['adatum'].', lastthreadID = '.(int)$last['tID'].' WHERE (boardID = '.$bid.' OR boardID = '.$thread['boardparentID'].')');					 						
@@ -902,7 +902,7 @@ function forum_edit_replay($id, $bid, $tid) {
 			}
 		} else {
 			$tpl = new smarty;
-			$tpl->assign('comment', htmlspecialchars($thread['comment']));
+			$tpl->assign('comment', charhtmlconvert($thread['comment']));
 			$tpl->assign('func', 'edit');
 			$tpl->assign('func2', '&comID='.$id);
 			if($db->result(DB_PRE.'ecp_forum_comments', 'COUNT(comID)', 'tID = '.$tid.' AND adatum < '.$thread['adatum'].' ORDER BY adatum ASC') == 0) {

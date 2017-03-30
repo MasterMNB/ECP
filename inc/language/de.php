@@ -684,6 +684,8 @@ $language_array = array(
   define('ACCOUNT_USERPIC_TO_BIG2',        'Dein Avatar hat eine hohe Aufösung.');
   define('TOWN',                                        'Wohnort');
   define('PERSONAL_INFO',                        'Persönliche Daten');
+  define('USERGAMES',             	'Meine Spiele');
+  define('ALSO_PLAY',             	'spielt auch');
   define('BIRTHDAY',                                'Geburtsdatum');
   define('MESSEGENER',                                'Messenger');
   define('YAHOO',                                        'Yahoo');

@@ -21,7 +21,7 @@
       	{if $smarty.session.rights.admin.user.edit OR $smarty.session.rights.superadmin}
         <div class="comments_menu_link" onClick="location.href='?section=admin&site=user&func=edit&id={$i.ID}';">
         <img src="templates/{$smarty.const.DESIGN}/images/user_edit.png" title="{$smarty.const.EDIT_2}" alt=""  /> {$smarty.const.EDIT_2}</div>{/if}
-        {if $smarty.session.rights.admin.user.delete OR $smarty.session.rights.superadmin}
+        {if $smarty.session.rights.admin.user.del OR $smarty.session.rights.superadmin}
         <div class="comments_menu_link" onClick="user_delete({$i.ID}, '{$i.username}');">
         <img src="templates/{$smarty.const.DESIGN}/images/user_delete.png" title="{$smarty.const.DELETE}" alt=""  /> {$smarty.const.DELETE}</div>{/if}
         {if $smarty.session.rights.admin.user.ban OR $smarty.session.rights.superadmin}
@@ -34,13 +34,13 @@
         <div class="comments_menu_link" onClick="user_change_rank({$i.ID});">
         <img src="templates/{$smarty.const.DESIGN}/images/ranks.png" title="{$smarty.const.CHANGE_RANK}" alt=""  /> {$smarty.const.CHANGE_RANK}</div>{/if}           
         <hr />
-        {if $smarty.session.rights.admin.teams.add_m OR $smarty.session.rights.superadmin}
+        {if $smarty.session.rights.admin.teams.add_member OR $smarty.session.rights.superadmin}
         <div class="comments_menu_link" onClick="user_add_team({$i.ID});">
         <img src="templates/{$smarty.const.DESIGN}/images/user_add.png" title="{$smarty.const.TEAM_ADD_USER}" alt=""  /> {$smarty.const.TEAM_ADD_USER}</div>{/if}                 
-        {if $smarty.session.rights.admin.groups.add_member OR $smarty.session.rights.superadmin}
+        {if $smarty.session.rights.admin.groups.add_m OR $smarty.session.rights.superadmin}
         <div class="comments_menu_link" onClick="user_add_group({$i.ID});">
         <img src="templates/{$smarty.const.DESIGN}/images/user_add.png" title="{$smarty.const.GROUP_ADD_USER}" alt=""  /> {$smarty.const.GROUP_ADD_USER}</div>{/if}  
-        {if $smarty.session.rights.admin.groups.del_member OR $smarty.session.rights.superadmin}
+        {if $smarty.session.rights.admin.groups.del_m OR $smarty.session.rights.superadmin}
         <hr />
         <strong>{$smarty.const.DEL_USER_GROUP}:</strong>
         <div id="gruppen_{$i.ID}">        

@@ -53,7 +53,7 @@ function teams_add_member($id) {
 	if(!isset($_SESSION['rights']['admin']['teams']['add_member']) AND !isset($_SESSION['rights']['superadmin'])) {
 		echo NO_ADMIN_RIGHTS;
 	} else {
-		$userid = @$db->result(DB_PRE.'ecp_user', 'ID', 'username = \''.strsave(htmlspecialchars($_POST['user'])).'\'');
+		$userid = @$db->result(DB_PRE.'ecp_user', 'ID', 'username = \''.strsave(charhtmlconvert($_POST['user'])).'\'');
 		if($userid) {
 			if(@$db->result(DB_PRE.'ecp_members', 'COUNT(mID)', 'userID = '.$userid.' AND teamID = '.$id)) {
 				echo USER_ALLREADY_IN_TEAM;

@@ -68,6 +68,7 @@
     "jediknightja"  => "JediKnight: Jedi Academy",
     "killingfloor"  => "Killing Floor",
     "kingpin"       => "Kingpin: Life of Crime",
+    "minecraft"        => "Minecraft",
     "mohaa"         => "Medal of Honor: Allied Assault",
     "mohaab"        => "Medal of Honor: Allied Assault Breakthrough",
     "mohaas"        => "Medal of Honor: Allied Assault Spearhead",
@@ -177,6 +178,7 @@
     "jediknightja"  => "02",
     "killingfloor"  => "13",
     "kingpin"       => "03",
+    "minecraft"     => "999",
     "mohaa"         => "03",
     "mohaab"        => "03",
     "mohaas"        => "03",
@@ -294,6 +296,7 @@
     "jediknightja"  => "qtracker://{IP}:{S_PORT}?game=JediKnightJediAcademy&action=show",
     "killingfloor"  => "qtracker://{IP}:{S_PORT}?game=KillingFloor&action=show",
     "kingpin"       => "qtracker://{IP}:{S_PORT}?game=Kingpin&action=show",
+    "minecraft"     => "https://minecraft.net/",
     "mohaa"         => "qtracker://{IP}:{S_PORT}?game=MedalofHonorAlliedAssault&action=show",
     "mohaab"        => "qtracker://{IP}:{S_PORT}?game=MedalofHonorAlliedAssaultBreakthrough&action=show",
     "mohaas"        => "qtracker://{IP}:{S_PORT}?game=MedalofHonorAlliedAssaultSpearhead&action=show",
@@ -3395,6 +3398,54 @@
 
     return TRUE;
   }
+
+//------------------------------------------------------------------------------------------------------------+
+//------------------------------------------------------------------------------------------------------------+
+
+    function lgsl_query_999(&$server, &$lgsl_need, &$lgsl_fp) 
+    { 
+//------------------------------------------------------------------------------------------------------------+
+    // get challenge 
+    fwrite($lgsl_fp, "\xFE\xFD\x09\x01\x02\x03\x04"); 
+    $Data         = SubStr(fread($lgsl_fp, 1440),5); 
+    $Challenge     = Pack( 'N', $Data ); 
+     
+    // get data 
+    fwrite($lgsl_fp, "\xFE\xFD\x00\x01\x02\x03\x04".$Challenge."\x01\x02\x03\x04"); 
+    $buffer     = substr(fread($lgsl_fp, 1440),16); 
+    $packets    = explode("\x00\x00\x01player_\x00\x00", $buffer ); 
+
+    // general 
+    $general                    = explode( "\x00", $packets[0] ); 
+    $server['s']['address']     = $general[17]; 
+    $server['s']['ip']          = $general[19]; 
+    $server['s']['name']        = $general[1]; 
+    $server['s']['gametype']    = $general[3]; 
+    $server['s']['gameid']      = $general[5]; 
+    $server['s']['version']     = $general[7]; 
+    $server['s']['map']         = $general[11]; 
+    $server['s']['players']     = $general[13]; 
+    $server['s']['playersmax']  = $general[15]; 
+     
+    // players 
+    $players                         = substr( $packets[1], 0, -2 ); 
+    $players                         = explode( "\x00", $players ); 
+
+    foreach ($players as $key => $name) 
+    { 
+          $server['p'][$key]['name']  = $players[$key]; 
+          $server['p'][$key]['time']  = "-"; 
+          $server['p'][$key]['ping']  = "-"; 
+          $server['p'][$key]['score'] = "-"; 
+    } 
+     
+    // plugins 
+    $server['e']['plugins'] = $general[9]; 
+  
+//------------------------------------------------------------------------------------------------------------+     
+    return TRUE; 
+  }
+
 
 //------------------------------------------------------------------------------------------------------------+
 //------------------------------------------------------------------------------------------------------------+

@@ -86,7 +86,7 @@
     <td>{if $a.url}<a href="{$a.url}" target="_blank">{$a.eventname}</a>{else}{$a.eventname}{/if}</td>
     <td><img src="images/games/{$a.icon}" alt="" title="{$a.gamename}" /> {$a.tname}</td>
     <td>{if platz < 4}<img src="templates/{$smarty.const.DESIGN}/images/award_{$a.platz}.png" alt="" title="{$a.platz}. {$smarty.const.PLACE}"/>{else}{$a.platz}.{/if}</td>
-    <td><img src="templates/{$smarty.const.DESIGN}/images/comments.png" alt="" title="{$smarty.const.COMMENTS}" / > <a href="?section=awards&action=view&id={$a.awardID}">({$a.comments})</a></td>
+    <td><img src="templates/{$smarty.const.DESIGN}/images/comments.png" alt="" title="{$smarty.const.COMMENTS}" / > <a href="?section=awards&amp;action=view&amp;id={$a.awardID}">({$a.comments})</a></td>
   </tr>
   {/foreach}
   {else}
@@ -99,7 +99,7 @@
 <div class="div_headline">{$smarty.const.CLANWARS} ({$clanwar})</div>
 <table width="100%" border="0" cellspacing="0" cellpadding="1" id="clanwars_table">
   <tr>
-    <td width="10%"><strong>{$smarty.const.DATE}</strong><a href="?section=clanwars&gameID={$smarty.get.gameID}&teamID={$smarty.get.teamID}&matchtypeID={$smarty.get.matchtypeID}&xonx={$smarty.get.xonx}&sortby=datum&art=desc&page={$smarty.get.page}" onclick="return load_wars('{$smarty.get.gameID}', '{$smarty.get.teamID}', '{$smarty.get.matchtypeID}', '{$smarty.get.xonx}', 'datum', 'desc', '{$smarty.get.page}');"></td>
+    <td width="10%"><strong>{$smarty.const.DATE}</strong><a href="?section=clanwars&amp;gameID={$smarty.get.gameID}&amp;teamID={$smarty.get.teamID}&amp;matchtypeID={$smarty.get.matchtypeID}&amp;xonx={$smarty.get.xonx}&amp;sortby=datum&amp;art=desc&amp;page={$smarty.get.page}" onclick="return load_wars('{$smarty.get.gameID}', '{$smarty.get.teamID}', '{$smarty.get.matchtypeID}', '{$smarty.get.xonx}', 'datum', 'desc', '{$smarty.get.page}');"></td>
     <td width="30%"><strong>{$smarty.const.OPP}</strong></td>
     <td width="20%"><strong>{$smarty.const.MATCHTYP}</strong></td>
     <td width="20%"><strong>{$smarty.const.TEAM}</strong></td>
@@ -114,7 +114,7 @@
     <td>{$c.matchtypename}</td>
     <td>{$c.tname}</td>
     <td><span class="clanwar_{$c.result}">{$c.resultscore}</span></td>
-    <td><img src="templates/{$smarty.const.DESIGN}/images/comments.png" alt="" title="{$smarty.const.COMMENTS}" / > <a href="?section=clanwars&action=view&id={$c.warID}">({$c.comments})</a></td>
+    <td><img src="templates/{$smarty.const.DESIGN}/images/comments.png" alt="" title="{$smarty.const.COMMENTS}" / > <a href="?section=clanwars&amp;action=view&amp;id={$c.warID}">({$c.comments})</a></td>
   </tr>
   {/foreach}
   {else}

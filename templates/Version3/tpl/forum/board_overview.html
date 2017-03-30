@@ -19,7 +19,7 @@
         <span class="forum_smalltext">{$f.beschreibung}</span></td>
       <td width="10%" align="center">{$f.threads}</td>
       <td width="10%" align="center">{$f.posts}</td>
-      <td width="30%">{if $f.lastpost}<a href="?section=forum&action=gotolast&boardID={$f.boardID}&amp;threadID={$f.lastthreadID}"><img src="templates/{$smarty.const.DESIGN}/images/forum_goto_last.png" title="{$smarty.const.FORUM_GOTO_LAST}" alt="" style="float: left;" /></a> <a href="?section=forum&amp;action=thread&amp;boardID={$f.boardID}&amp;threadID={$f.lastthreadID}">{$f.threadname}</a><br  />
+      <td width="30%">{if $f.lastpost}<a href="?section=forum&amp;action=gotolast&amp;boardID={$f.boardID}&amp;threadID={$f.lastthreadID}"><img src="templates/{$smarty.const.DESIGN}/images/forum_goto_last.png" title="{$smarty.const.FORUM_GOTO_LAST}" alt="" style="float: left;" /></a> <a href="?section=forum&amp;action=thread&amp;boardID={$f.boardID}&amp;threadID={$f.lastthreadID}">{$f.threadname}</a><br  />
         {if $f.lastpostuserID}<a href="?section=user&amp;id={$f.lastpostuserID}">{$f.username}</a>{else}{$f.lastpostuser}{/if} ({$f.lastpost}){/if}&nbsp;</td>
     </tr>
   </table>
@@ -42,7 +42,7 @@
         <span class="forum_smalltext">{$s.beschreibung}</span></td>
       <td width="10%" align="center">{$s.threads}</td>
       <td width="10%" align="center">{$s.posts}</td>
-      <td width="30%">{if $s.lastpost}<a href="?section=forum&action=gotolast&boardID={$s.boardID}&amp;threadID={$s.lastthreadID}"><img src="templates/{$smarty.const.DESIGN}/images/forum_goto_last.png" title="{$smarty.const.FORUM_GOTO_LAST}" alt="" style="float: left;" /></a> <a href="?section=forum&amp;action=thread&amp;boardID={$s.boardID}&amp;threadID={$s.lastthreadID}">{$s.threadname}</a><br  />
+      <td width="30%">{if $s.lastpost}<a href="?section=forum&amp;action=gotolast&amp;boardID={$s.boardID}&amp;threadID={$s.lastthreadID}"><img src="templates/{$smarty.const.DESIGN}/images/forum_goto_last.png" title="{$smarty.const.FORUM_GOTO_LAST}" alt="" style="float: left;" /></a> <a href="?section=forum&amp;action=thread&amp;boardID={$s.boardID}&amp;threadID={$s.lastthreadID}">{$s.threadname}</a><br  />
         {if $s.lastpostuserID}<a href="?section=user&amp;id={$s.lastpostuserID}">{$s.username}</a>{else}{$s.lastpostuser}{/if} ({$s.lastpost}){/if}&nbsp;</td>
     </tr>
     {/foreach}

@@ -17,6 +17,12 @@
     				die(mysql_error());
     			}
     		}
+            if (function_exists('mysql_set_charset') and version_compare(mysql_get_server_info(), '5.0.7') !== -1) { 
+                mysql_set_charset(ECP_DB_CHARSET);//PHP 5 >= 5.2.3 
+            }   
+            if (function_exists('date_default_timezone_get')) { 
+                mysql_query('SET time_zone = "' . date_default_timezone_get() . '"'); 
+            } 
     	}
 		function query($sql) {
 			$this->_sql = $sql;
@@ -2662,7 +2668,7 @@ class nomad_mimemail
 		if (!empty($this->mail_html)){
 			$this->mail_type = $this->mail_type + 2; // HTML
 			if (empty($this->mail_text)){
-				$this->mail_text = strip_tags(eregi_replace("<br>", BR, $this->mail_html));
+				$this->mail_text = strip_tags(eregi_replace("<br />", BR, $this->mail_html));
 				$this->mail_type = $this->mail_type + 1; // Plain Text
 			}
 		}
@@ -2786,10 +2792,10 @@ class nomad_mimemail
 	function _debug($msg, $element="")
 	{
 		if ($this->debug_status == "yes"){
-			echo "<br><b>Error:</b> " . $this->error_msg[$msg] . " $element<br>";
+			echo "<br /><b>Error:</b> " . $this->error_msg[$msg] . " $element<br />";
 		}
 		elseif ($this->debug_status == "halt"){
-			die ("<br><b>Error:</b> " . $this->error_msg[$msg] . " $element<br>");
+			die ("<br /><b>Error:</b> " . $this->error_msg[$msg] . " $element<br />");
 		}
 		return false;
 	}

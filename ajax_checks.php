@@ -22,9 +22,9 @@ ajax_convert_array($_FILES);
 switch(@$_GET['func']) {
 	case 'check_username':
 		if(isset($_GET['mode']))
-		echo $db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'ID != '.(int)$_SESSION['userID'].' AND username = "'.strsave(htmlspecialchars($_GET['username'])).'"');
+		echo $db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'ID != '.(int)$_SESSION['userID'].' AND username = "'.strsave(charhtmlconvert($_GET['username'])).'"');
 		else
-		echo $db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'username = "'.strsave(htmlspecialchars($_GET['username'])).'"');
+		echo $db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'username = "'.strsave(charhtmlconvert($_GET['username'])).'"');
 		break;
 	case 'check_email':
 		if(isset($_GET['mode']))
@@ -33,7 +33,7 @@ switch(@$_GET['func']) {
 		echo $db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'email = "'.strsave($_GET['email']).'"');
 		break;
 	case 'check_login':
-		echo $db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'username = \''.strsave(htmlspecialchars($_POST['username'])).'\' AND passwort = \''.sha1($_POST['passwort']).'\'');
+		echo $db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'username = \''.strsave(charhtmlconvert($_POST['username'])).'\' AND passwort = \''.sha1($_POST['passwort']).'\'');
 		break;
 	case 'read_all':
 		if(isset($_SESSION['userID'])) {
@@ -48,7 +48,7 @@ switch(@$_GET['func']) {
 			$string = '';
 			foreach($user AS $value) {
 				if(trim($value) != '') {
-					$row = $db->fetch_assoc('SELECT ID, username, country FROM '.DB_PRE.'ecp_user WHERE username = \''.strsave(trim(htmlspecialchars($value))).'\'');
+					$row = $db->fetch_assoc('SELECT ID, username, country FROM '.DB_PRE.'ecp_user WHERE username = \''.strsave(trim(charhtmlconvert($value))).'\'');
 					if(isset($row['username'])) {
 						$string .= ', <img src="images/flaggen/'.$row['country'].'.gif" alt="" title="'.$countries[$row['country']].'" /> <a href="?section=user&amp;id='.$row['ID'].'">'.$row['username'].'</a>';
 					}
@@ -133,7 +133,7 @@ switch(@$_GET['func']) {
 					$tpl->assign('id', (int)$_GET['id']);
 					$tpl->assign('country', $user['country']);
 					$tpl->assign('username', $user['username']);
-					$tpl->assign('url', 'ajax_checks.php?func=sendmsg&id='.(int)$_GET['id']);
+					$tpl->assign('url', 'ajax_checks.php?func=sendmsg&amp;id='.(int)$_GET['id']);
 					ob_start();
 					$tpl->display(DESIGN.'/tpl/account/message_touser.html');
 					$content = ob_get_contents();
@@ -214,7 +214,7 @@ switch(@$_GET['func']) {
 			}
 			$tpl->assign('anzahl', $anzahl);
 			if($limits[0] > 1)
-			$tpl->assign('seiten', makepagelink_ajax('?section=user&action=list&orderby='.$_GET['orderby'].'&order='.$_GET['order'],'return load_user(\'orderby='.$_GET['orderby'].'&order='.$_GET['order'].'&page={nr}\');',@$_GET['page'], $limits[0]));
+			$tpl->assign('seiten', makepagelink_ajax('?section=user&amp;action=list&amp;orderby='.$_GET['orderby'].'&amp;order='.$_GET['order'],'return load_user(\'orderby='.$_GET['orderby'].'&amp;order='.$_GET['order'].'&amp;page={nr}\');',@$_GET['page'], $limits[0]));
 			$tpl->assign('user', $user);
 			$tpl->assign('ajax', 1);
 			ob_start();
@@ -325,7 +325,7 @@ switch(@$_GET['func']) {
 				$mine = getMimeType($_FILES['Filedata']['tmp_name'], $_FILES['Filedata']['name']);
 				if($_FILES['Filedata']['size'] > $db->result(DB_PRE.'ecp_forum_boards', 'attachmaxsize', 'boardID = '.(int)$_GET['boardID'])) {
 					$error = FORUM_FILE_SIZE_TO_BIG;
-				} elseif ($mine != 'application/zip' AND $mine != 'application/x-rar-compressed' AND $mine != 'image/bmp' AND $mine != 'image/gif' AND $mine != 'image/jpeg' AND $mine != 'image/png' AND $mine != 'application/pdf' AND $mine != 'text/plain' AND $mine != 'text/css' AND $mine != 'text/html') {
+                }elseif ($mine != 'application/zip' AND $mine != 'application/x-rar-compressed' AND $mine != 'image/bmp' AND $mine != 'image/gif' AND $mine != 'image/jpeg' AND $mine != 'image/png' AND $mine != 'application/pdf' AND $mine != 'text/plain' AND $mine != 'text/css' AND $mine != 'text/html') {
 					$error = WRONG_FILE_TYPE.' '.$mine;
 				} else {
 					$sha1 = sha1_file($_FILES['Filedata']['tmp_name']);
@@ -525,7 +525,7 @@ switch(@$_GET['func']) {
 				$row['quote'] = $row['comment'];
 				($row['sex'] == 'male')? $row['sextext'] = MALE : $row['sextext'] = FEMALE;
 				if($row['edits']) {
-					$row['edit'] = str_replace(array('{anzahl}', '{von}', '{last}'), array($row['edits'], '<a href="?section=user&id='.$row['edituserID'].'">'.$row['editfrom'].'</a>', date(LONG_DATE, $row['editdatum'])), COMMENT_EDIT_TXT);
+					$row['edit'] = str_replace(array('{anzahl}', '{von}', '{last}'), array($row['edits'], '<a href="?section=user&amp;id='.$row['edituserID'].'">'.$row['editfrom'].'</a>', date(LONG_DATE, $row['editdatum'])), COMMENT_EDIT_TXT);
 				}
 				if($row['attachs']) {
 					$anhaenge = array();
@@ -547,14 +547,14 @@ switch(@$_GET['func']) {
 			while($row = $db->fetch_assoc()) {
 				if($row['uID']) {
 					$members++;
-					$member .= ', <a href="?section=user&id=' .$row['uID'].'">'.$row['username'].'</a>';
+					$member .= ', <a href="?section=user&amp;id=' .$row['uID'].'">'.$row['username'].'</a>';
 				} else {
 					$guests++;
 				}
 			}
 			$tpl = new smarty;
 			if($limits[0]) {
-				$seiten = makepagelink_ajax('?section=forum&action=thread&boardID='.$bid.'&threadID='.$id, 'return load_forum_com_page('.$id.', '.$bid.', {nr}, \''.(@$_GET['order'] == 'DESC' ?  'DESC' : 'ASC').'\');', $_GET['page'], $limits[0]);
+				$seiten = makepagelink_ajax('?section=forum&amp;action=thread&amp;boardID='.$bid.'&amp;threadID='.$id, 'return load_forum_com_page('.$id.', '.$bid.', {nr}, \''.(@$_GET['order'] == 'DESC' ?  'DESC' : 'ASC').'\');', $_GET['page'], $limits[0]);
 				$tpl->assign('seiten',$seiten);
 			}
 			$tpl->assign('ajax', 1);
@@ -571,7 +571,7 @@ switch(@$_GET['func']) {
 			$tpl->assign('closed', $thread['closed']);
 			$tpl->assign('bclosed', $thread['forumclosed']);
 			$tpl->assign('comments', @$comments);
-			$tpl->assign('path', '<a href="?section=forum">'.FORUM.'</a> <img src="templates/'.DESIGN.'/images/pfeil_o.gif" alt="" /> '.($thread['boardparentID'] ? '<a href="?section=forum&action=subboard&boardID='.$thread['boardparentID'].'">'.$thread['boardparentName'].'</a> <img src="templates/'.DESIGN.'/images/pfeil_o.gif" alt="" /> ' : '').'<a href="?section=forum&amp;action=board&amp;boardID='.$bid.'">'.$thread['name'].'</a> <img src="templates/'.DESIGN.'/images/pfeil_o.gif" alt="" /> '.($thread['closed'] ? '<img src="templates/'.DESIGN.'/images/forum_icon_thread_closed.png" alt="'.FORUM_THREAD_CLOSED.'" title="'.FORUM_THREAD_CLOSED.'" /> ' : '').$thread['threadname']);
+			$tpl->assign('path', '<a href="?section=forum">'.FORUM.'</a> <img src="templates/'.DESIGN.'/images/pfeil_o.gif" alt="" /> '.($thread['boardparentID'] ? '<a href="?section=forum&amp;action=subboard&amp;boardID='.$thread['boardparentID'].'">'.$thread['boardparentName'].'</a> <img src="templates/'.DESIGN.'/images/pfeil_o.gif" alt="" /> ' : '').'<a href="?section=forum&amp;amp;action=board&amp;boardID='.$bid.'">'.$thread['name'].'</a> <img src="templates/'.DESIGN.'/images/pfeil_o.gif" alt="" /> '.($thread['closed'] ? '<img src="templates/'.DESIGN.'/images/forum_icon_thread_closed.png" alt="'.FORUM_THREAD_CLOSED.'" title="'.FORUM_THREAD_CLOSED.'" /> ' : '').$thread['threadname']);
 			$tpl->assign('members', substr($member, 2));
 			$tpl->assign('thread',1);
 			$tpl->assign('quote', true);
@@ -635,7 +635,7 @@ switch(@$_GET['func']) {
 				}
 				$tpl = new smarty;
 				if($limits[0] > 1)
-					$tpl->assign('seiten', makepagelink_ajax('?section=gallery&action=kate&id='.$_GET['id'], 'return load_kate_page('.$_GET['id'].', {nr});', @$_GET['page'], $limits[0]));
+					$tpl->assign('seiten', makepagelink_ajax('?section=gallery&amp;action=kate&amp;id='.$_GET['id'], 'return load_kate_page('.$_GET['id'].', {nr});', @$_GET['page'], $limits[0]));
 				$tpl->assign('gallery', $gallery);
 				ob_start();
 				$tpl->display(DESIGN.'/tpl/gallery/gallery.html');
@@ -673,7 +673,7 @@ switch(@$_GET['func']) {
 				echo NO_ENTRIES;
 			}
 		} else {
-			echo htmlentities(NO_ACCESS_RIGHTS);
+			echo htmlconvert(NO_ACCESS_RIGHTS);
 		}
 		break;
 	case 'get_pic':
@@ -686,7 +686,7 @@ switch(@$_GET['func']) {
 				}
 				$tpl = new smarty;
 				$image['uploaded'] = date(LONG_DATE, $image['uploaded']);
-				$tpl->assign('pfad', '<a href="?section=gallery">'.GALLERY.'</a> <img src="templates/'.DESIGN.'/images/pfeil_o.gif" alt="" /> <a href="?section=gallery&action=kate&id='.$image['cID'].'">'.$image['katename'].'</a> <img src="templates/'.DESIGN.'/images/pfeil_o.gif" alt="" /> <a href="?section=gallery&action=gallery&id='.$image['gID'].'">'.$image['name'].'</a>');
+				$tpl->assign('pfad', '<a href="?section=gallery">'.GALLERY.'</a> <img src="templates/'.DESIGN.'/images/pfeil_o.gif" alt="" /> <a href="?section=gallery&amp;action=kate&amp;id='.$image['cID'].'">'.$image['katename'].'</a> <img src="templates/'.DESIGN.'/images/pfeil_o.gif" alt="" /> <a href="?section=gallery&amp;action=gallery&amp;id='.$image['gID'].'">'.$image['name'].'</a>');
 				$tpl->assign('vorID', @$db->result(DB_PRE.'ecp_gallery_images', 'imageID', 'gID = '.$image['gID'].' AND imageID < '.(int)$_GET['id'].' ORDER BY imageID DESC LIMIT 1'));
 				$tpl->assign('nachID', @$db->result(DB_PRE.'ecp_gallery_images', 'imageID', 'gID = '.$image['gID'].' AND imageID > '.(int)$_GET['id'].' ORDER BY imageID ASC LIMIT 1'));
 				foreach($image AS $key=>$value) $tpl->assign($key, $value);
@@ -699,7 +699,7 @@ switch(@$_GET['func']) {
 				table(ERROR, NO_ENTRIES_ID);
 			}
 		} else {
-			echo htmlentities(NO_ACCESS_RIGHTS);
+			echo htmlconvert(NO_ACCESS_RIGHTS);
 		}
 		break;
 	case 'get_pictures':
@@ -715,7 +715,7 @@ switch(@$_GET['func']) {
 				}
 				$tpl = new smarty;
 				if($limits[0] > 1)
-					$tpl->assign('seiten', makepagelink_ajax('?section=gallery&action=gallery&id='.$_GET['id'], 'return load_gallery_page('.$_GET['id'].', {nr});', @$_GET['page'], $limits[0]));
+					$tpl->assign('seiten', makepagelink_ajax('?section=gallery&amp;action=gallery&amp;id='.$_GET['id'], 'return load_gallery_page('.$_GET['id'].', {nr});', @$_GET['page'], $limits[0]));
 				$tpl->assign('folder', $gallery['folder']);
 				$tpl->assign('pics',$pics);
 				ob_start();
@@ -727,7 +727,7 @@ switch(@$_GET['func']) {
 				table(ERROR, NO_ENTRIES_ID);
 			}
 		} else {
-			echo htmlentities(NO_ACCESS_RIGHTS);
+			echo htmlconvert(NO_ACCESS_RIGHTS);
 		}
 		break;
 	case 'shout_page':
@@ -795,7 +795,7 @@ switch(@$_GET['func']) {
 			ob_end_clean();
 			echo html_ajax_convert($content);
 		} else {
-			echo htmlentities(NO_ACCESS_RIGHTS);
+			echo htmlconvert(NO_ACCESS_RIGHTS);
 		}
 		break;
 	case 'clankasse_overview':
@@ -844,14 +844,14 @@ switch(@$_GET['func']) {
 			ob_end_clean();
 			echo html_ajax_convert($content);
 		} else {
-			echo htmlentities(NO_ACCESS_RIGHTS);
+			echo htmlconvert(NO_ACCESS_RIGHTS);
 		}
 		break;
 	case 'calendar':
 		if(@$_SESSION['rights']['public']['calendar']['view'] OR @$_SESSION['rights']['superadmin']) {
 			echo html_ajax_convert(calendar_mini());
 		} else {
-			echo htmlentities(NO_ACCESS_RIGHTS);
+			echo htmlconvert(NO_ACCESS_RIGHTS);
 		}
 		break;
 	case 'get_survey':
@@ -885,10 +885,10 @@ switch(@$_GET['func']) {
 				ob_end_clean();
 				echo html_ajax_convert($content);
 			} else {
-				echo htmlentities(NO_ACCESS_RIGHTS);
+				echo htmlconvert(NO_ACCESS_RIGHTS);
 			}
 		} else {
-			echo htmlentities(NO_ACCESS_RIGHTS);
+			echo htmlconvert(NO_ACCESS_RIGHTS);
 		}
 		break;
 	case 'get_forum_survey':
@@ -934,7 +934,7 @@ switch(@$_GET['func']) {
 	case 'search_member':
 		echo '[';
 		if($_POST['username'] != '') {
-			$db->query('SELECT username FROM '.DB_PRE.'ecp_user WHERE username LIKE \'%'.strsave(htmlspecialchars($_POST['username'])).'%\' LIMIT 10');
+			$db->query('SELECT username FROM '.DB_PRE.'ecp_user WHERE username LIKE \'%'.strsave(charhtmlconvert($_POST['username'])).'%\' LIMIT 10');
 			$i = 0;
 			while($row = $db->fetch_assoc()) {
 				if($i++ != 0) echo ',';
@@ -950,7 +950,7 @@ switch(@$_GET['func']) {
 			$i = 0;
 			while($row = $db->fetch_assoc()) {
 				if($i++ != 0) echo ',';
-				echo html_ajax_convert('["'.htmlentities($row['name']).'", "'.htmlentities($row['kname']).'"]');
+				echo html_ajax_convert('["'.htmlconvert($row['name']).'", "'.htmlconvert($row['kname']).'"]');
 			}
 		}
 		echo ']';
@@ -1017,7 +1017,7 @@ switch(@$_GET['func']) {
 				}
 				$tplcw = new smarty;
 				if($limit[0] > 1)
-				$tplcw->assign('seiten', makepagelink_ajax('?section=clanwars&gameID='.$_GET['gameID'].'&teamID='.$_GET['teamID'].'&matchtypeID='.$_GET['matchtypeID'].'&xonx='.$_GET['xonx'].'&sortby='.$_GET['sortby'].'&art='.$_GET['art'].'', 'return load_wars('.$_GET['gameID'].', '.$_GET['teamID'].', '.$_GET['matchtypeID'].', \''.$_GET['xonx'].'\', \''.$_GET['sortby'].'\', \''.$_GET['art'].'\', {nr});', @$_GET['page'], $limit[0]));
+				$tplcw->assign('seiten', makepagelink_ajax('?section=clanwars&amp;gameID='.$_GET['gameID'].'&amp;teamID='.$_GET['teamID'].'&amp;matchtypeID='.$_GET['matchtypeID'].'&amp;xonx='.$_GET['xonx'].'&amp;sortby='.$_GET['sortby'].'&amp;art='.$_GET['art'].'', 'return load_wars('.$_GET['gameID'].', '.$_GET['teamID'].', '.$_GET['matchtypeID'].', \''.$_GET['xonx'].'\', \''.$_GET['sortby'].'\', \''.$_GET['art'].'\', {nr});', @$_GET['page'], $limit[0]));
 				$tplcw->assign('clanwars', $clanwars);
 				$tplcw->display(DESIGN.'/tpl/clanwars/overview.html');
 				$inhalt['clanwars'] = html_ajax_convert(ob_get_contents());
@@ -1157,7 +1157,7 @@ switch(@$_GET['func']) {
 							$text = $db->fetch_assoc('SELECT * FROM '.DB_PRE.'ecp_texte WHERE name = "THREAD_MOVE" AND lang = \'de\'');
 						}
 						$search = array('{username}', '{link}');
-						$replace = array($db->result(DB_PRE.'ecp_user', 'username', 'ID = '.$array['vonID']), '<a href="?section=forum&action=thread&threadID='.(int)$_GET['id'].'&boardID='.(int)$_GET['newboard'].'">?section=forum&action=thread&threadID='.(int)$_GET['id'].'&boardID='.(int)$_GET['newboard'].'</a>');
+						$replace = array($db->result(DB_PRE.'ecp_user', 'username', 'ID = '.$array['vonID']), '<a href="?section=forum&amp;action=thread&amp;threadID='.(int)$_GET['id'].'&amp;boardID='.(int)$_GET['newboard'].'">?section=forum&amp;action=thread&amp;threadID='.(int)$_GET['id'].'&amp;boardID='.(int)$_GET['newboard'].'</a>');
 						message_send($array['vonID'], 0, $text['content2'], str_replace($search, $replace, $text['content']), 0, 1);
 					}
 					$db->query('UPDATE '.DB_PRE.'ecp_forum_abo SET boID = '.(int)$_GET['newboard'].' WHERE thID = '.(int)$_GET['id']);
@@ -1247,7 +1247,7 @@ switch(@$_GET['func']) {
 				if($_POST['answer'] == '') {
 					echo NOT_NEED_ALL_INPUTS;
 				} else {
-					if($db->query('INSERT INTO '.DB_PRE.'ecp_forum_survey_answers (fsID, answer) VALUES ('.(int)$_GET['id'].', \''.strsave(htmlspecialchars($_POST['answer'])).'\')')) {
+					if($db->query('INSERT INTO '.DB_PRE.'ecp_forum_survey_answers (fsID, answer) VALUES ('.(int)$_GET['id'].', \''.strsave(charhtmlconvert($_POST['answer'])).'\')')) {
 						echo 'ok';
 					}
 				}
@@ -1271,7 +1271,7 @@ switch(@$_GET['func']) {
 				if($_POST['answer'] == '') {
 					echo NOT_NEED_ALL_INPUTS;
 				} else {
-					if($db->query('UPDATE '.DB_PRE.'ecp_forum_survey_answers SET answer = \''.strsave(htmlspecialchars($_POST['answer'])).'\' WHERE answerID = '.(int)$_GET['id'])) {
+					if($db->query('UPDATE '.DB_PRE.'ecp_forum_survey_answers SET answer = \''.strsave(charhtmlconvert($_POST['answer'])).'\' WHERE answerID = '.(int)$_GET['id'])) {
 						echo 'ok';
 					}
 				}
@@ -1328,7 +1328,7 @@ switch(@$_GET['func']) {
 				}
 			}
 		} else {
-			echo htmlentities(ACCESS_DENIED);
+			echo htmlconvert(ACCESS_DENIED);
 		}
 		break;
 	case 'thread_vote':
@@ -1625,9 +1625,9 @@ echo '
 							}
 						} else {
 							if(isset($error)) {
-								echo $error.'<br /><a href="index.php?section=admin&site=downloads">Back to Page</a>';
+								echo $error.'<br /><a href="index.php?section=admin&amp;site=downloads">Back to Page</a>';
 							} else {
-								header1('index.php?section=admin&site=downloads&show=true');
+								header1('index.php?section=admin&amp;site=downloads&amp;show=true');
 							}
 						}
 						break;
@@ -1815,7 +1815,7 @@ echo '
 						if(@$_SESSION['rights']['admin']['teams']['add'] OR @$_SESSION['rights']['superadmin']) {
 							$tpl = new smarty;
 							$tpl->assign('sid', session_name().'='.session_id());
-							$tpl->assign('url', 'ajax_checks.php?func=admin&site=team_upload');
+							$tpl->assign('url', 'ajax_checks.php?func=admin&amp;site=team_upload');
 							ob_start();
 							$tpl->display(DESIGN.'/tpl/admin/upload'.(UPLOAD_METHOD == 'old' ? '_old' : '').'.html');
 							$content = ob_get_contents();
@@ -1858,9 +1858,9 @@ echo '
 							}						
 						} else {
 							if(isset($error)) {
-								echo $error.'<br /><a href="?section=admin&site=teams">Back to page</a>';
+								echo $error.'<br /><a href="?section=admin&amp;site=teams">Back to page</a>';
 							} else {
-								header1('?section=admin&site=teams');
+								header1('?section=admin&amp;site=teams');
 							}	
 						}
 						break;
@@ -1916,10 +1916,10 @@ echo '
 								html_convert_array($row);
 								echo json_encode ($row);
 							} else {
-								echo '{"error" : "'.htmlentities(NO_ENTRIES_ID).'"}';
+								echo '{"error" : "'.htmlconvert(NO_ENTRIES_ID).'"}';
 							}
 						} else {
-							echo '{"error" : "'.htmlentities(NO_ADMIN_RIGHTS).'"}';
+							echo '{"error" : "'.htmlconvert(NO_ADMIN_RIGHTS).'"}';
 						}
 						break;
 					case 'team_order':
@@ -2004,7 +2004,7 @@ echo '
 						break;	
 					case 'get_games':
 						if(@$_SESSION['rights']['admin']['clanwars']['games_add'] OR @$_SESSION['rights']['admin']['clanwars']['games_edit'] OR @$_SESSION['rights']['superadmin']) {
-							$db->query('SELECT gamename, gameID, gameshort, icon FROM '.DB_PRE.'ecp_wars_games ORDER BY gamename');
+							$db->query('SELECT gamename, gameID, gameshort, icon, icon_big FROM '.DB_PRE.'ecp_wars_games ORDER BY gamename');
 							$games = array();
 							while($row = $db->fetch_assoc()) {
 								$games[] = $row;
@@ -2022,7 +2022,7 @@ echo '
 						break;
 					case 'edit_games':
 						if(@$_SESSION['rights']['admin']['clanwars']['games_edit'] OR @$_SESSION['rights']['superadmin']) {
-							$row = $db->fetch_assoc('SELECT gamename, gameshort, icon, fightus FROM '.DB_PRE.'ecp_wars_games WHERE gameID = '.(int)$_GET['id']);
+							$row = $db->fetch_assoc('SELECT gamename, gameshort, icon, icon_big, fightus FROM '.DB_PRE.'ecp_wars_games WHERE gameID = '.(int)$_GET['id']);
 							html_convert_array($row);
 							echo json_encode($row);
 						} else {
@@ -2051,7 +2051,7 @@ echo '
 							$tpl->assign('maps', $maps);
 							$tpl->assign('anzahl',$anzahl);
 							if($limit[0] > 1)
-								$tpl->assign('seiten', makepagelink_ajax('#', 'return load_content(\'maps\', \'ajax_checks.php?func=admin&site=get_maps&page={nr}\');', @$_GET['page'], $limit[0]));
+								$tpl->assign('seiten', makepagelink_ajax('#', 'return load_content(\'maps\', \'ajax_checks.php?func=admin&amp;site=get_maps&amp;page={nr}\');', @$_GET['page'], $limit[0]));
 							ob_start();
 							$tpl->display(DESIGN.'/tpl/admin/games_maps.html');
 							$content = ob_get_contents();
@@ -2170,9 +2170,9 @@ echo '
 									}								
 								} else {
 									if(isset($error)) {
-										echo $error.'<br /><a href="?section=admin&site=clanwars">Back to Page</a>'; 
+										echo $error.'<br /><a href="?section=admin&amp;site=clanwars">Back to Page</a>'; 
 									} else {
-										header1('index.php?section=admin&site=clanwars');
+										header1('index.php?section=admin&amp;site=clanwars');
 									}
 								}
 							} else {
@@ -2257,9 +2257,12 @@ echo '
 					case 'game_delete':
 						if(@$_SESSION['rights']['admin']['games']['del'] OR @$_SESSION['rights']['superadmin']) {
 							$result = $db->query('SELECT warID FROM '.DB_PRE.'ecp_wars WHERE gID = '.(int)$_GET['id']);
+                            
 							while($row = mysql_fetch_assoc($result)) {
 								clanwar_delete($row['warID']);
 							}
+                            $db->query('DELETE FROM '.DB_PRE.'ecp_games_user WHERE game_id = '.(int)$_GET['id']);
+							                       
 							if($db->query('DELETE FROM '.DB_PRE.'ecp_wars_games WHERE gameID = '.(int)$_GET['id'])) {
 								if($db->query('DELETE FROM '.DB_PRE.'ecp_wars_locations WHERE gID = '.(int)$_GET['id']));
 								echo 'ok';
@@ -2309,7 +2312,7 @@ echo '
 							ob_end_clean();
 							echo html_ajax_convert($content);
 						} else {
-							echo htmlentities(NO_ADMIN_RIGHTS);
+							echo htmlconvert(NO_ADMIN_RIGHTS);
 						}
 						break;
 					case 'awards_overview':
@@ -2355,7 +2358,7 @@ echo '
 							$db->query('SELECT username FROM '.DB_PRE.'ecp_user WHERE ID = 0'.@$search.' ORDER BY username ASC');
 							while($row1 = $db->fetch_assoc()) {
 								html_convert_array($row1);
-								@$players .= htmlspecialchars($row1['username']).', ';
+								@$players .= charhtmlconvert($row1['username']).', ';
 							}
 							$row['spieler']  = substr(@$players, 0, strlen(@$players)-2);
 							echo json_encode($row);
@@ -2382,13 +2385,13 @@ echo '
 								echo html_ajax_convert(NO_ENTRIES_ID);
 							}
 						} else {
-							echo htmlentities(NO_ADMIN_RIGHTS);
+							echo htmlconvert(NO_ADMIN_RIGHTS);
 						}
 						break;
 					case 'fightus_finish':
 						if(@$_SESSION['rights']['admin']['fightus']['close'] OR @$_SESSION['rights']['superadmin']) {
 							if($db->query('UPDATE '.DB_PRE.'ecp_fightus SET vonID = '.$_SESSION['userID'].', bearbeitet = 1 WHERE fightusID = '.(int)$_GET['id'])) {
-								echo html_ajax_convert('<a href="?section=user&id='.$_SESSION['userID'].'">'.$_SESSION['username'].'</a>');
+								echo html_ajax_convert('<a href="?section=user&amp;id='.$_SESSION['userID'].'">'.$_SESSION['username'].'</a>');
 							}
 						} else {
 							echo html_ajax_convert(NO_ADMIN_RIGHTS);
@@ -2420,7 +2423,7 @@ echo '
 					case 'joinus_finish':
 						if(@$_SESSION['rights']['admin']['joinus']['close'] OR @$_SESSION['rights']['superadmin']) {
 							if($db->query('UPDATE '.DB_PRE.'ecp_joinus SET closedby = '.$_SESSION['userID'].', closed = 1 WHERE joinID = '.(int)$_GET['id'])) {
-								echo html_ajax_convert('<a href="?section=user&id='.$_SESSION['userID'].'">'.$_SESSION['username'].'</a>');
+								echo html_ajax_convert('<a href="?section=user&amp;id='.$_SESSION['userID'].'">'.$_SESSION['username'].'</a>');
 							}
 						} else {
 							echo html_ajax_convert(NO_ADMIN_RIGHTS);
@@ -2510,7 +2513,7 @@ echo '
 							$row['answers'] = $antworten;
 							echo json_encode($row);
 						} else {
-							echo json_encode(array('error', htmlentities(NO_ADMIN_RIGHTS)));
+							echo json_encode(array('error', htmlconvert(NO_ADMIN_RIGHTS)));
 						}
 						break;
 					case 'forum_order':
@@ -2568,7 +2571,7 @@ echo '
 							html_convert_array($row);
 							echo json_encode($row);
 						} else {
-							echo json_encode(array('error', htmlentities(NO_ADMIN_RIGHTS)));
+							echo json_encode(array('error', htmlconvert(NO_ADMIN_RIGHTS)));
 						}
 						break;
 					case 'edit_auto':
@@ -2646,7 +2649,7 @@ echo '
 						break;
 					case 'add_user_buch':
 						if(@$_SESSION['rights']['admin']['clankasse']['add_user'] OR @$_SESSION['rights']['superadmin']) {
-							$userid = @$db->result(DB_PRE.'ecp_user', 'ID', 'username = \''.strsave(htmlspecialchars($_POST['username'])).'\'');
+							$userid = @$db->result(DB_PRE.'ecp_user', 'ID', 'username = \''.strsave(charhtmlconvert($_POST['username'])).'\'');
 							if(!$userid) { $db->close(); die(USER_NOT_FOUND); }
 							if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_clankasse_member (`monatgeld`, `verwendung`, `userID`) VALUES (%f, \'%s\', %d)', (float)str_replace(',', '.', $_POST['betrag_user']), strsave($_POST['userverwendung']), @$userid))) {
 								echo 'ok';
@@ -2670,7 +2673,7 @@ echo '
 							html_convert_array($row);
 							echo json_encode($row);
 						} else {
-							echo json_encode(array('error', htmlentities(NO_ADMIN_RIGHTS)));
+							echo json_encode(array('error', htmlconvert(NO_ADMIN_RIGHTS)));
 						}
 						break;
 					case 'get_clank_user':
@@ -2784,7 +2787,7 @@ echo '
 								echo 'ok';
 							}
 						} else {
-							echo htmlentities(NO_ADMIN_RIGHTS);
+							echo htmlconvert(NO_ADMIN_RIGHTS);
 						}
 						break;
 					case 'del_menu_link':
@@ -2793,7 +2796,7 @@ echo '
 								echo 'ok';
 							}
 						} else {
-							echo htmlentities(NO_ADMIN_RIGHTS);
+							echo htmlconvert(NO_ADMIN_RIGHTS);
 						}
 						break;
 					case 'get_menu_link':
@@ -2836,7 +2839,7 @@ echo '
 							$db->query('SELECT suche, ersetze, linkID FROM '.DB_PRE.'ecp_menu_links WHERE sprache = "'.strsave($_GET['lang']).'" ORDER BY suche ASC');
 							$links = array();
 							while($row = $db->fetch_assoc()) {
-								$row['ersetze'] = htmlspecialchars($row['ersetze']);
+								$row['ersetze'] = charhtmlconvert($row['ersetze']);
 								$links[] =$row;
 							}
 							ob_start();
@@ -2849,7 +2852,7 @@ echo '
 							ob_end_clean();
 							echo html_ajax_convert($content);
 						} else {
-							echo htmlentities(NO_ADMIN_RIGHTS);
+							echo htmlconvert(NO_ADMIN_RIGHTS);
 						}
 						break;
 					case 'get_link':
@@ -2875,7 +2878,7 @@ echo '
 								echo 'ok';
 							}
 						} else {
-							echo htmlentities(NO_ADMIN_RIGHTS);
+							echo htmlconvert(NO_ADMIN_RIGHTS);
 						}
 						break;
 					case 'get_links':
@@ -2894,7 +2897,7 @@ echo '
 							ob_end_clean();
 							echo html_ajax_convert($content);
 						} else {
-							echo htmlentities(NO_ADMIN_RIGHTS);
+							echo htmlconvert(NO_ADMIN_RIGHTS);
 						}
 						break;
 					case 'gallery_create_folder':
@@ -2910,7 +2913,7 @@ echo '
 								}
 							}
 						} else {
-							echo htmlentities(NO_ADMIN_RIGHTS);
+							echo htmlconvert(NO_ADMIN_RIGHTS);
 						}
 						break;
 					case 'get_gallery_kate':
@@ -2943,10 +2946,10 @@ echo '
 								}
 								echo json_encode($row);
 							} else {
-								echo '{"error" : "'.htmlentities(NO_ENTRIES_ID).'"}';
+								echo '{"error" : "'.htmlconvert(NO_ENTRIES_ID).'"}';
 							}
 						} else {
-							echo '{"error" : "'.htmlentities(NO_ADMIN_RIGHTS).'"}';
+							echo '{"error" : "'.htmlconvert(NO_ADMIN_RIGHTS).'"}';
 						}
 						break;
 					case 'get_gallery_kates':
@@ -3070,9 +3073,9 @@ echo '
 							}	
 						} else {
 						if(isset($error)) {
-								echo $error.'<br /><a href="index.php?section=admin&site=gallery&func=viewgallery&id='.(int)$_GET['id'].'">Back to Page</a>';
+								echo $error.'<br /><a href="index.php?section=admin&amp;site=gallery&amp;func=viewgallery&amp;id='.(int)$_GET['id'].'">Back to Page</a>';
 							} else {
-								header1('index.php?section=admin&site=gallery&func=viewgallery&id='.(int)$_GET['id']);
+								header1('index.php?section=admin&amp;site=gallery&amp;func=viewgallery&amp;id='.(int)$_GET['id']);
 							}	
 						}
 						break;
@@ -3190,10 +3193,10 @@ echo '
 								html_convert_array($row);
 								echo json_encode($row);
 							} else {
-								echo '{"error" : "'.htmlentities(NO_ENTRIES_ID).'"}';
+								echo '{"error" : "'.htmlconvert(NO_ENTRIES_ID).'"}';
 							}
 						} else {
-							echo '{"error" : "'.htmlentities(NO_ADMIN_RIGHTS).'"}';
+							echo '{"error" : "'.htmlconvert(NO_ADMIN_RIGHTS).'"}';
 						}
 						break;
 					case 'del_rank':
@@ -3251,7 +3254,7 @@ echo '
 								if($db->result(DB_PRE.'ecp_members', 'COUNT(userID)', 'teamID = '.(int)$_POST['teamID'].' AND userID = '.(int)$_GET['id'])) {
 									echo USER_ALLREADY_IN_TEAM;
 								} else {
-									if($db->query('INSERT INTO '.DB_PRE.'ecp_members (`userID`, `teamID`, `name`, `aufgabe`, `aktiv`, posi) VALUES ('.(int)$_GET['id'].', '.(int)$_POST['teamID'].', \''.strsave(htmlspecialchars($_POST['username'])).'\', \''.strsave($_POST['task']).'\', '.(int)@$_POST['aktiv'].', 99)')) {
+									if($db->query('INSERT INTO '.DB_PRE.'ecp_members (`userID`, `teamID`, `name`, `aufgabe`, `aktiv`, posi) VALUES ('.(int)$_GET['id'].', '.(int)$_POST['teamID'].', \''.strsave(charhtmlconvert($_POST['username'])).'\', \''.strsave($_POST['task']).'\', '.(int)@$_POST['aktiv'].', 99)')) {
 										echo 'ok';
 									}
 								}

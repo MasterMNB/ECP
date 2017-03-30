@@ -7,9 +7,13 @@
 			$tpl->assign('text', str_replace(array('{zeit}', '{username}'), array(date(LONG_DATE, $last), $_SESSION['username']), ACCOUNT_START_TEXT));
 			$tpl->assign('awards', $db->result(DB_PRE.'ecp_awards', 'COUNT(awardID)', 'eingetragen > '.$last));
 			$tpl->assign('downloads', $db->result(DB_PRE.'ecp_downloads', 'COUNT(dID)', 'datum > '.$last));
-			$tpl->assign('clanwars', $db->result(DB_PRE.'ecp_wars', 'COUNT(warID)', 'status = 1 AND datum > '.$last));
-			$tpl->assign('threads', $db->result(DB_PRE.'ecp_forum_threads', 'COUNT(threadID)', 'datum > '.$last));
-			$tpl->assign('fcomments', $db->result(DB_PRE.'ecp_forum_comments', 'COUNT(comID)', 'adatum > '.$last));
+            $tpl->assign('events', $db->result(DB_PRE.'ecp_calendar', 'COUNT(calID)', '(access = "" OR '.$_SESSION['access_search'].') AND datum2 > '.$last)); 
+			$tpl->assign('guestbook', $db->result(DB_PRE.'ecp_comments', 'COUNT(comID)', 'bereich = "guestbook" AND datum > '.$last));
+            $tpl->assign('clanwars', $db->result(DB_PRE.'ecp_wars', 'COUNT(warID)', 'status = 1 AND datum > '.$last));
+			//$tpl->assign('threads', $db->result(DB_PRE.'ecp_forum_threads', 'COUNT(threadID)', 'datum > '.$last));
+			$tpl->assign('threads', $db->result(DB_PRE.'ecp_forum_threads AS a LEFT JOIN '.DB_PRE.'ecp_forum_boards AS b ON ( a.bID = b.boardID ) LEFT JOIN '.DB_PRE.'ecp_forum_boards AS c ON ( b.boardparentID = c.boardID )', 'COUNT(threadID)', 'datum > '.$last.' AND (b.rightsread = "" OR  '.str_replace('access', 'b.rightsread', $_SESSION['access_search']).') AND (c.rightsread = "" OR  '.str_replace('access', 'c.rightsread', $_SESSION['access_search']).')'));
+			//$tpl->assign('fcomments', $db->result(DB_PRE.'ecp_forum_comments', 'COUNT(comID)', 'adatum > '.$last));
+            $tpl->assign('fcomments', $db->result(DB_PRE.'ecp_forum_comments AS a LEFT JOIN '.DB_PRE.'ecp_forum_boards AS b ON ( a.boardID = b.boardID ) LEFT JOIN '.DB_PRE.'ecp_forum_boards AS c ON ( b.boardparentID = c.boardID )', 'COUNT(comID)', 'adatum > '.$last.' AND (b.rightsread = "" OR  '.str_replace('access', 'b.rightsread', $_SESSION['access_search']).') AND (c.rightsread = "" OR  '.str_replace('access', 'c.rightsread', $_SESSION['access_search']).')'));
 			$tpl->assign('galleries', $db->result(DB_PRE.'ecp_gallery', 'COUNT(galleryID)', '(access = "" OR '.$_SESSION['access_search'].') AND datum > '.$last));
 			$tpl->assign('links', $db->result(DB_PRE.'ecp_links', 'COUNT(linkID)', 'eingetragen > '.$last));
 			$tpl->assign('messages', $db->result(DB_PRE.'ecp_messages', 'COUNT(msgID)', 'touser = '.$_SESSION['userID'].' AND readed = 0 AND datum > '.$last));
@@ -70,7 +74,7 @@
 				ob_end_clean();
 				main_content(REGISTER, $content, '',1);
 			} else {
-				$sql = sprintf('INSERT INTO '.DB_PRE.'ecp_user (`username`, `email`, `passwort`, `status`, `registerdate`, country) VALUES (\'%s\', \'%s\', \'%s\', %d, %d, \'%s\');', strsave(htmlspecialchars($_POST['username'])), strsave($_POST['email']), sha1($_POST['password1']), (SEND_ACCOUNT_CODE) ? 0 : 1, time(), strsave($_POST['country']));
+				$sql = sprintf('INSERT INTO '.DB_PRE.'ecp_user (`username`, `email`, `passwort`, `status`, `registerdate`, country, `sex`) VALUES (\'%s\', \'%s\', \'%s\', %d, %d, \'%s\', \'%s\');', strsave(charhtmlconvert($_POST['username'])), strsave($_POST['email']), sha1($_POST['password1']), (SEND_ACCOUNT_CODE) ? 0 : 1, time(), strsave($_POST['country']), strsave($_POST['sex']));
 				if($db->query($sql)) {
 					$userid = $db->last_id();				
 					$db->query('INSERT INTO '.DB_PRE.'ecp_user_config (userID) VALUES ('.$userid.')');
@@ -121,7 +125,7 @@
 			ob_end_clean();
 			main_content(LOGIN, $content, '',1);
 		} else {
-			$sql = 'SELECT ID, status, username, email, lastforum FROM '.DB_PRE.'ecp_user WHERE username = "'.strsave(htmlspecialchars($_POST['username'])).'" AND passwort = \''.sha1($_POST['password']).'\'';
+			$sql = 'SELECT ID, status, username, email, lastforum FROM '.DB_PRE.'ecp_user WHERE username = "'.strsave(charhtmlconvert($_POST['username'])).'" AND passwort = \''.sha1($_POST['password']).'\'';
 			$row = $db->fetch_assoc($sql);
 			if($row['ID']) {
 				/* 	Status checken
@@ -153,7 +157,7 @@
 						header1('?section=account');						
 					}
 					$search = array('{bantime}', '{banuser}', '{endbantime}');
-					$repalce = array(date(LONG_DATE, $ban['bantime']), '<a href="?section=user&id='.$ban['vonID'].'">'.$ban['username'].'</a>', date(LONG_DATE, $ban['endbantime']));
+					$repalce = array(date(LONG_DATE, $ban['bantime']), '<a href="?section=user&amp;id='.$ban['vonID'].'">'.$ban['username'].'</a>', date(LONG_DATE, $ban['endbantime']));
 					$bantxt = str_replace($search, $repalce, BANNED);
 					table(ACCESS_DENIED, $bantxt.$ban['grund']);
 				} elseif ($row['status'] == 1) {
@@ -244,7 +248,7 @@
 				$content = ob_get_contents();
 				ob_end_clean();			
 				main_content(ACCOUNT_SEND_PW, $content, '', 1);
-			} elseif(!$db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'username = \''.strsave(htmlspecialchars($_POST['username'])).'\' AND email = \''.strsave($_POST['email']).'\'')) {
+			} elseif(!$db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'username = \''.strsave(charhtmlconvert($_POST['username'])).'\' AND email = \''.strsave($_POST['email']).'\'')) {
 				table(ERROR, ACCOUNT_ERROR_SEND_PW);
 				$tpl = new smarty();
 				ob_start();
@@ -261,7 +265,7 @@
 				ob_end_clean();			
 				main_content(ACCOUNT_SEND_PW, $content, '', 1);
 			} else {
-				$userid = $db->result(DB_PRE.'ecp_user', 'ID', 'username = \''.strsave(htmlspecialchars($_POST['username'])).'\' AND email = \''.strsave($_POST['email']).'\'');
+				$userid = $db->result(DB_PRE.'ecp_user', 'ID', 'username = \''.strsave(charhtmlconvert($_POST['username'])).'\' AND email = \''.strsave($_POST['email']).'\'');
 				$db->query('DELETE FROM '.DB_PRE.'ecp_user_codes WHERE art="lost_pw" AND userID = '.$userid);
 				$string = get_random_string(10, 2);
 				$db->query('SELECT * FROM '.DB_PRE.'ecp_texte WHERE name = "ACCOUNT_SEND_PW"');
@@ -270,7 +274,7 @@
 					$text[$row['lang']] = $row;								
 				}
 				$search = array('{username}', '{code}', '{link}');
-				$replace = array($_POST['username'], $string, SITE_URL.'?section=account&action=change_pw&userid='.$userid.'&code='.$string);
+				$replace = array($_POST['username'], $string, SITE_URL.'?section=account&amp;action=change_pw&amp;userid='.$userid.'&amp;code='.$string);
 				if(!isset($text[LANGUAGE]))	$lang = 'de'; else $lang = LANGUAGE;					
 								
 				if(send_email($_POST['email'], $text[$lang]['content2'], str_replace($search, $replace, $text[$lang]['content'])) AND $db->query('INSERT INTO '.DB_PRE.'ecp_user_codes (userID, code, art) VALUES ('.$userid.', \''.strsave($string).'\', \'lost_pw\')')) {	
@@ -347,10 +351,10 @@
 		if($pic != '') {
 			unlink('images/avatar/'.$_SESSION['userID'].'_'.$pic);
 			if($db->query('UPDATE '.DB_PRE.'ecp_user SET avatar = "" WHERE ID = '.$_SESSION['userID'])) {
-				header1('?section=account&action=avatar');
+				header1('?section=account&amp;action=avatar');
 			}
 		} 
-		header1('?section=account&action=avatar');
+		header1('?section=account&amp;action=avatar');
 	}
 	function account_del_userpic() {
 		global $db;
@@ -358,10 +362,10 @@
 		if($pic != '') {
 			unlink('images/user/'.$_SESSION['userID'].'_'.$pic);
 			if($db->query('UPDATE '.DB_PRE.'ecp_user SET user_pic = "" WHERE ID = '.$_SESSION['userID'])) {
-				header1('?section=account&action=avatar');
+				header1('?section=account&amp;action=avatar');
 			}
 		} 
-		header1('?section=account&action=avatar');
+		header1('?section=account&amp;action=avatar');
 	}	
 	function account_avatar_upload() {
 		global $db;
@@ -387,7 +391,7 @@
 						resize_picture($_FILES['avatar']['tmp_name'], AVATAR_MAX_Y, 'images/avatar/'.$_SESSION['userID'].'_'.$sha1, 85, 0);
 					}
 					if($db->query('UPDATE '.DB_PRE.'ecp_user SET avatar = \''.strsave($sha1).'\' WHERE ID = '.$_SESSION['userID'])) {
-						header1('?section=account&action=avatar');
+						header1('?section=account&amp;action=avatar');
 					}					
 				} elseif ($size[0] > AVATAR_MAX_X OR $size[1] > AVATAR_MAX_Y) {
 					table(ERROR, ACCOUNT_AVATAR_TO_BIG2);
@@ -397,7 +401,7 @@
 						umask(0);
 						chmod('images/avatar/'.$_SESSION['userID'].'_'.$sha1, CHMOD);
 						if($db->query('UPDATE '.DB_PRE.'ecp_user SET avatar = \''.strsave($sha1).'\' WHERE ID = '.$_SESSION['userID'])) {
-							header1('?section=account&action=avatar');
+							header1('?section=account&amp;action=avatar');
 						}
 					}
 				}
@@ -429,7 +433,7 @@
 						resize_picture($_FILES['user']['tmp_name'], USER_PIC_Y, 'images/user/'.$_SESSION['userID'].'_'.$sha1, 85, 0);
 					}
 					if($db->query('UPDATE '.DB_PRE.'ecp_user SET user_pic = \''.strsave($sha1).'\' WHERE ID = '.$_SESSION['userID'])) {
-						header1('?section=account&action=avatar');
+						header1('?section=account&amp;action=avatar');
 					}					
 				} elseif ($size[0] > USER_PIC_X OR $size[1] > USER_PIC_Y) {
 					table(ERROR, ACCOUNT_USERPIC_TO_BIG2);
@@ -439,7 +443,7 @@
 						umask(0);
 						chmod('images/user/'.$_SESSION['userID'].'_'.$sha1, CHMOD);
 						if($db->query('UPDATE '.DB_PRE.'ecp_user SET user_pic = \''.strsave($sha1).'\' WHERE ID = '.$_SESSION['userID'])) {
-							header1('?section=account&action=avatar');
+							header1('?section=account&amp;action=avatar');
 						}
 					}
 				}
@@ -449,7 +453,7 @@
 	function account_edit() {
 		global $db;
 		if(isset($_POST['submit'])) {
-			if($db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'username = \''.strsave(htmlspecialchars($_POST['username'])).'\' AND ID != '.$_SESSION['userID']) OR $_POST['username'] == '') {
+			if($db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'username = \''.strsave(charhtmlconvert($_POST['username'])).'\' AND ID != '.$_SESSION['userID']) OR $_POST['username'] == '') {
 				$_POST['username'] = $db->result(DB_PRE.'ecp_user', 'username', 'ID = '.$_SESSION['userID']);
 				table(ERROR, ACCOUNT_ALLREADY_EXIST);
 			}
@@ -473,16 +477,16 @@
 						mauspad = \'%s\',internet = \'%s\',festplatte = \'%s\',
 						headset = \'%s\',aboutme = \'%s\', wohnort = \'%s\', aim = \'%s\', koord = \'%s\'  
 					WHERE ID = '.$_SESSION['userID'],
-					strsave(htmlspecialchars(@$_POST['username'])), strsave(@$_POST['email']), strsave(@$_POST['country']), (@$_POST['sex'] == 'male' ? 'male' : 'female'), strsave(comment_save(@$_POST['signatur'])),
-					strsave(htmlspecialchars(@$_POST['realname'])), (int)@$geburtstag[2].'-'.(int)@$geburtstag[1].'-'.(int)@$geburtstag[0], strsave(htmlspecialchars(check_url(@$_POST['homepage']))),
-					strsave(htmlspecialchars(@$_POST['icq'])),strsave(htmlspecialchars(@$_POST['msn'])),strsave(htmlspecialchars(@$_POST['yahoo'])),
-					strsave(htmlspecialchars(@$_POST['skype'])),strsave(htmlspecialchars(@$_POST['xfire'])),strsave(htmlspecialchars(@$_POST['clanname'])),
-					strsave(htmlspecialchars(@$_POST['clanirc'])),strsave(htmlspecialchars(check_url(@$_POST['clanhomepage']))),strsave(htmlspecialchars(@$_POST['clanhistory'])),
-					strsave(htmlspecialchars(@$_POST['cpu'])),strsave(htmlspecialchars(@$_POST['mainboard'])),strsave(htmlspecialchars(@$_POST['ram'])),
-					strsave(htmlspecialchars(@$_POST['gkarte'])),strsave(htmlspecialchars(@$_POST['skarte'])),strsave(htmlspecialchars(@$_POST['monitor'])),
-					strsave(htmlspecialchars(@$_POST['maus'])),strsave(htmlspecialchars(@$_POST['tastatur'])),strsave(htmlspecialchars(@$_POST['mauspad'])),
-					strsave(htmlspecialchars(@$_POST['internet'])),strsave(htmlspecialchars(@$_POST['festplatte'])),strsave(htmlspecialchars(@$_POST['headset'])),strsave(comment_save(@$_POST['aboutme'])), strsave(htmlspecialchars(@$_POST['wohnort'])), strsave(htmlspecialchars(@$_POST['aim'])), strsave(htmlspecialchars(@$_POST['koord'])));
-					$_SESSION['username'] = htmlspecialchars($_POST['username']);
+					strsave(charhtmlconvert(@$_POST['username'])), strsave(@$_POST['email']), strsave(@$_POST['country']), (@$_POST['sex'] == 'male' ? 'male' : 'female'), strsave(comment_save(@$_POST['signatur'])),
+					strsave(charhtmlconvert(@$_POST['realname'])), (int)@$geburtstag[2].'-'.(int)@$geburtstag[1].'-'.(int)@$geburtstag[0], strsave(charhtmlconvert(check_url(@$_POST['homepage']))),
+					strsave(charhtmlconvert(@$_POST['icq'])),strsave(charhtmlconvert(@$_POST['msn'])),strsave(charhtmlconvert(@$_POST['yahoo'])),
+					strsave(charhtmlconvert(@$_POST['skype'])),strsave(charhtmlconvert(@$_POST['xfire'])),strsave(charhtmlconvert(@$_POST['clanname'])),
+					strsave(charhtmlconvert(@$_POST['clanirc'])),strsave(charhtmlconvert(check_url(@$_POST['clanhomepage']))),strsave(charhtmlconvert(@$_POST['clanhistory'])),
+					strsave(charhtmlconvert(@$_POST['cpu'])),strsave(charhtmlconvert(@$_POST['mainboard'])),strsave(charhtmlconvert(@$_POST['ram'])),
+					strsave(charhtmlconvert(@$_POST['gkarte'])),strsave(charhtmlconvert(@$_POST['skarte'])),strsave(charhtmlconvert(@$_POST['monitor'])),
+					strsave(charhtmlconvert(@$_POST['maus'])),strsave(charhtmlconvert(@$_POST['tastatur'])),strsave(charhtmlconvert(@$_POST['mauspad'])),
+					strsave(charhtmlconvert(@$_POST['internet'])),strsave(charhtmlconvert(@$_POST['festplatte'])),strsave(charhtmlconvert(@$_POST['headset'])),strsave(comment_save(@$_POST['aboutme'])), strsave(charhtmlconvert(@$_POST['wohnort'])), strsave(charhtmlconvert(@$_POST['aim'])), strsave(charhtmlconvert(@$_POST['koord'])));
+					$_SESSION['username'] = charhtmlconvert($_POST['username']);
 					$_SESSION['email'] = $_POST['email'];
 			if($db->query($sql)) {
 				if($_POST['password1'] != '') {
@@ -531,7 +535,7 @@
 			if(isset($_GET['agree'])) {
 				$str = get_random_string(10, 2);
 				$db->query('DELETE FROM '.DB_PRE.'ecp_user_codes WHERE userID = '.$_SESSION['userID'].' AND art = \'account_del\'');
-				if(send_email($_SESSION['email'], ACCOUNT_DELETE, CONFIRM_LINK.': '.SITE_URL.'?section=account&action=confirmdel&code='.$str.'&id='.$_SESSION['userID'])) {
+				if(send_email($_SESSION['email'], ACCOUNT_DELETE, CONFIRM_LINK.': '.SITE_URL.'?section=account&amp;action=confirmdel&amp;code='.$str.'&amp;id='.$_SESSION['userID'])) {
 					if($db->query('INSERT INTO '.DB_PRE.'ecp_user_codes (`userID`, `code`, `art`) VALUES (\''.$_SESSION['userID'].'\', \''.strsave($str).'\', \'account_del\')')) {
 						table(INFO, EMAIL_SEND_SUCCESS);
 					}
@@ -760,6 +764,44 @@
 		ob_end_clean();			
 		main_content(BUDDYLIST, $content, '', 1);			
 	}
+	function user_games() {
+		if(isset($_POST['addgame'])) {
+				global $db;
+                if(!$db->fetch_assoc('SELECT * FROM '.DB_PRE.'ecp_games_user WHERE game_id='. strsave($_POST['addgame']) .' AND user_id='. $_SESSION['userID'] .'')) {							
+				    $db->fetch_assoc('INSERT INTO '.DB_PRE.'ecp_games_user (`game_id`, `user_id`) VALUES (\''. strsave($_POST['addgame']) .'\', \''. $_SESSION['userID'] .'\')');
+                }
+		}
+		
+		if(isset($_GET['delgame'])) 	{
+				global $db;
+				$db->fetch_assoc('DELETE FROM '.DB_PRE.'ecp_games_user WHERE user_id = '. $_SESSION['userID'] .' AND game_id = '. strsave($_GET['delgame']) .'');
+		}
+
+		$user_games = array();
+		$games_list = array();
+				
+		global $db;
+		$db->query('SELECT T1.*, T2.* FROM '.DB_PRE.'ecp_wars_games T1, '.DB_PRE.'ecp_games_user T2 WHERE T1.gameID = T2.game_id AND T2.user_id ='. $_SESSION['userID'] .' ORDER BY T1.gamename ASC');
+			
+		while($row = $db->fetch_assoc()) {
+				$user_games[] = $row;
+		}
+			
+		$db->query('SELECT * FROM '.DB_PRE.'ecp_wars_games ORDER BY gamename ASC');
+			
+		while($row = $db->fetch_assoc()) {
+				$games_list[] = $row;        
+		}
+				
+		$tpl = new smarty;
+		$tpl->assign('user_games', $user_games);
+		$tpl->assign('games_list', $games_list);
+		ob_start();
+		$tpl->display(DESIGN.'/tpl/account/user_games.html');
+		$content = ob_get_contents();
+		ob_end_clean();
+		main_content(USERGAMES, $content, '', 1);
+	}
 	function account_stats() {
 		global $db, $countries;
 		$tpl = new smarty;
@@ -887,20 +929,23 @@ $conditions = array('LIMIT' 	=> LIMIT_COMMENTS,
 			break;	
 			case 'stats':
 				account_stats();
-			break;			
+			break;
+			case 'user_games':
+				user_games();
+			break;		
 			case 'guestbook':
 	            $conditions['action'] = 'add';
-	            $conditions['link'] = '?section=account&action=guestbook';
+	            $conditions['link'] = '?section=account&amp;action=guestbook';
 	            comments_get('user', $_SESSION['userID'], $conditions, 0,1, "user");
 	         break;
 	         case 'addcomment':
 	            $conditions['action'] = 'add';
-	            $conditions['link'] = '?section=account&action=guestbook';
+	            $conditions['link'] = '?section=account&amp;action=guestbook';
 	            comments_add('user', $_SESSION['userID'], $conditions, "user");      
 	         break;
 	         case 'editcomment':
 	            $conditions['action'] = 'edit';
-	            $conditions['link'] = '?section=account&action=guestbook';
+	            $conditions['link'] = '?section=account&amp;action=guestbook';
 	            comments_edit('user', $_SESSION['userID'], (int)$_GET['id'], $conditions, "user");      
 	         break;				
 			default:

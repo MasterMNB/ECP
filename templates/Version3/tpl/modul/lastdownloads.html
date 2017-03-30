@@ -1,5 +1,5 @@
 {foreach from=$dls item=n}
-<span class="Tips info_line" title="{$n.name}"><img src="templates/{$smarty.const.DESIGN}/images/dot.gif" /> <a href="?section=downloads&action=viewdl&id={$n.dID}">{$n.name|truncate:24:"...":true}</a>
+<span class="Tips info_line" title="{$n.name}"><img src="templates/{$smarty.const.DESIGN}/images/dot.gif" /> <a href="?section=downloads&amp;action=viewdl&amp;id={$n.dID}">{$n.name|truncate:24:"...":true}</a>
 <span class="tipcontents"><table width="250" border="0" cellspacing="0" cellpadding="1">
   <tr>
     <td width="100"><strong>{$smarty.const.USER}:</strong></td>

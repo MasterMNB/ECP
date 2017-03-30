@@ -24,7 +24,7 @@ window.addEvent('load', function() {
 $('cw_form').addEvent('submit', function(e) {
 	new Event(e).stop();
 	new Request.JSON({
-		url: "ajax_checks.php?func=get_clanwars&gameID="+selected_value('gameID')+"&teamID="+selected_value('teamID')+"&matchtypeID="+selected_value('matchtypeID')+"&xonx="+selected_value('xonx')+"&page=1", 
+		url: "ajax_checks.php?func=get_clanwars&amp;gameID="+selected_value('gameID')+"&amp;teamID="+selected_value('teamID')+"&amp;matchtypeID="+selected_value('matchtypeID')+"&amp;xonx="+selected_value('xonx')+"&amp;page=1", 
 		onRequest: function () { waitercw.start();  }, 
 		onSuccess: function(data) {
 			waitercw.stop();

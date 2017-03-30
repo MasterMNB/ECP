@@ -1,8 +1,9 @@
 <?php
 	require('smarty/Smarty.class.php');
+    include_once('constants.php');
 	include_once('db.daten.php');
 	include_once('classes.php');
-	include_once('constant.php');	
+	include_once('settings.php');	
 	// Sprache prüfen
 	include('templates/'.DESIGN.'/design.php');
 	include('language/'.LANGUAGE.'.php');	

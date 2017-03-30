@@ -11,8 +11,8 @@
 {foreach from=$news item=n}
   <tr>
     <td>{$n.datum}</td>
-    <td><a href="?section=news&action=comments&id={$n.newsID}">{$n.headline}</a></td>
-    <td><a href="?section=news&action=archiv&tid={$n.topicID}">{$n.topicname}</a></td>
+    <td><a href="?section=news&amp;action=comments&amp;id={$n.newsID}">{$n.headline}</a></td>
+    <td><a href="?section=news&amp;action=archiv&amp;tid={$n.topicID}">{$n.topicname}</a></td>
     <td>{$n.comments}</td>
     <td>{$n.hits}</td>
   </tr>

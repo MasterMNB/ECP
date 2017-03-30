@@ -38,7 +38,7 @@ include_once('../../../../../inc/functions.php');
 		while($row = $db->fetch_assoc()) {
 			$row['headline'] = json_decode($row['headline'], true);
 			if(isset($row['headline'][LANGUAGE]) AND $row['headline'][LANGUAGE] != '') $row['headline'] = $row['headline'][LANGUAGE]; else $row['headline'] = $row['headline'][DEFAULT_LANG];      			
-			echo '<option value="'.$row['cmsID'].'">'.htmlspecialchars($row['headline']).'</option>';
+			echo '<option value="'.$row['cmsID'].'">'.charhtmlconvert($row['headline']).'</option>';
 		}
 		?></select>
     	<br />    

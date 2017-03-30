@@ -13,7 +13,7 @@
     <td>{if $a.url}<a href="{$a.url}" target="_blank">{$a.eventname}</a>{else}{$a.eventname}{/if}</td>
     <td><img src="images/games/{$a.icon}" alt="" title="{$a.gamename}" /> {$a.tname}</td>
     <td>{if $a.platz < 4}<img src="templates/{$smarty.const.DESIGN}/images/award_{$a.platz}.png" alt="" title="{$a.platz}. {$smarty.const.PLACE}"/>{else}{$a.platz}.{/if}</td>
-    <td><img src="templates/{$smarty.const.DESIGN}/images/comments.png" alt="" title="{$smarty.const.COMMENTS}" / > <a href="?section=awards&action=view&id={$a.awardID}">({$a.comments})</a></td>
+    <td><img src="templates/{$smarty.const.DESIGN}/images/comments.png" alt="" title="{$smarty.const.COMMENTS}" / > <a href="?section=awards&amp;action=view&amp;id={$a.awardID}">({$a.comments})</a></td>
   </tr>
   {/foreach}
 </table>

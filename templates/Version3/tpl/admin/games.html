@@ -3,7 +3,8 @@
 	<legend>{$smarty.const.GAMES_ADD}</legend>
     <div><label for="name">{$smarty.const.NAME}:</label><input type="text" id="name" name="name" class="required" /></div>
     <div><label for="short">{$smarty.const.GAMES_SHORT}:</label><input type="text" id="short" name="short" class="required" /></div>    
-    <div><label for="icon">{$smarty.const.GAMES_ICON}:</label><select class="validate-selection selected" id="icon" name="icon">{$icons}</select><span id="game_icon"></span></div>  
+    <div><label for="icon">{$smarty.const.GAMES_ICON}:</label><select class="validate-selection selected" id="icon" name="icon">{$icons}</select><span id="game_icon"></span></div>
+    <div><label for="icon_big">{$smarty.const.GAMES_ICON_BIG}:</label><select class="validate-selection selected" id="icon_big" name="icon_big">{$icons_big}</select><span id="game_icon_big"></span></div>  
     <div><label for="fightus">{$smarty.const.TEAMS_FIGHTUS}:</label><input type="checkbox" value="1" class="checkbox" id="fightus" name="fightus" /></div>
     <br /><br /><div style="clear:both"></div><input type="submit" class="submit" name="submit" value="{$smarty.const.ADD}" id="games_submit" /> <img style="visibility: hidden" src="templates/{$smarty.const.DESIGN}/images/spinner.gif" id="games_spinner" alt="" title="{$smarty.const.LOADING}" />
 </fieldset>

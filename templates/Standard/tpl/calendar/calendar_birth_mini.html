@@ -5,7 +5,7 @@
     <td><strong>{$smarty.const.AGE}:</strong></td>
   </tr>{foreach from=$data item=b}
   <tr>
-    <td><img src="images/flaggen/{$b.country}.gif" alt="" title="{$b.countryname}" /> <a href="?section=user&id={$b.ID}">{$b.username}</a></td>
+    <td><img src="images/flaggen/{$b.country}.gif" alt="" title="{$b.countryname}" /> <a href="?section=user&amp;id={$b.ID}">{$b.username}</a></td>
     <td>{$b.alter}</td>
   </tr>{/foreach}
 </table>

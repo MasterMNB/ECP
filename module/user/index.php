@@ -84,6 +84,13 @@ function user_details($id) {
 				$last[] = $row;
 			}		
 			$tpl->assign('last', $last);
+			$user_games = array();
+			$db->query('SELECT T1.*, T2.* FROM '.DB_PRE.'ecp_wars_games T1, '.DB_PRE.'ecp_games_user T2 WHERE T1.gameID = T2.game_id AND T2.user_id = '. $id);
+	
+			while($row1 = $db->fetch_assoc()) {
+				$user_games[] = $row1;
+			}
+			$tpl->assign('user_games', $user_games);
 			$user = $db->fetch_assoc('SELECT `registerdate`, rankname, `clicks`, `logins`, `comments`, a.money, iconname, `msg_s`, `msg_r`, `profilhits`, `scheine`, `2er`, `3er`, `4er`, COUNT(b.scheinID) as scheine FROM '.DB_PRE.'ecp_user LEFT JOIN '.DB_PRE.'ecp_user_stats as a ON (a.userID = ID) LEFT JOIN '.DB_PRE.'ecp_ranks ON (rID = rankID) LEFT JOIN '.DB_PRE.'ecp_lotto_scheine as b ON (b.userID = ID) WHERE ID = '.$id.' GROUP BY ID');
 			$db->query('SELECT SUM(gewinn) as gewinn, art FROM '.DB_PRE.'ecp_lotto_gewinner WHERE userID = '.$id.' GROUP BY art');
 			$user['wonmoney'] = 0;

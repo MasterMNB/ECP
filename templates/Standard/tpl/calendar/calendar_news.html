@@ -11,7 +11,7 @@
       <tr class="{cycle name="news" values="row_odd,row_even"}">
       	<td>{$n.datum}</td>
         <td>{$n.headline|truncate:26:"...":true}</td>
-     	<td><img src="images/flaggen/{$n.country}.gif" alt="" title="{$n.countryname}" /> <a href="?section=user&id={$n.userID}">{$n.username}</a></td>
+     	<td><img src="images/flaggen/{$n.country}.gif" alt="" title="{$n.countryname}" /> <a href="?section=user&amp;id={$n.userID}">{$n.username}</a></td>
         <td>{$n.topicname}</td>
         <td>{$n.comments}</td>
       </tr>

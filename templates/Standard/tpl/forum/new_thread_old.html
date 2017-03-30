@@ -1,12 +1,12 @@
 <span id="swf"></span>
-<form name="thread_add" id="thread_add" method="post" enctype="multipart/form-data" action="?section=forum&action=newtopic&boardID={$smarty.get.boardID}&rand={$rand}">
+<form name="thread_add" id="thread_add" method="post" enctype="multipart/form-data" action="?section=forum&amp;action=newtopic&amp;boardID={$smarty.get.boardID}&amp;rand={$rand}">
 <fieldset>
    <legend> {$smarty.const.FORUM_NEW_TOPIC} </legend>
    <div><label for="name">{$smarty.const.NAME}:</label><input type="text" id="name" maxlength="100" class="required" name="name" value="{$name}" /></div>
    {if !$smarty.session.userID AND !$func}<div><label for="content">{$smarty.const.USERNAME}:</label><input type="text" name="username" class="required" id="username" maxlength="25" /></div>{/if}   
    <div><label for="content">{$smarty.const.CONTENT}:</label><textarea name="comment" class="com_input required" id="comment" rows="10" cols="50">{$comment}</textarea></div>
 	  {if !$smarty.session.userID AND !$func}    
-      <div><label for="captcha">{$smarty.const.CAPTCHA}:</label><div style="float: left;"><img id="captcha_pic" src="captcha.php?chars=4&minsize=22&maxsize=26" alt="" title="{$smarty.const.CAPTCHA}" /> <img src="templates/{$smarty.const.DESIGN}/images/refresh.png" alt="" title="{$smarty.const.CAPTCHA_RELOAD}" style="cursor:pointer" onclick="reload_captcha('captcha_pic', 'chars=4&minsize=22&maxsize=26', 'captcha');" /><br /><input name="captcha" type="text" class="required validate-captcha smallinput" id="captcha"/></div></div>{/if}       
+      <div><label for="captcha">{$smarty.const.CAPTCHA}:</label><div style="float: left;"><img id="captcha_pic" src="captcha.php?chars=4&amp;minsize=22&amp;maxsize=26" alt="" title="{$smarty.const.CAPTCHA}" /> <img src="templates/{$smarty.const.DESIGN}/images/refresh.png" alt="" title="{$smarty.const.CAPTCHA_RELOAD}" style="cursor:pointer" onclick="reload_captcha('captcha_pic', 'chars=4&amp;minsize=22&amp;maxsize=26', 'captcha');" /><br /><input name="captcha" type="text" class="required validate-captcha smallinput" id="captcha"/></div></div>{/if}       
       {if $attach OR $umfrage}
       <div id="tabBoxExample">
         <ul class="tabSet">

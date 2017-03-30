@@ -30,8 +30,8 @@
     </tr>
     {foreach from=$user item=u}
     <tr class="{cycle values="row_odd, row_even"}">
-      <td><img src="images/flaggen/{$u.country}.gif" alt="{$u.countryname}" title="{$u.countryname}" /> <img src="templates/{$smarty.const.DESIGN}/images/{if $u.online}online{else}offline{/if}.png" alt="{if $u.online}{$smarty.const.ONLINE}{else}{$smarty.const.OFFLINE}{/if}" title="{if $u.online}{$smarty.const.ONLINE}{else}{$smarty.const.OFFLINE}{/if}" /> <a href="?section=user&id={$u.ID}" title="{$u.username|escape:"quotes"}" class="Tips">{$u.username}<span class="tipcontents">
-        <div style="width:370px"> {if $u.user_pic}<img src="images/user/{$u.ID}_{$u.user_pic}" alt="" title="{$u.username|escape:"quotes"}" style="max-width: 90px; float: left; margin: 5px;" />{else}<img src="templates/{$smarty.const.DESIGN}/images/nopic.png" alt="" title="{$smarty.const.NO_USER_PIC}" style="max-width: 90px; float: left; margin: 5px;" />{/if}
+      <td><img src="images/flaggen/{$u.country}.gif" alt="{$u.countryname}" title="{$u.countryname}" /> <img src="templates/{$smarty.const.DESIGN}/images/{if $u.online}online{else}offline{/if}.png" alt="{if $u.online}{$smarty.const.ONLINE}{else}{$smarty.const.OFFLINE}{/if}" title="{if $u.online}{$smarty.const.ONLINE}{else}{$smarty.const.OFFLINE}{/if}" /> <a href="?section=user&id={$u.ID}" title="{$u.username}" class="Tips">{$u.username}<span class="tipcontents">
+        <div style="width:370px"> {if $u.user_pic}<img src="images/user/{$u.ID}_{$u.user_pic}" alt="" title="{$u.username}" style="max-width: 90px; float: left; margin: 5px;" />{else}<img src="templates/{$smarty.const.DESIGN}/images/nopic.png" alt="" title="{$smarty.const.NO_USER_PIC}" style="max-width: 90px; float: left; margin: 5px;" />{/if}
           <table border="0"cellspacing="0" width="270" cellpadding="1" style="float: left;">
             <tr>
               <td><strong>{$smarty.const.USERNAME}:</strong></td>
@@ -65,7 +65,7 @@
       <td><img src="images/ranks/{$u.iconname}" alt="" title="{$u.rankname}" /></td>
       <td align="center">{if $u.homepage}<a href="{$u.homepage}" target="_blank"><img src="templates/{$smarty.const.DESIGN}/images/homepage.png" alt="{$u.homepage}" title="{$u.homepage}" /></a>{else}-{/if}</td>
       <td align="right">{if $u.xfire}<a href="http://profile.xfire.com/{$u.xfire}" target="_blank" class="Tips" title="XFire {$u.xfire}"><img src="templates/{$smarty.const.DESIGN}/images/xfire.png" alt="" title="{$u.xfire}" /><span class="tipcontents"><img src="http://miniprofile.xfire.com/bg/bg/type/0/{$u.xfire}.png" width="440" height="111" /></span></a> {/if}{if $u.icq}<a href="http://www.icq.com/people/about_me.php?uin={$u.icqtrim}" target="_blank"><img src="http://web.icq.com/whitepages/online?icq={$u.icqtrim}&img=5" border="0" alt="" title="{$u.icq}" /></a> {/if}</td>
-      <td align="right"><img src="templates/{$smarty.const.DESIGN}/images/message.png" alt="" onclick="return send_message_user({$u.ID},'{$u.username|escape:"quotes"}');" title="{$smarty.const.USER_SEND_MESSAGE}" class="imgpointer" /> <img src="templates/{$smarty.const.DESIGN}/images/buddy_add.png" alt="" onclick="return add_buddy({$u.ID});" title="{$smarty.const.BUDDY_ADD}" class="imgpointer" /></td>
+      <td align="right"><img src="templates/{$smarty.const.DESIGN}/images/message.png" alt="" onclick="return send_message_user({$u.ID},'{$u.username}');" title="{$smarty.const.USER_SEND_MESSAGE}" class="imgpointer" /> <img src="templates/{$smarty.const.DESIGN}/images/buddy_add.png" alt="" onclick="return add_buddy({$u.ID});" title="{$smarty.const.BUDDY_ADD}" class="imgpointer" /></td>
     </tr>
     {/foreach}
   </table>

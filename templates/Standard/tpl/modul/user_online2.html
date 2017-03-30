@@ -1,0 +1,6 @@
+{if $guest}<img src="templates/{$smarty.const.DESIGN}/images/group.png" alt="" />&nbsp;<b><u>{$smarty.const.GUESTS} :</u></b> {$guest}<br />{/if}
+{foreach from=$Member item=tmp}
+	 {if $tmp.admin}<img src="templates/{$smarty.const.DESIGN}/images/user_add.png" alt="" />{else}<img src="templates/{$smarty.const.DESIGN}/images/user.png" alt="" />{/if}
+	 &nbsp;<a href="?section=user&amp;id={$tmp.uID}">{$tmp.username}</a><br />
+{/foreach}
+

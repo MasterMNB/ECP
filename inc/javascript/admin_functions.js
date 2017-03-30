@@ -630,8 +630,12 @@ function games_edit(id) {
 				    $('name').value = data.gamename;
 					$('short').value = data.gameshort;
 					$('game_icon').set('html', '<img src="images/games/'+data.icon+'" alt="" title="'+data.gamename+'" />');
+                    $('game_icon_big').set('html', '<img src="images/games_big/'+data.icon_big+'" alt="" title="'+data.gamename+'" />');
 					(data.fightus == 1) ? $('fightus').checked = true : $('fightus').checked = false;
-					for(i=0;i<$('icon').options.length;i++) {
+                    for(i=0;i<$('icon_big').options.length;i++) {
+						($('icon_big').options[i].value == data.icon_big) ? $('icon_big').options[i].selected = true : $('icon_big').options[i].selected = false;
+					}
+                    for(i=0;i<$('icon').options.length;i++) {
 						($('icon').options[i].value == data.icon) ? $('icon').options[i].selected = true : $('icon').options[i].selected = false;
 					}			
 					$('games_spinner').style.visibility = 'hidden';

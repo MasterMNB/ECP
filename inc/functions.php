@@ -1,4 +1,15 @@
 <?php
+// ---------> Grundlegende Funktionen <------------ //
+function htmlconvert($string) {
+    $string = htmlentities($string, ENT_XHTML, ECP_CHARSET);
+    return $string;
+}
+
+function charhtmlconvert($string) {
+    $string = htmlspecialchars($string, ENT_XHTML, ECP_CHARSET);
+    return $string;
+}
+
 // ---------> Funktionen ohne Rückgabewert <------------ //
 function show_content() {	
 	global $db;
@@ -20,7 +31,7 @@ function show_content() {
 				include('module/news/index.php');
 			}
 		} else {
-			header1('?section=cms&id='.$start[1]);
+			header1('?section=cms&amp;id='.$start[1]);
 		}
 	}
 }
@@ -76,18 +87,20 @@ function footer() {
 	$endzeit = explode(' ',substr(microtime(),1));
 	$endzeit = $endzeit[1]+$endzeit[0];
 	$laufzeit = $endzeit-$startzeit;
-	echo '<center>© 2005-'.date('Y').' <a href="http://www.easy-clanpage.de" target="_blank">ECP '.VERSION.'</a> :: '.SQL_QUERIES.': '.$db->number_querys().' :: '.PHP_RUN_TIME.': '.number_format($laufzeit,3,'.','').' Sec.</center>';
+	echo '<div id="footer_ECP">© 2005-'.date('Y').' <a href="http://www.easy-clanpage.de" target="_blank">ECP '.VERSION.'</a> :: '.SQL_QUERIES.': '.$db->number_querys().' :: '.PHP_RUN_TIME.': '.number_format($laufzeit,3,'.','').' Sec.</div>';
 }
 function javascripts() {
 	echo '
 <script type="text/javascript">
    DESIGN = \''.DESIGN.'\';
    LANG = \''.LANGUAGE.'\';
-</script>	
+</script>
+<script src="inc/javascript/jquery.1.72.js" type="text/javascript">
+$.noConflict();</script>
 <script src="inc/javascript/lang/'.LANGUAGE.'.js?v30" type="text/javascript"></script>
-<script src="inc/javascript/mootools.php?v30" type="text/javascript"></script>
-<script src="inc/javascript/functions.js?v30" type="text/javascript"></script>
-<script src="inc/javascript/admin_functions.js?v30" type="text/javascript"></script>
+<script src="inc/javascript/mootools.php?v301" type="text/javascript"></script>
+<script src="inc/javascript/functions.js?v301" type="text/javascript"></script>
+<script src="inc/javascript/admin_functions.js?v301" type="text/javascript"></script>
 <script src="inc/javascript/tinymce/tiny_mce_gzip.js" type="text/javascript"></script>
 <script type="text/javascript" src="inc/javascript/calender/calendar.js"></script>
 <script type="text/javascript" src="inc/javascript/calender/lang/calendar-'.LANGUAGE.'.js"></script>
@@ -110,11 +123,11 @@ tinyMCE_GZ.init({
 		editor_selector : "admininput",
 		mode : "textareas",
 		language: "'.((LANGUAGE == 'gb' OR LANGUAGE == 'us') ? 'en' : LANGUAGE).'",
-		plugins : "ecp,inlinepopups,style,layer,table,save,advimage,advlink,emotions,iespell,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras",
+		plugins : "ecp,inlinepopups,style,layer,table,save,advimage,advlink,emotions,iespell,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,youtube",
 		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
 		theme_advanced_buttons2 : "copy,paste,cut,|,search,replace,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink,anchor",
 		theme_advanced_buttons3 : "tablecontrols,|,cleanup,code",
-		theme_advanced_buttons4 : "hr,removeformat,visualaid,|,sub,sup,|,image,charmap,emotions,iespell,media,|,print,|,fullscreen",
+		theme_advanced_buttons4 : "hr,removeformat,visualaid,|,sub,sup,|,image,charmap,emotions,iespell,media,youtube,|,print,|,fullscreen",
 		theme_advanced_buttons5 : "insertlayer,moveforward,movebackward,absolute,attribs,|,styleprops,|,visualchars,nonbreaking,|,forecolor,backcolor,|,ecpphp,ecpquote,ecpflags,ecpuser,ecppages",
 		theme_advanced_toolbar_location : "top",
 		theme_advanced_toolbar_align : "left",
@@ -375,7 +388,9 @@ tinyMCE_GZ.init({
 		  +"|onmouseup|style|title|type],"
 		+"var[class|dir<ltr?rtl|id|lang|onclick|ondblclick|onkeydown|onkeypress"
 		  +"|onkeyup|onmousedown|onmousemove|onmouseout|onmouseover|onmouseup|style"
-		  +"|title]",
+		  +"|title],"
+		+"iframe[src|title|width|height|allowfullscreen|frameborder|class|id],"
+		+"object[classid|width|height|codebase|*],param[name|value|_value|*],embed[type|width|height|src|*]",
 		theme_advanced_resizing: true,
 		theme_advanced_resize_horizontal : true,
 		convert_urls : true,
@@ -392,16 +407,17 @@ tinyMCE_GZ.init({
 		editor_selector : "com_input",
 		mode : "textareas",
 		language: "'.((LANGUAGE == 'gb' OR LANGUAGE == 'us') ? 'en' : LANGUAGE).'",
-		plugins : "inlinepopups,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,ecp",
+		plugins : "inlinepopups,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,ecp,youtube",
 		theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
 		theme_advanced_buttons2 : "copy,paste,cut,|,search,replace,|,bullist,numlist,|,outdent,indent,|,undo,redo,|,link,unlink",
-		theme_advanced_buttons3 : "sub,sup,|,image,charmap,emotions,iespell,media,advhr,|,print,|,fullscreen,|,forecolor,backcolor,|,ecpphp,ecpquote,ecpflags,ecpuser",
+		theme_advanced_buttons3 : "sub,sup,|,image,charmap,emotions,iespell,media,youtube,advhr,|,print,|,fullscreen,|,forecolor,backcolor,|,ecpphp,ecpquote,ecpflags,ecpuser",
 		theme_advanced_toolbar_location : "top",
 		theme_advanced_toolbar_align : "left",
 		theme_advanced_path_location : "bottom",
 		plugin_insertdate_dateFormat : "%Y-%m-%d",
 		plugin_insertdate_timeFormat : "%H:%M:%S",
-		extended_valid_elements : "a[name|href|target|title],img[class|src|border=0|alt|title|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+		extended_valid_elements : "object[classid|width|height|codebase|*],param[name|value|_value|*],embed[type|width|height|src|*],"
+								  + "a[name|href|target|title],img[class|src|border=0|alt|title|width|height|align|onmouseover|onmouseout|name],hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
 		theme_advanced_resizing: true,
 	    forced_root_block : false,
 	    force_br_newlines : true,
@@ -522,7 +538,7 @@ function check_img_size($arg) {
        for($i=1;$i<=7;$i++) {
            @$id .= rand(0,9);
        }
-       $after_replace = htmlspecialchars($string[1]);
+       $after_replace = charhtmlconvert($string[1]);
        // Replace 2 spaces with "&nbsp; " so non-tabbed code indents without making huge long lines.
        $after_replace = str_replace("  ", "&nbsp; ", $after_replace);
        // now Replace 2 spaces with " &nbsp;" to catch odd #s of spaces.
@@ -600,7 +616,7 @@ function form_country($wert = 'de') {
 	$str = '';
 	foreach($countries AS $key => $value) {
 		$sub = ($key == $wert) ? ' selected="selected"' : '';
-		$str .= '<option value="'.$key.'"'.$sub.'>'.htmlentities($value).'</option>'."\n";
+		$str .= '<option value="'.$key.'"'.$sub.'>'.htmlconvert($value).'</option>'."\n";
 	}
 	return $str;
 }
@@ -745,7 +761,7 @@ function comments_get($bereich, $id, $conditions, $ajax = 0, $border =1, $sessio
 				$row['countryname'] = @$countries[$row['country']];
 				($row['sex'] == 'male')? $row['sextext'] = MALE : $row['sextext'] = FEMALE;			
 				if($row['edits']) {
-					$row['edit'] = str_replace(array('{anzahl}', '{von}', '{last}'), array($row['edits'], '<a href="?section=user&id='.$row['editby'].'">'.$row['editfrom'].'</a>', date(LONG_DATE, $row['editdatum'])), COMMENT_EDIT_TXT);
+					$row['edit'] = str_replace(array('{anzahl}', '{von}', '{last}'), array($row['edits'], '<a href="?section=user&amp;id='.$row['editby'].'">'.$row['editfrom'].'</a>', date(LONG_DATE, $row['editdatum'])), COMMENT_EDIT_TXT);
 				}			
 				$row['datum'] = date(LONG_DATE, $row['datum']);
 				$row['quote'] = $row['beitrag'];
@@ -867,13 +883,13 @@ function comments_add($bereich, $id, $conditions, $session = false) {
 												'.DB_PRE.'ecp_comments (`subID`, `bereich`, `author`, `beitrag`, `email`, `homepage`, `datum`, `IP`) 
 											VALUES 
 												(%d,"%s", "%s", "%s", "%s", "%s", %d, "%s")', 
-											$id, $bereich, strsave(htmlspecialchars($_POST['author'])), strsave(comment_save($_POST['commentstext'])), strsave(htmlspecialchars($_POST['email'])), strsave(htmlspecialchars(check_url($_POST['homepage']))), time(), $_SERVER['REMOTE_ADDR']);
+											$id, $bereich, strsave(charhtmlconvert($_POST['author'])), strsave(comment_save($_POST['commentstext'])), strsave(charhtmlconvert($_POST['email'])), strsave(charhtmlconvert(check_url($_POST['homepage']))), time(), $_SERVER['REMOTE_ADDR']);
 							if($db->query($sql)) {
 								$lastid = $db->last_id();
 								if($conditions['ORDER'] == 'ASC') {
 									$anzahl = $db->result(DB_PRE.'ecp_comments', 'COUNT(comID)', 'subID = '.$id.' AND bereich = "'.$bereich.'"');
 									$seiten = ceil($anzahl/$conditions['LIMIT']);
-									header1($conditions['link'].'&page='.$seiten.'#com_'.$lastid);
+									header1($conditions['link'].'&amp;page='.$seiten.'#com_'.$lastid);
 								} else {
 									header1($conditions['link'].'#com_'.$lastid);
 								}		
@@ -908,7 +924,7 @@ function comments_add($bereich, $id, $conditions, $session = false) {
 							if($conditions['ORDER'] == 'ASC') {
 								$anzahl = $db->result(DB_PRE.'ecp_comments', 'COUNT(comID)', 'subID = '.$id.' AND bereich = "'.$bereich.'"');
 								$seiten = ceil($anzahl/$conditions['LIMIT']);
-								header1($conditions['link'].'&page='.$seiten.'#com_'.$lastid);
+								header1($conditions['link'].'&amp;page='.$seiten.'#com_'.$lastid);
 							} else {
 								header1($conditions['link'].'#com_'.$lastid);
 							}	
@@ -946,7 +962,7 @@ function comments_edit($bereich, $subid, $id, $conditions, $session = '', $admin
 					$tplc->assign('id', $id);
 					$tplc->assign('edit', 1);
 					$tplc->assign('userID', $com['userID']);
-					$tplc->assign('sub', '&subid='.$subid);
+					$tplc->assign('sub', '&amp;subid='.$subid);
 					foreach($_POST AS $key => $value) $tplc->assign($key,$value);
 					ob_start();
 					$tplc->display(DESIGN.'/tpl/comment_add_edit.html');
@@ -963,7 +979,7 @@ function comments_edit($bereich, $subid, $id, $conditions, $session = '', $admin
 							$tplc->assign('id', $id);
 							$tplc->assign('edit', 1);
 							$tplc->assign('userID', $com['userID']);
-							$tplc->assign('sub', '&subid='.$subid);
+							$tplc->assign('sub', '&amp;subid='.$subid);
 							foreach($_POST AS $key => $value) $tplc->assign($key,$value);
 							ob_start();
 							$tplc->display(DESIGN.'/tpl/comment_add_edit.html');
@@ -975,11 +991,11 @@ function comments_edit($bereich, $subid, $id, $conditions, $session = '', $admin
 												'.DB_PRE.'ecp_comments SET
 												`author` = \'%s\', `beitrag` = \'%s\', `email` = \'%s\', `homepage` = \'%s\', `editdatum` = %d, `editby` = %d, `edits` = edits + 1 
 											WHERE comID = %d',
-											strsave(htmlspecialchars($_POST['author'])), strsave(comment_save($_POST['commentstext'])), strsave(htmlspecialchars($_POST['email'])), strsave(htmlspecialchars(check_url($_POST['homepage']))), time(), $_SESSION['userID'], $id);
+											strsave(charhtmlconvert($_POST['author'])), strsave(comment_save($_POST['commentstext'])), strsave(charhtmlconvert($_POST['email'])), strsave(charhtmlconvert(check_url($_POST['homepage']))), time(), $_SESSION['userID'], $id);
 							if($db->query($sql)) {
 								$anzahl = $db->result(DB_PRE.'ecp_comments', 'COUNT(comID)', 'subID = '.$subid.' AND bereich = "'.$bereich.'" AND comID '.($conditions['ORDER'] == "ASC" ? '<' : '>').' '.$id);
 								$seiten = ceil($anzahl/$conditions['LIMIT']);
-								header1($conditions['link'].'&page='.$seiten.'#com_'.$id);	
+								header1($conditions['link'].'&amp;page='.$seiten.'#com_'.$id);	
 							}
 						}
 					} else {				
@@ -991,7 +1007,7 @@ function comments_edit($bereich, $subid, $id, $conditions, $session = '', $admin
 						if($db->query($sql)) {
 							$anzahl = $db->result(DB_PRE.'ecp_comments', 'COUNT(comID)', 'subID = '.$subid.' AND bereich = "'.$bereich.'" AND comID '.($conditions['ORDER'] == "ASC" ? '<=' : '>=').' '.$id);
 							$seiten = ceil($anzahl/$conditions['LIMIT']);
-							header1($conditions['link'].'&page='.$seiten.'#com_'.$id);
+							header1($conditions['link'].'&amp;page='.$seiten.'#com_'.$id);
 						}					
 					}
 				}
@@ -1001,8 +1017,8 @@ function comments_edit($bereich, $subid, $id, $conditions, $session = '', $admin
 				$tplc->assign('action', $conditions['action']);
 				$tplc->assign('id', $id);
 				$tplc->assign('edit', 1);
-				$tplc->assign('sub', '&subid='.$subid);
-				$tplc->assign('commentstext', htmlentities($com['beitrag']));
+				$tplc->assign('sub', '&amp;subid='.$subid);
+				$tplc->assign('commentstext', htmlconvert($com['beitrag']));
 				$tplc->assign('userID', $com['userID']);
 				$tplc->assign('author', $com['author']);
 				$tplc->assign('homepage', $com['homepage']);
@@ -1039,14 +1055,14 @@ function send_email($to, $title, $content, $html = 0, $from = '', $fromname = ''
 	else 
 		$m->Text($content);		
 	if(SMTP_AKTIV) {
-		$c = $m->Connect(SMTP_HOST, (int)SMTP_PORT, SMTP_USER, SMTP_PASS, 'tls', 10, 'localhost', null, 'plain'); //or die(print_r($m->Result));
+		$c = $m->Connect(SMTP_HOST, (int)SMTP_PORT, SMTP_USER, SMTP_PASS, null, 10, 'localhost', null, 'plain'); //or die(print_r($m->Result));
 	}		
 	
 	return $m->Send(SMTP_AKTIV ? $c : null);
 }
 function header1($location) {
 	if(isset($_GET[session_name()])) {
-		header('Location: '.SITE_URL.$location.'&'.session_name().'='.session_id());
+		header('Location: '.SITE_URL.$location.'&amp;'.session_name().'='.session_id());
 	} else {
 		header('Location: '.SITE_URL.$location);
 	}
@@ -1231,7 +1247,7 @@ function scan_dir($dir, $no_dots=FALSE) {
  	$games = '<option value="0">'.CHOOSE.'</option>';
  	while($row = $db->fetch_assoc()) {
  		($game == $row['gameID']) ? $sub = 'selected="selected"' : $sub = '';
- 		$games .= '<option '.$sub.' value="'.$row['gameID'].'">'.htmlspecialchars($row['gamename']).'</option>';
+ 		$games .= '<option '.$sub.' value="'.$row['gameID'].'">'.charhtmlconvert($row['gamename']).'</option>';
  	}
  	return $games;
 }
@@ -1241,7 +1257,7 @@ function get_teams_form($team = '') {
  	$teams = '<option value="0">'.CHOOSE.'</option>';
  	while($row = $db->fetch_assoc()) {
  		($team == $row['tID']) ? $sub = 'selected="selected"' : $sub = '';
- 		$teams .= '<option '.$sub.' value="'.$row['tID'].'">'.htmlspecialchars($row['tname']).'</option>';
+ 		$teams .= '<option '.$sub.' value="'.$row['tID'].'">'.charhtmlconvert($row['tname']).'</option>';
  	}
  	return $teams;
 }
@@ -1251,7 +1267,7 @@ function get_teams_form_joinus($team = '') {
  	$teams = '<option value="0">'.CHOOSE.'</option>';
  	while($row = $db->fetch_assoc()) {
  		($team == $row['tID']) ? $sub = 'selected="selected"' : $sub = '';
- 		$teams .= '<option '.$sub.' value="'.$row['tID'].'">'.htmlspecialchars($row['tname']).'</option>';
+ 		$teams .= '<option '.$sub.' value="'.$row['tID'].'">'.charhtmlconvert($row['tname']).'</option>';
  	}
  	return $teams;
 }
@@ -1265,7 +1281,7 @@ function get_matchtype_form($match = '', $fightus=1) {
  	$matchtype = '<option value="0">'.CHOOSE.'</option>';
  	while($row = $db->fetch_assoc()) {
  		($match == $row['matchtypeID']) ? $sub = 'selected="selected"' : $sub = '';
- 		$matchtype .= '<option '.$sub.' value="'.$row['matchtypeID'].'">'.htmlspecialchars($row['matchtypename']).'</option>';
+ 		$matchtype .= '<option '.$sub.' value="'.$row['matchtypeID'].'">'.charhtmlconvert($row['matchtypename']).'</option>';
  	}
  	return $matchtype;
 }
@@ -1275,7 +1291,7 @@ function get_xonx_form($xonx = '') {
  	$str = '<option value="0">'.CHOOSE.'</option>';
  	while($row = $db->fetch_assoc()) {
  		($xonx == $row['xonx']) ? $sub = 'selected="selected"' : $sub = '';
- 		$str .= '<option '.$sub.' value="'.$row['xonx'].'">'.htmlspecialchars($row['xonx']).'</option>';
+ 		$str .= '<option '.$sub.' value="'.$row['xonx'].'">'.charhtmlconvert($row['xonx']).'</option>';
  	}
  	return $str;
 }
@@ -1350,8 +1366,9 @@ function find_access($felder) {
 function getMimeType($filename, $filename2) 
 { 
     if (extension_loaded('Fileinfo')) 
+    //if (false)
     { 
-        $finfo = finfo_open(FILEINFO_MIME); 
+        $finfo = finfo_open(FILEINFO_MIME_TYPE); 
         $mimetype = finfo_file($finfo, $filename); 
         finfo_close($finfo); 
         return $mimetype; 
@@ -1528,7 +1545,7 @@ function message_send($to, $from, $title, $msg, $save = 1, $system = 0) {
 			return false;
 		}
 	} else {
-		if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_messages (`touser`, `title`, `msg`, `fromdel`, `datum`, fromuser) VALUES (%d, \'%s\', \'%s\', 0, %d, %d)', (int)$to, strsave(htmlspecialchars($title)), strsave(comment_save($msg)), time(), (int)$from))) {
+		if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_messages (`touser`, `title`, `msg`, `fromdel`, `datum`, fromuser) VALUES (%d, \'%s\', \'%s\', 0, %d, %d)', (int)$to, strsave(charhtmlconvert($title)), strsave(comment_save($msg)), time(), (int)$from))) {
 			$db->query('UPDATE '.DB_PRE.'ecp_user_stats SET msg_r = msg_r + 1 WHERE userID = '.(int)$to);
 			$db->query('UPDATE '.DB_PRE.'ecp_user_stats SET msg_s = msg_s + 1 WHERE userID = '.(int)$from);
 			return true;
@@ -1539,17 +1556,17 @@ function message_send($to, $from, $title, $msg, $save = 1, $system = 0) {
 }
 function makepagelink($link, $page, $pages) {
 	     $page_link = "";
-	     if($page!=1) $page_link .= "&nbsp;<a href=\"$link&page=1\">&laquo;</a>&nbsp;&nbsp;<a href=\"$link&page=".($page-1)."\">‹</a>";
-	     if($page>=5) $page_link .= "&nbsp;<a href=\"$link&page=".($page-4)."\">...</a>";
+	     if($page!=1) $page_link .= "&nbsp;<a href=\"$link&amp;page=1\">&laquo;</a>&nbsp;&nbsp;<a href=\"$link&amp;page=".($page-1)."\">‹</a>";
+	     if($page>=5) $page_link .= "&nbsp;<a href=\"$link&amp;page=".($page-4)."\">...</a>";
 	     if($page+3>=$pages) $pagex=$pages;
 	     else $pagex=$page+3;
 	     for($i=$page-3 ; $i<=$pagex ; $i++) {
 		 if($i<=0) $i=1;
 		 if($i==$page) $page_link .= " ($i)";
-		 else $page_link .= "&nbsp;<a href=\"$link&page=$i"."\">$i</a>";
+		 else $page_link .= "&nbsp;<a href=\"$link&amp;page=$i"."\">$i</a>";
 	     }
-	     if(($pages-$page)>=4) $page_link .= "&nbsp;<a href=\"$link&page=".($page+4)."\">...</a>";
-	     if($page!=$pages) $page_link .= "&nbsp;<a href=\"$link&page=".($page+1)."\">›</a>&nbsp;<a href=\"$link&page=".$pages."\">&raquo;</a>";
+	     if(($pages-$page)>=4) $page_link .= "&nbsp;<a href=\"$link&amp;page=".($page+4)."\">...</a>";
+	     if($page!=$pages) $page_link .= "&nbsp;<a href=\"$link&amp;page=".($page+1)."\">›</a>&nbsp;<a href=\"$link&amp;page=".$pages."\">&raquo;</a>";
 	     return $page_link;
 }
 function get_forum_rating($wert) {
@@ -1623,12 +1640,12 @@ function lgsl_string_html($string)
 {
 	if (function_exists("mb_convert_encoding")) // REQUIRES http://php.net/mbstring
 	{
-		$string = htmlspecialchars($string, ENT_QUOTES);
+		$string = charhtmlconvert($string, ENT_QUOTES);
 		$string = @mb_convert_encoding($string, "HTML-ENTITIES", "UTF-8");
 	}
 	else
 	{
-		$string = htmlentities($string, ENT_QUOTES);
+		$string = htmlconvert($string, ENT_QUOTES);
 	}
 
 	return $string;
@@ -1964,7 +1981,8 @@ function nulluhr() {
 				// add inline attachment '$f' file with ID '$id'
 				$m->Attach(file_get_contents($f), FUNC::mime_type($f), null, null, null, 'attachment', $id);			
 				if(SMTP_AKTIV) {
-					$c = $m->Connect(SMTP_HOST, (int)SMTP_PORT, SMTP_USER, SMTP_PASS, 'tls', 10, 'localhost', null, 'plain'); //or die(print_r($m->Result));
+					//$c = $m->Connect(SMTP_HOST, (int)SMTP_PORT, SMTP_USER, SMTP_PASS, 'tls', 10, 'localhost', null, 'plain'); //or die(print_r($m->Result));
+                    $c = $m->Connect(SMTP_HOST, (int)SMTP_PORT, SMTP_USER, SMTP_PASS, null, 10, 'localhost', null, 'plain'); //or die(print_r($m->Result));
 				}		
 			  if($m->Send(SMTP_AKTIV ? $c : null)) {
 			  	$db->query('UPDATE '.DB_PRE.'ecp_stats SET lastdbbackup = '.strtotime('today 00:00:00'));
@@ -2431,35 +2449,35 @@ function get_url_userpass($url,$type='USER:PASS') {
  	if(!$page) $page = 1;
 	$page_link = "";
 	if($page!=1) 
-		$page_link .= " <a href=\"$link&page=1$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', 1,$ajax).'"' : '')." class=\"$fontclass\">&laquo;</a> <a href=\"$link&page=".($page-1)."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', ($page-1),$ajax).'"' : '')." class=\"$fontclass\" href=\"$link&page=".($page-1)."$sub\">&lsaquo;</a>";
+		$page_link .= " <a href=\"$link&amp;page=1$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', 1,$ajax).'"' : '')." class=\"$fontclass\">&laquo;</a> <a href=\"$link&amp;page=".($page-1)."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', ($page-1),$ajax).'"' : '')." class=\"$fontclass\" href=\"$link&amp;page=".($page-1)."$sub\">&lsaquo;</a>";
 	if($page>=5) 
-		$page_link .= " <a href=\"$link&page=".($page-4)."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', ($page-4),$ajax).'"' : '')." class=\"$fontclass\">...</a>";
+		$page_link .= " <a href=\"$link&amp;page=".($page-4)."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', ($page-4),$ajax).'"' : '')." class=\"$fontclass\">...</a>";
 	if($page+3>=$pages) 
 		$pagex=$pages;
 	else 
 		$pagex=$page+3;
 	for($i=$page-3 ; $i<=$pagex ; $i++) {
 		if($i<=0) $i=1;
-		if($i==$page) $page_link .= " <a href=\"$link&page=$i"."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', $i,$ajax).'"' : '')." class=\"$aktivclass\">$i</a>";
-		else $page_link .= " <a href=\"$link&page=$i"."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', $i,$ajax).'"' : '')." class=\"$fontclass\">$i</a>";
+		if($i==$page) $page_link .= " <a href=\"$link&amp;page=$i"."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', $i,$ajax).'"' : '')." class=\"$aktivclass\">$i</a>";
+		else $page_link .= " <a href=\"$link&amp;page=$i"."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', $i,$ajax).'"' : '')." class=\"$fontclass\">$i</a>";
 	}
 	if(($pages-$page)>=4) 
-		$page_link .= "&nbsp;<a href=\"$link&page=".($page+4)."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', ($page+4),$ajax).'"' : '')." class=\"$fontclass\">...</a>";
+		$page_link .= "&nbsp;<a href=\"$link&amp;page=".($page+4)."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', ($page+4),$ajax).'"' : '')." class=\"$fontclass\">...</a>";
 	if($page!=$pages) 
-		$page_link .= "&nbsp;<a href=\"$link&page=".($page+1)."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', ($page+1),$ajax).'"' : '')." class=\"$fontclass\">&rsaquo;</a> <a href=\"$link&page=".$pages."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', $pages,$ajax).'"' : '')." class=\"$fontclass\">&raquo;</a>";
+		$page_link .= "&nbsp;<a href=\"$link&amp;page=".($page+1)."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', ($page+1),$ajax).'"' : '')." class=\"$fontclass\">&rsaquo;</a> <a href=\"$link&amp;page=".$pages."$sub\" ".($ajax ? 'onclick="'.str_replace('{nr}', $pages,$ajax).'"' : '')." class=\"$fontclass\">&raquo;</a>";
 	return $page_link;
 }
 
 /*
-htmLawed 1.1.5, 31 January 2009
+htmLawed 1.1.14, 8 August 2012
 Copyright Santosh Patnaik
-GPL v3 license
+Dual licensed with LGPL 3 and GPL 2+
 A PHP Labware internal utility; www.bioinformatics.org/phplabware/internal_utilities/htmLawed
 
-See htmLawed_README.txt/.htm
+See htmLawed_README.txt/htm
 */
 
-function htmLawed($t, $C=1, $spec=array()){
+function htmLawed($t, $C=1, $S=array()){
 $C = is_array($C) ? $C : array();
 if(!empty($C['valid_xhtml'])){
  $C['elements'] = empty($C['elements']) ? '*-center-dir-font-isindex-menu-s-strike-u' : $C['elements'];
@@ -2469,8 +2487,7 @@ if(!empty($C['valid_xhtml'])){
 // config eles
 $e = array('a'=>1, 'abbr'=>1, 'acronym'=>1, 'address'=>1, 'applet'=>1, 'area'=>1, 'b'=>1, 'bdo'=>1, 'big'=>1, 'blockquote'=>1, 'br'=>1, 'button'=>1, 'caption'=>1, 'center'=>1, 'cite'=>1, 'code'=>1, 'col'=>1, 'colgroup'=>1, 'dd'=>1, 'del'=>1, 'dfn'=>1, 'dir'=>1, 'div'=>1, 'dl'=>1, 'dt'=>1, 'em'=>1, 'embed'=>1, 'fieldset'=>1, 'font'=>1, 'form'=>1, 'h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'hr'=>1, 'i'=>1, 'iframe'=>1, 'img'=>1, 'input'=>1, 'ins'=>1, 'isindex'=>1, 'kbd'=>1, 'label'=>1, 'legend'=>1, 'li'=>1, 'map'=>1, 'menu'=>1, 'noscript'=>1, 'object'=>1, 'ol'=>1, 'optgroup'=>1, 'option'=>1, 'p'=>1, 'param'=>1, 'pre'=>1, 'q'=>1, 'rb'=>1, 'rbc'=>1, 'rp'=>1, 'rt'=>1, 'rtc'=>1, 'ruby'=>1, 's'=>1, 'samp'=>1, 'script'=>1, 'select'=>1, 'small'=>1, 'span'=>1, 'strike'=>1, 'strong'=>1, 'sub'=>1, 'sup'=>1, 'table'=>1, 'tbody'=>1, 'td'=>1, 'textarea'=>1, 'tfoot'=>1, 'th'=>1, 'thead'=>1, 'tr'=>1, 'tt'=>1, 'u'=>1, 'ul'=>1, 'var'=>1); // 86/deprecated+embed+ruby
 if(!empty($C['safe'])){
-	unset($e['applet'], $e['embed'], $e['iframe'], $e['script']);	
- //unset($e['applet'], $e['embed'], $e['iframe'], $e['object'], $e['script']);
+ unset($e['applet'], $e['embed'], $e['iframe'], $e['object'], $e['script']);
 }
 $x = !empty($C['elements']) ? str_replace(array("\n", "\r", "\t", ' '), '', $C['elements']) : '*';
 if($x == '-*'){$e = array();}
@@ -2486,12 +2503,14 @@ else{
  }
 }
 $C['elements'] =& $e;
-// config denied attrs
-$C['deny_attribute'] = !empty($C['deny_attribute']) ? array_flip(explode(',', str_replace(array("\n", "\r", "\t", ' '), '', $C['deny_attribute']. (!empty($C['safe']) ? ',on*' : '')))) : (!empty($C['safe']) ? array('on*'=>1) : array());
-if(isset($C['deny_attribute']['on*'])){
- unset($C['deny_attribute']['on*']);
- $C['deny_attribute'] += array('onblur'=>1, 'onchange'=>1, 'onclick'=>1, 'ondblclick'=>1, 'onfocus'=>1, 'onkeydown'=>1, 'onkeypress'=>1, 'onkeyup'=>1, 'onmousedown'=>1, 'onmousemove'=>1, 'onmouseout'=>1, 'onmouseover'=>1, 'onmouseup'=>1, 'onreset'=>1, 'onselect'=>1, 'onsubmit'=>1);
+// config attrs
+$x = !empty($C['deny_attribute']) ? str_replace(array("\n", "\r", "\t", ' '), '', $C['deny_attribute']) : '';
+$x = array_flip((isset($x[0]) && $x[0] == '*') ? explode('-', $x) : explode(',', $x. (!empty($C['safe']) ? ',on*' : '')));
+if(isset($x['on*'])){
+ unset($x['on*']);
+ $x += array('onblur'=>1, 'onchange'=>1, 'onclick'=>1, 'ondblclick'=>1, 'onfocus'=>1, 'onkeydown'=>1, 'onkeypress'=>1, 'onkeyup'=>1, 'onmousedown'=>1, 'onmousemove'=>1, 'onmouseout'=>1, 'onmouseover'=>1, 'onmouseup'=>1, 'onreset'=>1, 'onselect'=>1, 'onsubmit'=>1);
 }
+$C['deny_attribute'] = $x;
 // config URL
 $x = (isset($C['schemes'][2]) && strpos($C['schemes'], ':')) ? strtolower($C['schemes']) : 'href: aim, feed, file, ftp, gopher, http, https, irc, mailto, news, nntp, sftp, ssh, telnet; *:file, http, https';
 $C['schemes'] = array();
@@ -2500,7 +2519,7 @@ foreach(explode(';', str_replace(array(' ', "\t", "\r", "\n"), '', $x)) as $v){
  if($x2){$C['schemes'][$x] = array_flip(explode(',', $x2));}
 }
 if(!isset($C['schemes']['*'])){$C['schemes']['*'] = array('file'=>1, 'http'=>1, 'https'=>1,);}
-if(!empty($C['safe']) && empty($C['schemes']['style'])){$C['schemes']['style'] = array('nil'=>1);}
+if(!empty($C['safe']) && empty($C['schemes']['style'])){$C['schemes']['style'] = array('!'=>1);}
 $C['abs_url'] = isset($C['abs_url']) ? $C['abs_url'] : 0;
 if(!isset($C['base_url']) or !preg_match('`^[a-zA-Z\d.+\-]+://[^/]+/(.+?/)?$`', $C['base_url'])){
  $C['base_url'] = $C['abs_url'] = 0;
@@ -2514,6 +2533,7 @@ $C['cdata'] = isset($C['cdata']) ? $C['cdata'] : (empty($C['safe']) ? 3 : 0);
 $C['clean_ms_char'] = empty($C['clean_ms_char']) ? 0 : $C['clean_ms_char'];
 $C['comment'] = isset($C['comment']) ? $C['comment'] : (empty($C['safe']) ? 3 : 0);
 $C['css_expression'] = empty($C['css_expression']) ? 0 : 1;
+$C['direct_list_nest'] = empty($C['direct_list_nest']) ? 0 : 1;
 $C['hexdec_entity'] = isset($C['hexdec_entity']) ? $C['hexdec_entity'] : 1;
 $C['hook'] = (!empty($C['hook']) && function_exists($C['hook'])) ? $C['hook'] : 0;
 $C['hook_tag'] = (!empty($C['hook_tag']) && function_exists($C['hook_tag'])) ? $C['hook_tag'] : 0;
@@ -2524,15 +2544,16 @@ $C['named_entity'] = isset($C['named_entity']) ? (bool)$C['named_entity'] : 1;
 $C['no_deprecated_attr'] = isset($C['no_deprecated_attr']) ? $C['no_deprecated_attr'] : 1;
 $C['parent'] = isset($C['parent'][0]) ? strtolower($C['parent']) : 'body';
 $C['show_setting'] = !empty($C['show_setting']) ? $C['show_setting'] : 0;
+$C['style_pass'] = empty($C['style_pass']) ? 0 : 1;
 $C['tidy'] = empty($C['tidy']) ? 0 : $C['tidy'];
 $C['unique_ids'] = isset($C['unique_ids']) ? $C['unique_ids'] : 1;
 $C['xml:lang'] = isset($C['xml:lang']) ? $C['xml:lang'] : 0;
 
 if(isset($GLOBALS['C'])){$reC = $GLOBALS['C'];}
 $GLOBALS['C'] = $C;
-$spec = is_array($spec) ? $spec : hl_spec($spec);
-if(isset($GLOBALS['spec'])){$reSpec = $GLOBALS['spec'];}
-$GLOBALS['spec'] = $spec;
+$S = is_array($S) ? $S : hl_spec($S);
+if(isset($GLOBALS['S'])){$reS = $GLOBALS['S'];}
+$GLOBALS['S'] = $S;
 
 $t = preg_replace('`[\x00-\x08\x0b-\x0c\x0e-\x1f]`', '', $t);
 if($C['clean_ms_char']){
@@ -2543,9 +2564,9 @@ if($C['clean_ms_char']){
 if($C['cdata'] or $C['comment']){$t = preg_replace_callback('`<!(?:(?:--.*?--)|(?:\[CDATA\[.*?\]\]))>`sm', 'hl_cmtcd', $t);}
 $t = preg_replace_callback('`&amp;([A-Za-z][A-Za-z0-9]{1,30}|#(?:[0-9]{1,8}|[Xx][0-9A-Fa-f]{1,7}));`', 'hl_ent', str_replace('&', '&amp;', $t));
 if($C['unique_ids'] && !isset($GLOBALS['hl_Ids'])){$GLOBALS['hl_Ids'] = array();}
-if($C['hook']){$t = $C['hook']($t, $C, $spec);}
+if($C['hook']){$t = $C['hook']($t, $C, $S);}
 if($C['show_setting'] && preg_match('`^[a-z][a-z0-9_]*$`i', $C['show_setting'])){
- $GLOBALS[$C['show_setting']] = array('config'=>$C, 'spec'=>$spec, 'time'=>microtime());
+ $GLOBALS[$C['show_setting']] = array('config'=>$C, 'spec'=>$S, 'time'=>microtime());
 }
 // main
 $t = preg_replace_callback('`<(?:(?:\s|$)|(?:[^>]*(?:>|$)))|>`m', 'hl_tag', $t);
@@ -2554,13 +2575,13 @@ $t = (($C['cdata'] or $C['comment']) && strpos($t, "\x01") !== false) ? str_repl
 $t = $C['tidy'] ? hl_tidy($t, $C['tidy'], $C['parent']) : $t;
 unset($C, $e);
 if(isset($reC)){$GLOBALS['C'] = $reC;}
-if(isset($reSpec)){$GLOBALS['spec'] = $reSpec;}
+if(isset($reS)){$GLOBALS['S'] = $reS;}
 return $t;
 // eof
 }
 
 function hl_attrval($t, $p){
-// check attr val against user spec
+// check attr val against $S
 $o = 1; $l = strlen($t);
 foreach($p as $k=>$v){
  switch($k){
@@ -2589,7 +2610,7 @@ return ($o ? $t : (isset($p['default']) ? $p['default'] : 0));
 
 function hl_bal($t, $do=1, $in='div'){
 // balance tags
-// eles by content
+// by content
 $cB = array('blockquote'=>1, 'form'=>1, 'map'=>1, 'noscript'=>1); // Block
 $cE = array('area'=>1, 'br'=>1, 'col'=>1, 'embed'=>1, 'hr'=>1, 'img'=>1, 'input'=>1, 'isindex'=>1, 'param'=>1); // Empty
 $cF = array('button'=>1, 'del'=>1, 'div'=>1, 'dd'=>1, 'fieldset'=>1, 'iframe'=>1, 'ins'=>1, 'li'=>1, 'noscript'=>1, 'object'=>1, 'td'=>1, 'th'=>1); // Flow; later context-wise dynamic move of ins & del to $cI
@@ -2597,17 +2618,18 @@ $cI = array('a'=>1, 'abbr'=>1, 'acronym'=>1, 'address'=>1, 'b'=>1, 'bdo'=>1, 'bi
 $cN = array('a'=>array('a'=>1), 'button'=>array('a'=>1, 'button'=>1, 'fieldset'=>1, 'form'=>1, 'iframe'=>1, 'input'=>1, 'label'=>1, 'select'=>1, 'textarea'=>1), 'fieldset'=>array('fieldset'=>1), 'form'=>array('form'=>1), 'label'=>array('label'=>1), 'noscript'=>array('script'=>1), 'pre'=>array('big'=>1, 'font'=>1, 'img'=>1, 'object'=>1, 'script'=>1, 'small'=>1, 'sub'=>1, 'sup'=>1), 'rb'=>array('ruby'=>1), 'rt'=>array('ruby'=>1)); // Illegal
 $cN2 = array_keys($cN);
 $cR = array('blockquote'=>1, 'dir'=>1, 'dl'=>1, 'form'=>1, 'map'=>1, 'menu'=>1, 'noscript'=>1, 'ol'=>1, 'optgroup'=>1, 'rbc'=>1, 'rtc'=>1, 'ruby'=>1, 'select'=>1, 'table'=>1, 'tbody'=>1, 'tfoot'=>1, 'thead'=>1, 'tr'=>1, 'ul'=>1);
-$cS = array('colgroup'=>array('col'=>1), 'dir'=>array('li'), 'dl'=>array('dd'=>1, 'dt'=>1), 'menu'=>array('li'=>1), 'ol'=>array('li'=>1), 'optgroup'=>array('option'=>1), 'option'=>array('#pcdata'=>1), 'rbc'=>array('rb'=>1), 'rp'=>array('#pcdata'=>1), 'rtc'=>array('rt'=>1), 'ruby'=>array('rb'=>1, 'rbc'=>1, 'rp'=>1, 'rt'=>1, 'rtc'=>1), 'select'=>array('optgroup'=>1, 'option'=>1), 'script'=>array('#pcdata'=>1), 'table'=>array('caption'=>1, 'col'=>1, 'colgroup'=>1, 'tfoot'=>1, 'tbody'=>1, 'tr'=>1, 'thead'=>1), 'tbody'=>array('tr'=>1), 'tfoot'=>array('tr'=>1), 'textarea'=>array('#pcdata'=>1), 'thead'=>array('tr'=>1), 'tr'=>array('td'=>1, 'th'=>1), 'ul'=>array('li'=>1)); // Specific (immediate parent-child)
+$cS = array('colgroup'=>array('col'=>1), 'dir'=>array('li'=>1), 'dl'=>array('dd'=>1, 'dt'=>1), 'menu'=>array('li'=>1), 'ol'=>array('li'=>1), 'optgroup'=>array('option'=>1), 'option'=>array('#pcdata'=>1), 'rbc'=>array('rb'=>1), 'rp'=>array('#pcdata'=>1), 'rtc'=>array('rt'=>1), 'ruby'=>array('rb'=>1, 'rbc'=>1, 'rp'=>1, 'rt'=>1, 'rtc'=>1), 'select'=>array('optgroup'=>1, 'option'=>1), 'script'=>array('#pcdata'=>1), 'table'=>array('caption'=>1, 'col'=>1, 'colgroup'=>1, 'tfoot'=>1, 'tbody'=>1, 'tr'=>1, 'thead'=>1), 'tbody'=>array('tr'=>1), 'tfoot'=>array('tr'=>1), 'textarea'=>array('#pcdata'=>1), 'thead'=>array('tr'=>1), 'tr'=>array('td'=>1, 'th'=>1), 'ul'=>array('li'=>1)); // Specific - immediate parent-child
+if($GLOBALS['C']['direct_list_nest']){$cS['ol'] = $cS['ul'] += array('ol'=>1, 'ul'=>1);}
 $cO = array('address'=>array('p'=>1), 'applet'=>array('param'=>1), 'blockquote'=>array('script'=>1), 'fieldset'=>array('legend'=>1, '#pcdata'=>1), 'form'=>array('script'=>1), 'map'=>array('area'=>1), 'object'=>array('param'=>1, 'embed'=>1)); // Other
 $cT = array('colgroup'=>1, 'dd'=>1, 'dt'=>1, 'li'=>1, 'option'=>1, 'p'=>1, 'td'=>1, 'tfoot'=>1, 'th'=>1, 'thead'=>1, 'tr'=>1); // Omitable closing
-// eles by block/inline type; ins & del both type; #pcdata: plain text
+// block/inline type; ins & del both type; #pcdata: text
 $eB = array('address'=>1, 'blockquote'=>1, 'center'=>1, 'del'=>1, 'dir'=>1, 'dl'=>1, 'div'=>1, 'fieldset'=>1, 'form'=>1, 'ins'=>1, 'h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'hr'=>1, 'isindex'=>1, 'menu'=>1, 'noscript'=>1, 'ol'=>1, 'p'=>1, 'pre'=>1, 'table'=>1, 'ul'=>1);
-$eI = array('#pcdata'=>1, 'a'=>1, 'abbr'=>1, 'acronym'=>1, 'applet'=>1, 'b'=>1, 'bdo'=>1, 'big'=>1, 'br'=>1, 'button'=>1, 'cite'=>1, 'code'=>1, 'del'=>1, 'dfn'=>1, 'em'=>1, 'embed'=>1, 'font'=>1, 'i'=>1, 'iframe'=>1, 'img'=>1, 'input'=>1, 'ins'=>1, 'kbd'=>1, 'label'=>1, 'map'=>1, 'object'=>1, 'param'=>1, 'q'=>1, 'ruby'=>1, 's'=>1, 'samp'=>1, 'select'=>1, 'script'=>1, 'small'=>1, 'span'=>1, 'strike'=>1, 'strong'=>1, 'sub'=>1, 'sup'=>1, 'textarea'=>1, 'tt'=>1, 'u'=>1, 'var'=>1);
+$eI = array('#pcdata'=>1, 'a'=>1, 'abbr'=>1, 'acronym'=>1, 'applet'=>1, 'b'=>1, 'bdo'=>1, 'big'=>1, 'br'=>1, 'button'=>1, 'cite'=>1, 'code'=>1, 'del'=>1, 'dfn'=>1, 'em'=>1, 'embed'=>1, 'font'=>1, 'i'=>1, 'iframe'=>1, 'img'=>1, 'input'=>1, 'ins'=>1, 'kbd'=>1, 'label'=>1, 'map'=>1, 'object'=>1, 'q'=>1, 'ruby'=>1, 's'=>1, 'samp'=>1, 'select'=>1, 'script'=>1, 'small'=>1, 'span'=>1, 'strike'=>1, 'strong'=>1, 'sub'=>1, 'sup'=>1, 'textarea'=>1, 'tt'=>1, 'u'=>1, 'var'=>1);
 $eN = array('a'=>1, 'big'=>1, 'button'=>1, 'fieldset'=>1, 'font'=>1, 'form'=>1, 'iframe'=>1, 'img'=>1, 'input'=>1, 'label'=>1, 'object'=>1, 'ruby'=>1, 'script'=>1, 'select'=>1, 'small'=>1, 'sub'=>1, 'sup'=>1, 'textarea'=>1); // Exclude from specific ele; $cN values
-$eO = array('area'=>1, 'caption'=>1, 'col'=>1, 'colgroup'=>1, 'dd'=>1, 'dt'=>1, 'legend'=>1, 'li'=>1, 'optgroup'=>1, 'option'=>1, 'rb'=>1, 'rbc'=>1, 'rp'=>1, 'rt'=>1, 'rtc'=>1, 'script'=>1, 'tbody'=>1, 'td'=>1, 'tfoot'=>1, 'thead'=>1, 'th'=>1, 'tr'=>1); // Missing in $eB & $eI
+$eO = array('area'=>1, 'caption'=>1, 'col'=>1, 'colgroup'=>1, 'dd'=>1, 'dt'=>1, 'legend'=>1, 'li'=>1, 'optgroup'=>1, 'option'=>1, 'param'=>1, 'rb'=>1, 'rbc'=>1, 'rp'=>1, 'rt'=>1, 'rtc'=>1, 'script'=>1, 'tbody'=>1, 'td'=>1, 'tfoot'=>1, 'thead'=>1, 'th'=>1, 'tr'=>1); // Missing in $eB & $eI
 $eF = $eB + $eI;
 
-// $in sets allowed children
+// $in sets allowed child
 $in = ((isset($eF[$in]) && $in != '#pcdata') or isset($eO[$in])) ? $in : 'div';
 if(isset($cE[$in])){
  return (!$do ? '' : str_replace(array('<', '>'), array('&lt;', '&gt;'), $t));
@@ -2640,7 +2662,10 @@ for($i=-1, $ci=count($t); ++$i<$ci;){
   echo '&lt;', $s, $e, $a, '&gt;';
  }
  if(isset($x[0])){
-  if($do < 3 or isset($ok['#pcdata'])){echo $x;}
+  if(strlen(trim($x)) && (($ql && isset($cB[$p])) or (isset($cB[$in]) && !$ql))){
+   echo '<div>', $x, '</div>';
+  }
+  elseif($do < 3 or isset($ok['#pcdata'])){echo $x;}
   elseif(strpos($x, "\x02\x04")){
    foreach(preg_split('`(\x01\x02[^\x01\x02]+\x02\x01)`', $x, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY) as $v){
     echo (substr($v, 0, 2) == "\x01\x02" ? $v : ($do > 4 ? preg_replace('`\S`', '', $v) : ''));
@@ -2648,7 +2673,7 @@ for($i=-1, $ci=count($t); ++$i<$ci;){
   }elseif($do > 4){echo preg_replace('`\S`', '', $x);}
  }
  // get markup
- if(!preg_match('`^(/?)([a-zA-Z1-6]+)([^>]*)>(.*)`sm', $t[$i], $r)){$x = $t[$i]; continue;}
+ if(!preg_match('`^(/?)([a-z1-6]+)([^>]*)>(.*)`sm', $t[$i], $r)){$x = $t[$i]; continue;}
  $s = null; $e = null; $a = null; $x = null; list($all, $s, $e, $a, $x) = $r;
  // close tag
  if($s){
@@ -2670,7 +2695,7 @@ for($i=-1, $ci=count($t); ++$i<$ci;){
  if((($ql && isset($cB[$p])) or (isset($cB[$in]) && !$ql)) && !isset($eB[$e]) && !isset($ok[$e])){
   array_splice($t, $i, 0, 'div>'); unset($e, $x); ++$ci; --$i; continue;
  }
- // if no open ele, $in is parent; except for certain cases, immediate parent-child relation should hold
+ // if no open ele, $in = parent; mostly immediate parent-child relation should hold
  if(!$ql or !isset($eN[$e]) or !array_intersect($q, $cN2)){
   if(!isset($ok[$e])){
    if($ql && isset($cT[$p])){echo '</', array_pop($q), '>'; unset($e, $x); --$i;}
@@ -2743,20 +2768,14 @@ function hl_cmtcd($t){
 // comment/CDATA sec handler
 $t = $t[0];
 global $C;
-if($t[3] == '-'){
- if(!$C['comment']){return $t;}
- if($C['comment'] == 1){return '';}
+if(!($v = $C[$n = $t[3] == '-' ? 'comment' : 'cdata'])){return $t;}
+if($v == 1){return '';}
+if($n == 'comment'){
  if(substr(($t = preg_replace('`--+`', '-', substr($t, 4, -3))), -1) != ' '){$t .= ' ';}
- $t = $C['comment'] == 2 ? str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $t) : $t;
- $t = "\x01\x02\x04!--$t--\x05\x02\x01";
-}else{ // CDATA
- if(!$C['cdata']){return $t;}
- if($C['cdata'] == 1){return '';}
- $t = substr($t, 1, -1);
- $t = $C['cdata'] == 2 ? str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $t) : $t;
- $t = "\x01\x01\x04$t\x05\x01\x01";
 }
-return str_replace(array('&', '<', '>'), array("\x03", "\x04", "\x05"), $t);
+else{$t = substr($t, 1, -1);}
+$t = $v == 2 ? str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $t) : $t;
+return str_replace(array('&', '<', '>'), array("\x03", "\x04", "\x05"), ($n == 'comment' ? "\x01\x02\x04!--$t--\x05\x02\x01" : "\x01\x01\x04$t\x05\x01\x01"));
 // eof
 }
 
@@ -2782,9 +2801,11 @@ global $C;
 $b = $a = '';
 if($c == null){$c = 'style'; $b = $p[1]; $a = $p[3]; $p = trim($p[2]);}
 $c = isset($C['schemes'][$c]) ? $C['schemes'][$c] : $C['schemes']['*'];
-if(isset($c['*']) or !strcspn($p, '#?;')){return "{$b}{$p}{$a}";} // All ok, frag, query, param
+static $d = 'denied:';
+if(isset($c['!']) && substr($p, 0, 7) != $d){$p = "$d$p";}
+if(isset($c['*']) or !strcspn($p, '#?;') or (substr($p, 0, 7) == $d)){return "{$b}{$p}{$a}";} // All ok, frag, query, param
 if(preg_match('`^([a-z\d\-+.&#; ]+?)(:|&#(58|x3a);|%3a|\\\\0{0,4}3a).`i', $p, $m) && !isset($c[strtolower($m[1])])){ // Denied prot
- return "{$b}denied:{$p}{$a}";
+ return "{$b}{$d}{$p}{$a}";
 }
 if($C['abs_url']){
  if($C['abs_url'] == -1 && strpos($p, $C['base_url']) === 0){ // Make url rel
@@ -2808,7 +2829,7 @@ return "{$b}{$p}{$a}";
 }
 
 function hl_regex($p){
-// ?ok regex
+// ?regex
 if(empty($p)){return 0;}
 if($t = ini_get('track_errors')){$o = isset($php_errormsg) ? $php_errormsg : null;}
 else{ini_set('track_errors', 1);}
@@ -2824,7 +2845,7 @@ return $r;
 }
 
 function hl_spec($t){
-// finalize $spec
+// final $spec
 $s = array();
 $t = str_replace(array("\t", "\r", "\n", ' '), '', preg_replace('/"(?>(`.|[^"])*)"/sme', 'substr(str_replace(array(";", "|", "~", " ", ",", "/", "(", ")", \'`"\'), array("\x01", "\x02", "\x03", "\x04", "\x05", "\x06", "\x07", "\x08", "\""), "$0"), 1, -1)', trim($t))); 
 for($i = count(($t = explode(';', $t))); --$i>=0;){
@@ -2844,11 +2865,6 @@ for($i = count(($t = explode(';', $t))); --$i>=0;){
   if(isset($y[$x]['nomatch']) && !hl_regex($y[$x]['nomatch'])){unset($y[$x]['nomatch']);}
  }
  if(!count($y) && !count($n)){continue;}
- if(!isset($n['*'])){
-  foreach($y as $k=>$v){
-   if(!is_array($v) or !count($v)){unset($y[$k]);}
-  }
- }
  foreach(explode(',', substr($w, 0, $e)) as $v){
   if(!strlen(($v = strtolower($v)))){continue;}
   if(count($y)){$s[$v] = $y;}
@@ -2872,10 +2888,7 @@ if(!preg_match('`^<(/?)([a-zA-Z][a-zA-Z1-6]*)([^>]*?)\s?>$`m', $t, $m)){
  return (($C['keep_bad']%2) ? str_replace(array('<', '>'), array('&lt;', '&gt;'), $t) : '');
 }
 // attr string
-$a = str_replace(array("\xad", "\n", "\r", "\t"), ' ', trim($m[3]));
-if(strpos($a, '&') !== false){
- str_replace(array('&#xad;', '&#173;', '&shy;'), ' ', $a);
-}
+$a = str_replace(array("\n", "\r", "\t"), ' ', trim($m[3]));
 // tag transform
 static $eD = array('applet'=>1, 'center'=>1, 'dir'=>1, 'embed'=>1, 'font'=>1, 'isindex'=>1, 'menu'=>1, 's'=>1, 'strike'=>1, 'u'=>1); // Deprecated
 if($C['make_tag_strict'] && isset($eD[$e])){
@@ -2885,17 +2898,17 @@ if($C['make_tag_strict'] && isset($eD[$e])){
 // close tag
 static $eE = array('area'=>1, 'br'=>1, 'col'=>1, 'embed'=>1, 'hr'=>1, 'img'=>1, 'input'=>1, 'isindex'=>1, 'param'=>1); // Empty ele
 if(!empty($m[1])){
- return (!isset($eE[$e]) ? "</$e>" : (($C['keep_bad'])%2 ? str_replace(array('<', '>'), array('&lt;', '&gt;'), $t) : ''));
+ return (!isset($eE[$e]) ? (empty($C['hook_tag']) ? "</$e>" : $C['hook_tag']($e)) : (($C['keep_bad'])%2 ? str_replace(array('<', '>'), array('&lt;', '&gt;'), $t) : ''));
 }
 
 // open tag & attr
-static $aN = array('abbr'=>array('td'=>1, 'th'=>1), 'accept-charset'=>array('form'=>1), 'accept'=>array('form'=>1, 'input'=>1), 'accesskey'=>array('a'=>1, 'area'=>1, 'button'=>1, 'input'=>1, 'label'=>1, 'legend'=>1, 'textarea'=>1), 'action'=>array('form'=>1), 'align'=>array('caption'=>1, 'embed'=>1, 'applet'=>1, 'iframe'=>1, 'img'=>1, 'input'=>1, 'object'=>1, 'legend'=>1, 'table'=>1, 'hr'=>1, 'div'=>1, 'h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'p'=>1, 'col'=>1, 'colgroup'=>1, 'tbody'=>1, 'td'=>1, 'tfoot'=>1, 'th'=>1, 'thead'=>1, 'tr'=>1), 'alt'=>array('applet'=>1, 'area'=>1, 'img'=>1, 'input'=>1), 'archive'=>array('applet'=>1, 'object'=>1), 'axis'=>array('td'=>1, 'th'=>1), 'bgcolor'=>array('embed'=>1, 'table'=>1, 'tr'=>1, 'td'=>1, 'th'=>1), 'border'=>array('table'=>1, 'img'=>1, 'object'=>1), 'bordercolor'=>array('table'=>1, 'td'=>1, 'tr'=>1), 'cellpadding'=>array('table'=>1), 'cellspacing'=>array('table'=>1), 'char'=>array('col'=>1, 'colgroup'=>1, 'tbody'=>1, 'td'=>1, 'tfoot'=>1, 'th'=>1, 'thead'=>1, 'tr'=>1), 'charoff'=>array('col'=>1, 'colgroup'=>1, 'tbody'=>1, 'td'=>1, 'tfoot'=>1, 'th'=>1, 'thead'=>1, 'tr'=>1), 'charset'=>array('a'=>1, 'script'=>1), 'checked'=>array('input'=>1), 'cite'=>array('blockquote'=>1, 'q'=>1, 'del'=>1, 'ins'=>1), 'classid'=>array('object'=>1), 'clear'=>array('br'=>1), 'code'=>array('applet'=>1), 'codebase'=>array('object'=>1, 'applet'=>1), 'codetype'=>array('object'=>1), 'color'=>array('font'=>1), 'cols'=>array('textarea'=>1), 'colspan'=>array('td'=>1, 'th'=>1), 'compact'=>array('dir'=>1, 'dl'=>1, 'menu'=>1, 'ol'=>1, 'ul'=>1), 'coords'=>array('area'=>1, 'a'=>1), 'data'=>array('object'=>1), 'datetime'=>array('del'=>1, 'ins'=>1), 'declare'=>array('object'=>1), 'defer'=>array('script'=>1), 'dir'=>array('bdo'=>1), 'disabled'=>array('button'=>1, 'input'=>1, 'optgroup'=>1, 'option'=>1, 'select'=>1, 'textarea'=>1), 'enctype'=>array('form'=>1), 'face'=>array('font'=>1), 'for'=>array('label'=>1), 'frame'=>array('table'=>1), 'frameborder'=>array('iframe'=>1), 'headers'=>array('td'=>1, 'th'=>1), 'height'=>array('embed'=>1, 'iframe'=>1, 'td'=>1, 'th'=>1, 'img'=>1, 'object'=>1, 'applet'=>1), 'href'=>array('a'=>1, 'area'=>1), 'hreflang'=>array('a'=>1), 'hspace'=>array('applet'=>1, 'img'=>1, 'object'=>1), 'ismap'=>array('img'=>1, 'input'=>1), 'label'=>array('option'=>1, 'optgroup'=>1), 'language'=>array('script'=>1), 'longdesc'=>array('img'=>1, 'iframe'=>1), 'marginheight'=>array('iframe'=>1), 'marginwidth'=>array('iframe'=>1), 'maxlength'=>array('input'=>1), 'method'=>array('form'=>1), 'model'=>array('embed'=>1), 'multiple'=>array('select'=>1), 'name'=>array('button'=>1, 'embed'=>1, 'textarea'=>1, 'applet'=>1, 'select'=>1, 'form'=>1, 'iframe'=>1, 'img'=>1, 'a'=>1, 'input'=>1, 'object'=>1, 'map'=>1, 'param'=>1), 'nohref'=>array('area'=>1), 'noshade'=>array('hr'=>1), 'nowrap'=>array('td'=>1, 'th'=>1), 'object'=>array('applet'=>1), 'onblur'=>array('a'=>1, 'area'=>1, 'button'=>1, 'input'=>1, 'label'=>1, 'select'=>1, 'textarea'=>1), 'onchange'=>array('input'=>1, 'select'=>1, 'textarea'=>1), 'onfocus'=>array('a'=>1, 'area'=>1, 'button'=>1, 'input'=>1, 'label'=>1, 'select'=>1, 'textarea'=>1), 'onreset'=>array('form'=>1), 'onselect'=>array('input'=>1, 'textarea'=>1), 'onsubmit'=>array('form'=>1), 'pluginspage'=>array('embed'=>1), 'pluginurl'=>array('embed'=>1), 'prompt'=>array('isindex'=>1), 'readonly'=>array('textarea'=>1, 'input'=>1), 'rel'=>array('a'=>1), 'rev'=>array('a'=>1), 'rows'=>array('textarea'=>1), 'rowspan'=>array('td'=>1, 'th'=>1), 'rules'=>array('table'=>1), 'scope'=>array('td'=>1, 'th'=>1), 'scrolling'=>array('iframe'=>1), 'selected'=>array('option'=>1), 'shape'=>array('area'=>1, 'a'=>1), 'size'=>array('hr'=>1, 'font'=>1, 'input'=>1, 'select'=>1), 'span'=>array('col'=>1, 'colgroup'=>1), 'src'=>array('embed'=>1, 'script'=>1, 'input'=>1, 'iframe'=>1, 'img'=>1), 'standby'=>array('object'=>1), 'start'=>array('ol'=>1), 'summary'=>array('table'=>1), 'tabindex'=>array('a'=>1, 'area'=>1, 'button'=>1, 'input'=>1, 'object'=>1, 'select'=>1, 'textarea'=>1), 'target'=>array('a'=>1, 'area'=>1, 'form'=>1), 'type'=>array('a'=>1, 'embed'=>1, 'object'=>1, 'param'=>1, 'script'=>1, 'input'=>1, 'li'=>1, 'ol'=>1, 'ul'=>1, 'button'=>1), 'usemap'=>array('img'=>1, 'input'=>1, 'object'=>1), 'valign'=>array('col'=>1, 'colgroup'=>1, 'tbody'=>1, 'td'=>1, 'tfoot'=>1, 'th'=>1, 'thead'=>1, 'tr'=>1), 'value'=>array('input'=>1, 'option'=>1, 'param'=>1, 'button'=>1, 'li'=>1), 'valuetype'=>array('param'=>1), 'vspace'=>array('applet'=>1, 'img'=>1, 'object'=>1), 'width'=>array('embed'=>1, 'hr'=>1, 'iframe'=>1, 'img'=>1, 'object'=>1, 'table'=>1, 'td'=>1, 'th'=>1, 'applet'=>1, 'col'=>1, 'colgroup'=>1, 'pre'=>1), 'wmode'=>array('embed'=>1), 'xml:space'=>array('pre'=>1, 'script'=>1, 'style'=>1)); // Specific attrs
-static $aNE = array('checked'=>1, 'compact'=>1, 'declare'=>1, 'defer'=>1, 'disabled'=>1, 'ismap'=>1, 'multiple'=>1, 'nohref'=>1, 'noresize'=>1, 'noshade'=>1, 'nowrap'=>1, 'readonly'=>1, 'selected'=>1); // Empty attrs
-static $aNP = array('action'=>1, 'cite'=>1, 'classid'=>1, 'codebase'=>1, 'data'=>1, 'href'=>1, 'longdesc'=>1, 'model'=>1, 'pluginspage'=>1, 'pluginurl'=>1, 'usemap'=>1); // Attrs needing protocol check; for attrs like onmouseover & src, using: '$n[0] != 'o' && strpos($n, 'src') === false'; 'style' separately handled
-static $aNU = array('class'=>array('param'=>1, 'script'=>1), 'dir'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'iframe'=>1, 'param'=>1, 'script'=>1), 'id'=>array('script'=>1), 'lang'=>array('applet'=>1, 'br'=>1, 'iframe'=>1, 'param'=>1, 'script'=>1), 'xml:lang'=>array('applet'=>1, 'br'=>1, 'iframe'=>1, 'param'=>1, 'script'=>1), 'onclick'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'ondblclick'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onkeydown'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onkeypress'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onkeyup'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onmousedown'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onmousemove'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onmouseout'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onmouseover'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onmouseup'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'style'=>array('param'=>1, 'script'=>1), 'title'=>array('param'=>1, 'script'=>1)); // Univ attrs & exceptions
+static $aN = array('abbr'=>array('td'=>1, 'th'=>1), 'accept-charset'=>array('form'=>1), 'accept'=>array('form'=>1, 'input'=>1), 'accesskey'=>array('a'=>1, 'area'=>1, 'button'=>1, 'input'=>1, 'label'=>1, 'legend'=>1, 'textarea'=>1), 'action'=>array('form'=>1), 'align'=>array('caption'=>1, 'embed'=>1, 'applet'=>1, 'iframe'=>1, 'img'=>1, 'input'=>1, 'object'=>1, 'legend'=>1, 'table'=>1, 'hr'=>1, 'div'=>1, 'h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'p'=>1, 'col'=>1, 'colgroup'=>1, 'tbody'=>1, 'td'=>1, 'tfoot'=>1, 'th'=>1, 'thead'=>1, 'tr'=>1), 'alt'=>array('applet'=>1, 'area'=>1, 'img'=>1, 'input'=>1), 'archive'=>array('applet'=>1, 'object'=>1), 'axis'=>array('td'=>1, 'th'=>1), 'bgcolor'=>array('embed'=>1, 'table'=>1, 'tr'=>1, 'td'=>1, 'th'=>1), 'border'=>array('table'=>1, 'img'=>1, 'object'=>1), 'bordercolor'=>array('table'=>1, 'td'=>1, 'tr'=>1), 'cellpadding'=>array('table'=>1), 'cellspacing'=>array('table'=>1), 'char'=>array('col'=>1, 'colgroup'=>1, 'tbody'=>1, 'td'=>1, 'tfoot'=>1, 'th'=>1, 'thead'=>1, 'tr'=>1), 'charoff'=>array('col'=>1, 'colgroup'=>1, 'tbody'=>1, 'td'=>1, 'tfoot'=>1, 'th'=>1, 'thead'=>1, 'tr'=>1), 'charset'=>array('a'=>1, 'script'=>1), 'checked'=>array('input'=>1), 'cite'=>array('blockquote'=>1, 'q'=>1, 'del'=>1, 'ins'=>1), 'classid'=>array('object'=>1), 'clear'=>array('br'=>1), 'code'=>array('applet'=>1), 'codebase'=>array('object'=>1, 'applet'=>1), 'codetype'=>array('object'=>1), 'color'=>array('font'=>1), 'cols'=>array('textarea'=>1), 'colspan'=>array('td'=>1, 'th'=>1), 'compact'=>array('dir'=>1, 'dl'=>1, 'menu'=>1, 'ol'=>1, 'ul'=>1), 'coords'=>array('area'=>1, 'a'=>1), 'data'=>array('object'=>1), 'datetime'=>array('del'=>1, 'ins'=>1), 'declare'=>array('object'=>1), 'defer'=>array('script'=>1), 'dir'=>array('bdo'=>1), 'disabled'=>array('button'=>1, 'input'=>1, 'optgroup'=>1, 'option'=>1, 'select'=>1, 'textarea'=>1), 'enctype'=>array('form'=>1), 'face'=>array('font'=>1), 'flashvars'=>array('embed'=>1), 'for'=>array('label'=>1), 'frame'=>array('table'=>1), 'frameborder'=>array('iframe'=>1), 'headers'=>array('td'=>1, 'th'=>1), 'height'=>array('embed'=>1, 'iframe'=>1, 'td'=>1, 'th'=>1, 'img'=>1, 'object'=>1, 'applet'=>1), 'href'=>array('a'=>1, 'area'=>1), 'hreflang'=>array('a'=>1), 'hspace'=>array('applet'=>1, 'img'=>1, 'object'=>1), 'ismap'=>array('img'=>1, 'input'=>1), 'label'=>array('option'=>1, 'optgroup'=>1), 'language'=>array('script'=>1), 'longdesc'=>array('img'=>1, 'iframe'=>1), 'marginheight'=>array('iframe'=>1), 'marginwidth'=>array('iframe'=>1), 'maxlength'=>array('input'=>1), 'method'=>array('form'=>1), 'model'=>array('embed'=>1), 'multiple'=>array('select'=>1), 'name'=>array('button'=>1, 'embed'=>1, 'textarea'=>1, 'applet'=>1, 'select'=>1, 'form'=>1, 'iframe'=>1, 'img'=>1, 'a'=>1, 'input'=>1, 'object'=>1, 'map'=>1, 'param'=>1), 'nohref'=>array('area'=>1), 'noshade'=>array('hr'=>1), 'nowrap'=>array('td'=>1, 'th'=>1), 'object'=>array('applet'=>1), 'onblur'=>array('a'=>1, 'area'=>1, 'button'=>1, 'input'=>1, 'label'=>1, 'select'=>1, 'textarea'=>1), 'onchange'=>array('input'=>1, 'select'=>1, 'textarea'=>1), 'onfocus'=>array('a'=>1, 'area'=>1, 'button'=>1, 'input'=>1, 'label'=>1, 'select'=>1, 'textarea'=>1), 'onreset'=>array('form'=>1), 'onselect'=>array('input'=>1, 'textarea'=>1), 'onsubmit'=>array('form'=>1), 'pluginspage'=>array('embed'=>1), 'pluginurl'=>array('embed'=>1), 'prompt'=>array('isindex'=>1), 'readonly'=>array('textarea'=>1, 'input'=>1), 'rel'=>array('a'=>1), 'rev'=>array('a'=>1), 'rows'=>array('textarea'=>1), 'rowspan'=>array('td'=>1, 'th'=>1), 'rules'=>array('table'=>1), 'scope'=>array('td'=>1, 'th'=>1), 'scrolling'=>array('iframe'=>1), 'selected'=>array('option'=>1), 'shape'=>array('area'=>1, 'a'=>1), 'size'=>array('hr'=>1, 'font'=>1, 'input'=>1, 'select'=>1), 'span'=>array('col'=>1, 'colgroup'=>1), 'src'=>array('embed'=>1, 'script'=>1, 'input'=>1, 'iframe'=>1, 'img'=>1), 'standby'=>array('object'=>1), 'start'=>array('ol'=>1), 'summary'=>array('table'=>1), 'tabindex'=>array('a'=>1, 'area'=>1, 'button'=>1, 'input'=>1, 'object'=>1, 'select'=>1, 'textarea'=>1), 'target'=>array('a'=>1, 'area'=>1, 'form'=>1), 'type'=>array('a'=>1, 'embed'=>1, 'object'=>1, 'param'=>1, 'script'=>1, 'input'=>1, 'li'=>1, 'ol'=>1, 'ul'=>1, 'button'=>1), 'usemap'=>array('img'=>1, 'input'=>1, 'object'=>1), 'valign'=>array('col'=>1, 'colgroup'=>1, 'tbody'=>1, 'td'=>1, 'tfoot'=>1, 'th'=>1, 'thead'=>1, 'tr'=>1), 'value'=>array('input'=>1, 'option'=>1, 'param'=>1, 'button'=>1, 'li'=>1), 'valuetype'=>array('param'=>1), 'vspace'=>array('applet'=>1, 'img'=>1, 'object'=>1), 'width'=>array('embed'=>1, 'hr'=>1, 'iframe'=>1, 'img'=>1, 'object'=>1, 'table'=>1, 'td'=>1, 'th'=>1, 'applet'=>1, 'col'=>1, 'colgroup'=>1, 'pre'=>1), 'wmode'=>array('embed'=>1), 'xml:space'=>array('pre'=>1, 'script'=>1, 'style'=>1)); // Ele-specific
+static $aNE = array('checked'=>1, 'compact'=>1, 'declare'=>1, 'defer'=>1, 'disabled'=>1, 'ismap'=>1, 'multiple'=>1, 'nohref'=>1, 'noresize'=>1, 'noshade'=>1, 'nowrap'=>1, 'readonly'=>1, 'selected'=>1); // Empty
+static $aNP = array('action'=>1, 'cite'=>1, 'classid'=>1, 'codebase'=>1, 'data'=>1, 'href'=>1, 'longdesc'=>1, 'model'=>1, 'pluginspage'=>1, 'pluginurl'=>1, 'usemap'=>1); // Need scheme check; excludes style, on* & src
+static $aNU = array('class'=>array('param'=>1, 'script'=>1), 'dir'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'iframe'=>1, 'param'=>1, 'script'=>1), 'id'=>array('script'=>1), 'lang'=>array('applet'=>1, 'br'=>1, 'iframe'=>1, 'param'=>1, 'script'=>1), 'xml:lang'=>array('applet'=>1, 'br'=>1, 'iframe'=>1, 'param'=>1, 'script'=>1), 'onclick'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'ondblclick'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onkeydown'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onkeypress'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onkeyup'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onmousedown'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onmousemove'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onmouseout'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onmouseover'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'onmouseup'=>array('applet'=>1, 'bdo'=>1, 'br'=>1, 'font'=>1, 'iframe'=>1, 'isindex'=>1, 'param'=>1, 'script'=>1), 'style'=>array('param'=>1, 'script'=>1), 'title'=>array('param'=>1, 'script'=>1)); // Univ & exceptions
 
 if($C['lc_std_val']){
- // predef attr vals like radio for $eAL & $aNE ele
+ // predef attr vals for $eAL & $aNE ele
  static $aNL = array('all'=>1, 'baseline'=>1, 'bottom'=>1, 'button'=>1, 'center'=>1, 'char'=>1, 'checkbox'=>1, 'circle'=>1, 'col'=>1, 'colgroup'=>1, 'cols'=>1, 'data'=>1, 'default'=>1, 'file'=>1, 'get'=>1, 'groups'=>1, 'hidden'=>1, 'image'=>1, 'justify'=>1, 'left'=>1, 'ltr'=>1, 'middle'=>1, 'none'=>1, 'object'=>1, 'password'=>1, 'poly'=>1, 'post'=>1, 'preserve'=>1, 'radio'=>1, 'rect'=>1, 'ref'=>1, 'reset'=>1, 'right'=>1, 'row'=>1, 'rowgroup'=>1, 'rows'=>1, 'rtl'=>1, 'submit'=>1, 'text'=>1, 'top'=>1);
  static $eAL = array('a'=>1, 'area'=>1, 'bdo'=>1, 'button'=>1, 'col'=>1, 'form'=>1, 'img'=>1, 'input'=>1, 'object'=>1, 'optgroup'=>1, 'option'=>1, 'param'=>1, 'script'=>1, 'select'=>1, 'table'=>1, 'td'=>1, 'tfoot'=>1, 'th'=>1, 'thead'=>1, 'tr'=>1, 'xml:space'=>1);
  $lcase = isset($eAL[$e]) ? 1 : 0;
@@ -2915,7 +2928,7 @@ $mode = 0; $a = trim($a, ' /'); $aA = array();
 while(strlen($a)){
  $w = 0;
  switch($mode){
-  case 0: // Attr name
+  case 0: // Name
    if(preg_match('`^[a-zA-Z][\-a-zA-Z:]+`', $a, $m)){
     $nm = strtolower($m[0]);
     $w = $mode = 1; $a = ltrim(substr_replace($a, '', 0, strlen($m[0])));
@@ -2927,9 +2940,9 @@ while(strlen($a)){
     $w = 1; $mode = 0; $a = ltrim($a);
     $aA[$nm] = '';
    }
-  break; case 2: // Attr val
-   if(preg_match('`^"[^"]*"`', $a, $m) or preg_match("`^'[^']*'`", $a, $m) or preg_match("`^\s*[^\s\"']+`", $a, $m)){
-    $m = $m[0]; $w = 1; $mode = 0; $a = ltrim(substr_replace($a, '', 0, strlen($m)));
+  break; case 2: // Val
+   if(preg_match('`^((?:"[^"]*")|(?:\'[^\']*\')|(?:\s*[^\s"\']+))(.*)`', $a, $m)){
+    $a = ltrim($m[2]); $m = $m[1]; $w = 1; $mode = 0;
     $aA[$nm] = trim(($m[0] == '"' or $m[0] == '\'') ? substr($m, 1, -1) : $m);
    }
   break;
@@ -2941,24 +2954,29 @@ while(strlen($a)){
 }
 if($mode == 1){$aA[$nm] = '';}
 
-// clean attrs - remove invalids, escape ", values for 'empty' attr, lowercase predefined values, remove ones with unfit values, anti-spam, check scheme & expressions in style props, check scheme in other attr
-global $spec;
-$rl = isset($spec[$e]) ? $spec[$e] : array();
+// clean attrs
+global $S;
+$rl = isset($S[$e]) ? $S[$e] : array();
 $a = array(); $nfr = 0;
 foreach($aA as $k=>$v){
- if(!isset($C['deny_attribute'][$k]) && ((!isset($rl['n'][$k]) && !isset($rl['n']['*'])) or isset($rl[$k])) && (isset($aN[$k][$e]) or (isset($aNU[$k]) && !isset($aNU[$k][$e])))){
+  if(((isset($C['deny_attribute']['*']) ? isset($C['deny_attribute'][$k]) : !isset($C['deny_attribute'][$k])) && (isset($aN[$k][$e]) or (isset($aNU[$k]) && !isset($aNU[$k][$e]))) && !isset($rl['n'][$k]) && !isset($rl['n']['*'])) or isset($rl[$k])){
   if(isset($aNE[$k])){$v = $k;}
   elseif(!empty($lcase) && (($e != 'button' or $e != 'input') or $k == 'type')){ // Rather loose but ?not cause issues
    $v = (isset($aNL[($v2 = strtolower($v))])) ? $v2 : $v;
   }
-  if($k == 'style'){
-   $v = preg_replace_callback('`((?:u|&#(?:x75|117);)(?:r|&#(?:x72|114);)(?:l|&#(?:x6c|108);)(?:\(|&#(?:x28|40);)(?: |&#(?:x20|32);)*(?:\'|"|&(?:quot|apos|34|39|x22|x27);)?)(.+)((?:\'|"|&(?:quot|apos|34|39|x22|x27);)?(?: |&#(?:x20|32);)*(?:\)|&#(?:x29|41);))`iS', 'hl_prot', $v);
-   $v = !$C['css_expression'] ? preg_replace('`:\s*(/\*.*\*/)*\s*e.+?n\s*(/\*.*\*/)*\s*\(.*\)`iS', '', html_entity_decode(urldecode($v))) : $v;
+  if($k == 'style' && !$C['style_pass']){
+   if(false !== strpos($v, '&#')){
+    static $sC = array('&#x20;'=>' ', '&#32;'=>' ', '&#x45;'=>'e', '&#69;'=>'e', '&#x65;'=>'e', '&#101;'=>'e', '&#x58;'=>'x', '&#88;'=>'x', '&#x78;'=>'x', '&#120;'=>'x', '&#x50;'=>'p', '&#80;'=>'p', '&#x70;'=>'p', '&#112;'=>'p', '&#x53;'=>'s', '&#83;'=>'s', '&#x73;'=>'s', '&#115;'=>'s', '&#x49;'=>'i', '&#73;'=>'i', '&#x69;'=>'i', '&#105;'=>'i', '&#x4f;'=>'o', '&#79;'=>'o', '&#x6f;'=>'o', '&#111;'=>'o', '&#x4e;'=>'n', '&#78;'=>'n', '&#x6e;'=>'n', '&#110;'=>'n', '&#x55;'=>'u', '&#85;'=>'u', '&#x75;'=>'u', '&#117;'=>'u', '&#x52;'=>'r', '&#82;'=>'r', '&#x72;'=>'r', '&#114;'=>'r', '&#x4c;'=>'l', '&#76;'=>'l', '&#x6c;'=>'l', '&#108;'=>'l', '&#x28;'=>'(', '&#40;'=>'(', '&#x29;'=>')', '&#41;'=>')', '&#x20;'=>':', '&#32;'=>':', '&#x22;'=>'"', '&#34;'=>'"', '&#x27;'=>"'", '&#39;'=>"'", '&#x2f;'=>'/', '&#47;'=>'/', '&#x2a;'=>'*', '&#42;'=>'*', '&#x5c;'=>'\\', '&#92;'=>'\\');
+    $v = strtr($v, $sC);
+   }
+   $v = preg_replace_callback('`(url(?:\()(?: )*(?:\'|"|&(?:quot|apos);)?)(.+?)((?:\'|"|&(?:quot|apos);)?(?: )*(?:\)))`iS', 'hl_prot', $v);
+   $v = !$C['css_expression'] ? preg_replace('`expression`i', ' ', preg_replace('`\\\\\S|(/|(%2f))(\*|(%2a))`i', ' ', $v)) : $v;
   }elseif(isset($aNP[$k]) or strpos($k, 'src') !== false or $k[0] == 'o'){
+   $v = str_replace("\xad", ' ', (strpos($v, '&') !== false ? str_replace(array('&#xad;', '&#173;', '&shy;'), ' ', $v) : $v));
    $v = hl_prot($v, $k);
-   if($k == 'href'){ // Anti-spam
+   if($k == 'href'){ // X-spam
     if($C['anti_mail_spam'] && strpos($v, 'mailto:') === 0){
-     $v = str_replace('@', htmlspecialchars($C['anti_mail_spam']), $v);
+     $v = str_replace('@', charhtmlconvert($C['anti_mail_spam']), $v);
     }elseif($C['anti_link_spam']){
      $r1 = $C['anti_link_spam'][1];
      if(!empty($r1) && preg_match($r1, $v)){continue;}
@@ -3039,7 +3057,7 @@ if($depTr){
   $a['style'] = isset($a['style']) ? rtrim($a['style'], ' ;'). '; '. $c. ';': $c. ';';
  }
 }
-// unique IDs
+// unique ID
 if($C['unique_ids'] && isset($a['id'])){
  if(!preg_match('`^[A-Za-z][A-Za-z0-9_\-.:]*$`', ($id = $a['id'])) or (isset($GLOBALS['hl_Ids'][$id]) && $C['unique_ids'] == 1)){unset($a['id']);
  }else{
@@ -3056,7 +3074,7 @@ if($C['xml:lang'] && isset($a['lang'])){
 if(!empty($trt)){
  $a['style'] = isset($a['style']) ? rtrim($a['style'], ' ;'). '; '. $trt : $trt;
 }
-// return with empty ele's slash
+// return with empty ele /
 if(empty($C['hook_tag'])){
  $aA = '';
  foreach($a as $k=>$v){$aA .= " {$k}=\"{$v}\"";}
@@ -3075,7 +3093,7 @@ if($e == 'u'){$e = 'span'; return 'text-decoration: underline;';}
 static $fs = array('0'=>'xx-small', '1'=>'xx-small', '2'=>'small', '3'=>'medium', '4'=>'large', '5'=>'x-large', '6'=>'xx-large', '7'=>'300%', '-1'=>'smaller', '-2'=>'60%', '+1'=>'larger', '+2'=>'150%', '+3'=>'200%', '+4'=>'300%');
 if($e == 'font'){
  $a2 = '';
- if(preg_match('`face\s*=\s*(\'|")([^=]+?)\\1`i', $a, $m) or preg_match('`face\s*=\s*([^"])(\S+)`i', $a, $m)){
+ if(preg_match('`face\s*=\s*(\'|")([^=]+?)\\1`i', $a, $m) or preg_match('`face\s*=(\s*)(\S+)`i', $a, $m)){
   $a2 .= ' font-family: '. str_replace('"', '\'', trim($m[2])). ';';
  }
  if(preg_match('`color\s*=\s*(\'|")?(.+?)(\\1|\s|$)`i', $a, $m)){
@@ -3094,39 +3112,48 @@ return '';
 function hl_tidy($t, $w, $p){
 // Tidy/compact HTM
 if(strpos(' pre,script,textarea', "$p,")){return $t;}
-$t = str_replace(' </', '</', preg_replace(array('`(<\w[^>]*(?<!/)>)\s+`', '`\s+`', '`(<\w[^>]*(?<!/)>) `'), array(' $1', ' ', '$1'), preg_replace_callback(array('`(<(!\[CDATA\[))(.+?)(\]\]>)`sm', '`(<(!--))(.+?)(-->)`sm', '`(<(pre|script|textarea).*?>)(.+?)(</\2>)`sm'), create_function('$m', 'return $m[1]. str_replace(array("<", ">", "\n", "\r", "\t", " "), array("\x01", "\x02", "\x03", "\x04", "\x05", "\x07"), $m[3]). $m[4];'), $t)));
+$t = str_replace(' </', '</', preg_replace(array('`(<\w[^>]*(?<!/)>)\s+`', '`\s+`', '`(<\w[^>]*(?<!/)>) `'), array(' $1', ' ', '$1'), preg_replace_callback(array('`(<(!\[CDATA\[))(.+?)(\]\]>)`sm', '`(<(!--))(.+?)(-->)`sm', '`(<(pre|script|textarea)[^>]*?>)(.+?)(</\2>)`sm'), create_function('$m', 'return $m[1]. str_replace(array("<", ">", "\n", "\r", "\t", " "), array("\x01", "\x02", "\x03", "\x04", "\x05", "\x07"), $m[3]). $m[4];'), $t)));
 if(($w = strtolower($w)) == -1){
  return str_replace(array("\x01", "\x02", "\x03", "\x04", "\x05", "\x07"), array('<', '>', "\n", "\r", "\t", ' '), $t);
 }
 $s = strpos(" $w", 't') ? "\t" : ' ';
 $s = preg_match('`\d`', $w, $m) ? str_repeat($s, $m[0]) : str_repeat($s, ($s == "\t" ? 1 : 2));
-$n = preg_match('`[ts]([1-9])`', $w, $m) ? $m[1] : 0;
+$N = preg_match('`[ts]([1-9])`', $w, $m) ? $m[1] : 0;
 $a = array('br'=>1);
 $b = array('button'=>1, 'input'=>1, 'option'=>1);
 $c = array('caption'=>1, 'dd'=>1, 'dt'=>1, 'h1'=>1, 'h2'=>1, 'h3'=>1, 'h4'=>1, 'h5'=>1, 'h6'=>1, 'isindex'=>1, 'label'=>1, 'legend'=>1, 'li'=>1, 'object'=>1, 'p'=>1, 'pre'=>1, 'td'=>1, 'textarea'=>1, 'th'=>1);
-$d = array('address'=>1, 'blockquote'=>1, 'center'=>1, 'colgroup'=>1, 'dir'=>1, 'div'=>1, 'dl'=>1, 'fieldset'=>1, 'form'=>1, 'hr'=>1, 'iframe'=>1, 'map'=>1, 'menu'=>1, 'noscript'=>1, 'ol'=>1, 'optgroup'=>1, 'rbc'=>1, 'rtc'=>1, 'ruby'=>1, 'script'=>1, 'select'=>1, 'table'=>1, 'tfoot'=>1, 'thead'=>1, 'tr'=>1, 'ul'=>1);
-ob_start();
-if(isset($d[$p])){echo str_repeat($s, ++$n);}
-$t = explode('<', $t);
-echo ltrim(array_shift($t));
-for($i=-1, $j=count($t); ++$i<$j;){
- $r = ''; list($e, $r) = explode('>', $t[$i]);
- $x = $e[0] == '/' ? 0 : (substr($e, -1) == '/' ? 1 : ($e[0] != '!' ? 2 : -1));
- $y = !$x ? ltrim($e, '/') : ($x > 0 ? substr($e, 0, strcspn($e, ' ')) : 0);
- $e = "<$e>"; 
- if(isset($d[$y])){
-  if(!$x){echo "\n", str_repeat($s, --$n), "$e\n", str_repeat($s, $n);}
-  else{echo "\n", str_repeat($s, $n), "$e\n", str_repeat($s, ($x != 1 ? ++$n : $n));}
-  echo ltrim($r); continue;
+$d = array('address'=>1, 'blockquote'=>1, 'center'=>1, 'colgroup'=>1, 'dir'=>1, 'div'=>1, 'dl'=>1, 'fieldset'=>1, 'form'=>1, 'hr'=>1, 'iframe'=>1, 'map'=>1, 'menu'=>1, 'noscript'=>1, 'ol'=>1, 'optgroup'=>1, 'rbc'=>1, 'rtc'=>1, 'ruby'=>1, 'script'=>1, 'select'=>1, 'table'=>1, 'tbody'=>1, 'tfoot'=>1, 'thead'=>1, 'tr'=>1, 'ul'=>1);
+$T = explode('<', $t);
+$X = 1;
+while($X){
+ $n = $N;
+ $t = $T;
+ ob_start();
+ if(isset($d[$p])){echo str_repeat($s, ++$n);}
+ echo ltrim(array_shift($t));
+ for($i=-1, $j=count($t); ++$i<$j;){
+  $r = ''; list($e, $r) = explode('>', $t[$i]);
+  $x = $e[0] == '/' ? 0 : (substr($e, -1) == '/' ? 1 : ($e[0] != '!' ? 2 : -1));
+  $y = !$x ? ltrim($e, '/') : ($x > 0 ? substr($e, 0, strcspn($e, ' ')) : 0);
+  $e = "<$e>"; 
+  if(isset($d[$y])){
+   if(!$x){
+    if($n){echo "\n", str_repeat($s, --$n), "$e\n", str_repeat($s, $n);}
+    else{++$N; ob_end_clean(); continue 2;}
+   }
+   else{echo "\n", str_repeat($s, $n), "$e\n", str_repeat($s, ($x != 1 ? ++$n : $n));}
+   echo ltrim($r); continue;
+  }
+  $f = "\n". str_repeat($s, $n);
+  if(isset($c[$y])){
+   if(!$x){echo $e, $f, ltrim($r);}
+   else{echo $f, $e, $r;}
+  }elseif(isset($b[$y])){echo $f, $e, $r;
+  }elseif(isset($a[$y])){echo $e, $f, ltrim($r);
+  }elseif(!$y){echo $f, $e, $f, ltrim($r);
+  }else{echo $e, $r;}
  }
- $f = "\n". str_repeat($s, $n);
- if(isset($c[$y])){
-  if(!$x){echo $e, $f, ltrim($r);}
-  else{echo $f, $e, $r;}
- }elseif(isset($b[$y])){echo $f, $e, $r;
- }elseif(isset($a[$y])){echo $e, $f, ltrim($r);
- }elseif(!$y){echo $f, $e, $f, ltrim($r);
- }else{echo $e, $r;}
+ $X = 0;
 }
 $t = preg_replace('`[\n]\s*?[\n]+`', "\n", ob_get_contents());
 ob_end_clean();
@@ -3138,8 +3165,8 @@ return str_replace(array("\x01", "\x02", "\x03", "\x04", "\x05", "\x07"), array(
 }
 
 function hl_version(){
-// version
-return '1.1.5';
+// rel
+return '1.1.14';
 // eof
 }
 
@@ -3157,7 +3184,7 @@ return htmLawed($t, $C, $h);
 // eof
 }
 
-function kses_hook($t, &$C, &$spec){
+function kses_hook($t, &$C, &$S){
 // kses compat
 return $t;
 // eof

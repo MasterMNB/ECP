@@ -99,7 +99,7 @@ function guestbook_add() {
 			ob_end_clean();
 			main_content(GUESTBOOK_ADD, $content, '',1);
 		} else {
-			$sql = sprintf('INSERT INTO '.DB_PRE.'ecp_comments (`bereich`, `author`, `beitrag`, `email`, `homepage`, `datum`, `IP`) VALUES ("guestbook", \'%s\', \'%s\', \'%s\', \'%s\', %d, \'%s\')', strsave(htmlspecialchars($_POST['author'])), strsave(comment_save($_POST['commentstext'])), strsave(htmlspecialchars($_POST['email'])), strsave(htmlspecialchars(check_url($_POST['homepage']))), time(), strsave($_SERVER['REMOTE_ADDR']));
+			$sql = sprintf('INSERT INTO '.DB_PRE.'ecp_comments (`bereich`, `author`, `beitrag`, `email`, `homepage`, `datum`, `IP`) VALUES ("guestbook", \'%s\', \'%s\', \'%s\', \'%s\', %d, \'%s\')', strsave(charhtmlconvert($_POST['author'])), strsave(comment_save($_POST['commentstext'])), strsave(charhtmlconvert($_POST['email'])), strsave(charhtmlconvert(check_url($_POST['homepage']))), time(), strsave($_SERVER['REMOTE_ADDR']));
 			if($db->query($sql)) {
 				setcookie('guestbook', time(), (time()+365*86400));
 				header1('?section=guestbook');

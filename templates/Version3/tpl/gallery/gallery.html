@@ -10,10 +10,10 @@
   {foreach from=$gallery item=g}
   <tr class="{cycle values="row_odd,row_even"}" id="gallery_{$g.galleryID}">
     <td valign="top">{$g.datum}</td>
-    <td valign="top"><a href="?section=gallery&action=gallery&id={$g.galleryID}">{$g.name}</a></td>
+    <td valign="top"><a href="?section=gallery&amp;action=gallery&amp;id={$g.galleryID}">{$g.name}</a></td>
     <td valign="top">{$g.images}</td>
     <td valign="top"><a href="?section=user&amp;id={$g.userID}">{$g.username}</a></td>
-    <td align="center" valign="top"><a href="?section=gallery&action=viewpic&id={$g.imageID}"><img src="images/gallery/{$g.folder}/thumbs/{$g.imageID}_{$g.filename}" alt="" title="" /></a></td>
+    <td align="center" valign="top"><a href="?section=gallery&amp;action=viewpic&amp;id={$g.imageID}"><img src="images/gallery/{$g.folder}/thumbs/{$g.imageID}_{$g.filename}" alt="" title="" /></a></td>
   </tr>
   {/foreach}
 </table>

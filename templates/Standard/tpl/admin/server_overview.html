@@ -11,7 +11,7 @@
     <td colspan="4">
 <div id="server" class="sorting_div"> 
 {foreach from=$server item=s}
-  <div id="server_{$s.serverID}" style="width: 540px;">
+  <div id="server_{$s.serverID}" style="width: 605px;">
   	<table cellpadding="1" cellspacing="0" width="100%" style="table-layout:fixed;">
       <tr class="{cycle values="row_odd,row_even"}">
  	   <td width="30%"><a href="hlsw://{$s.ip}:{$s.port}{if $s.queryport}:{$s.queryport}{/if}">{$s.ip}:{$s.port}</a></td>

@@ -1,4 +1,4 @@
-<form method="get"><input type="hidden" value="news" name="section" /><input type="hidden" value="archiv" name="action" /><select name="tid"><option value="0">{$smarty.const.ALL}</option>{foreach from=$topics item=t}<option value="{$t.tID}">{$t.topicname}</option>{/foreach}</select> <input type="submit" class="submit" value="{$smarty.const.VIEW}" /></form>
+<form method="get"><input type="hidden" value="news" name="section" /><input type="hidden" value="archiv" name="action" /><select name="tid">{foreach from=$topics item=t}<option value="{$t.tID}">{$t.topicname}</option>{/foreach}</select> <input type="submit" class="submit" value="{$smarty.const.VIEW}" /></form>
 <br />
 <table width="100%" border="0" cellspacing="1" cellpadding="0">
   <tr>
@@ -11,8 +11,8 @@
 {foreach from=$news item=n}
   <tr>
     <td>{$n.datum}</td>
-    <td><a href="?section=news&action=comments&id={$n.newsID}">{$n.headline}</a></td>
-    <td><a href="?section=news&action=archiv&tid={$n.topicID}">{$n.topicname}</a></td>
+    <td><a href="?section=news&amp;action=comments&amp;id={$n.newsID}">{$n.headline}</a></td>
+    <td><a href="?section=news&amp;action=archiv&amp;tid={$n.topicID}">{$n.topicname}</a></td>
     <td>{$n.comments}</td>
     <td>{$n.hits}</td>
   </tr>

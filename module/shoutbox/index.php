@@ -60,7 +60,7 @@ function shoutbox_add() {
 			table(ERROR, str_replace(array('{sek}', '{zeit}'), array(SPAM_SHOUTBOX, $zeit), SPAM_PROTECTION_MSG));
 		}		
 	} else {
-		$sql = sprintf('INSERT INTO '.DB_PRE.'ecp_comments (`bereich`, `userID`, `author`, `beitrag`, `datum`, `IP`) VALUES (\'shoutbox\', %d, \'%s\', \'%s\', %d, \'%s\')', @$_SESSION['userID'], strsave(htmlspecialchars(@$_POST['shout_username'])), strsave(htmlspecialchars(substr($_POST['shoutbox_msgbox'],0, SHOUTBOX_MAX_CHARS))), time(), strsave($_SERVER['REMOTE_ADDR']));
+		$sql = sprintf('INSERT INTO '.DB_PRE.'ecp_comments (`bereich`, `userID`, `author`, `beitrag`, `datum`, `IP`) VALUES (\'shoutbox\', %d, \'%s\', \'%s\', %d, \'%s\')', @$_SESSION['userID'], strsave(charhtmlconvert(@$_POST['shout_username'])), strsave(charhtmlconvert(substr($_POST['shoutbox_msgbox'],0, SHOUTBOX_MAX_CHARS))), time(), strsave($_SERVER['REMOTE_ADDR']));
 		if($db->query($sql)) {
 			setcookie('shoutbox', time(), (time()+365*86400));
 			if(isset($_GET['ajax'])) {

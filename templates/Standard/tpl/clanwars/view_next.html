@@ -57,7 +57,7 @@
 	</tr>
 	<tr class="{cycle values="row_odd,row_even"}">
 		<td>{$smarty.const.LINE_UP}:</td>
-		<td>{foreach from=$players item=p}<a href="?section=user&id={$p.userID}"><span class="{if $p.status == 1}clanwar_win{elseif $p.status == 2}clanwar_loss{elseif $p.status == 3}clanwar_draw{else}{/if}">{$p.username}</span></a>{if $p.meldedatum}({$p.datum}){/if}, {/foreach}</td>
+		<td>{foreach from=$players item=p}<a href="?section=user&amp;id={$p.userID}"><span class="{if $p.status == 1}clanwar_win{elseif $p.status == 2}clanwar_loss{elseif $p.status == 3}clanwar_draw{else}{/if}">{$p.username}</span></a>{if $p.meldedatum}({$p.datum}){/if}, {/foreach}</td>
 	</tr>
 	<tr class="{cycle values="row_odd,row_even"}">
 		<td>{$smarty.const.CW_CLOSED_MEMBER}:</td>
@@ -74,9 +74,9 @@
 	<tr class="{cycle values="row_odd,row_even"}">
 		<td align="left" valign="top">{$smarty.const.PARTICIPATION}:</td>
 		<td>{if $aktiv}
-		<a href="?section=clanwars&action=setpart&mode=1&id={$id}"><font class="clanwar_win">{$smarty.const.CW_WITH}</font></a><br>
-		<a href="?section=clanwars&action=setpart&mode=2&id={$id}"><font class="clanwar_loss">{$smarty.const.CW_WITHOUT}</font></a><br>
-		<a href="?section=clanwars&action=setpart&mode=3&id={$id}"><font class="clanwar_draw">{$smarty.const.CW_QUEST}</font></a>
+		<a href="?section=clanwars&amp;action=setpart&amp;mode=1&amp;id={$id}"><font class="clanwar_win">{$smarty.const.CW_WITH}</font></a><br />
+		<a href="?section=clanwars&amp;action=setpart&amp;mode=2&amp;id={$id}"><font class="clanwar_loss">{$smarty.const.CW_WITHOUT}</font></a><br />
+		<a href="?section=clanwars&amp;action=setpart&amp;mode=3&amp;id={$id}"><font class="clanwar_draw">{$smarty.const.CW_QUEST}</font></a>
         {else}{$smarty.const.PARTICIPATION_END}{/if}</td>
 	</tr>
 	{/if}

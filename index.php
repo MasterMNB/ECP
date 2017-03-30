@@ -1,6 +1,6 @@
 <?php
 // Fehlerausgabe festlegen
-error_reporting(E_ALL);
+error_reporting(E_ALL | E_STRICT);
     if(file_exists('install.php') OR file_exists('update.php')) {
     	if(!file_exists('inc/db.daten.php')) {
     	    header('Location: install.php');
@@ -18,6 +18,7 @@ session_cache_expire(30);
 
 // SESSION starten
 session_start();
+
 
 // Ausgabenspeicher starten
 //ob_start("ob_gzhandler");
@@ -91,9 +92,8 @@ $replace = array(
 $index = str_replace($search, $replace, $index);
 eval('?>'.$index);
 $db->query('UPDATE '.DB_PRE.'ecp_online SET SIDDATA = \''.strsave(serialize($_SESSION)).'\' WHERE SID = \''.session_id().'\' LIMIT 1');
-
-print_r($_SESSION);
 /*
+print_r($_SESSION);
 echo '<br /><br />';
 print_r($_COOKIE);
 print_r($_SERVER);

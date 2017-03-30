@@ -44,7 +44,7 @@ function admin_user() {
 function admin_user_edit($id) {
 		global $db;
 		if(isset($_POST['submit'])) {
-			if($db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'username = \''.strsave(htmlspecialchars($_POST['username'])).'\' AND ID != '.$id) OR $_POST['username'] == '') {
+			if($db->result(DB_PRE.'ecp_user', 'COUNT(ID)', 'username = \''.strsave(charhtmlconvert($_POST['username'])).'\' AND ID != '.$id) OR $_POST['username'] == '') {
 				$_POST['username'] = $db->result(DB_PRE.'ecp_user', 'username', 'ID = '.$id);
 				table(ERROR, ACCOUNT_ALLREADY_EXIST);
 			}
@@ -68,15 +68,15 @@ function admin_user_edit($id) {
 						mauspad = \'%s\',internet = \'%s\',festplatte = \'%s\',
 						headset = \'%s\',aboutme = \'%s\', wohnort = \'%s\', aim = \'%s\'  
 					WHERE ID = '.$id,
-					strsave(htmlspecialchars(@$_POST['username'])), strsave(@$_POST['email']), strsave(@$_POST['country']), (@$_POST['sex'] == 'male' ? 'male' : 'female'), strsave(comment_save(@$_POST['signatur'])),
-					strsave(htmlspecialchars(@$_POST['realname'])), (int)@$geburtstag[2].'-'.(int)@$geburtstag[1].'-'.(int)@$geburtstag[0], strsave(htmlspecialchars(check_url(@$_POST['homepage']))),
-					strsave(htmlspecialchars(@$_POST['icq'])),strsave(htmlspecialchars(@$_POST['msn'])),strsave(htmlspecialchars(@$_POST['yahoo'])),
-					strsave(htmlspecialchars(@$_POST['skype'])),strsave(htmlspecialchars(@$_POST['xfire'])),strsave(htmlspecialchars(@$_POST['clanname'])),
-					strsave(htmlspecialchars(@$_POST['clanirc'])),strsave(htmlspecialchars(check_url(@$_POST['clanhomepage']))),strsave(htmlspecialchars(@$_POST['clanhistory'])),
-					strsave(htmlspecialchars(@$_POST['cpu'])),strsave(htmlspecialchars(@$_POST['mainboard'])),strsave(htmlspecialchars(@$_POST['ram'])),
-					strsave(htmlspecialchars(@$_POST['gkarte'])),strsave(htmlspecialchars(@$_POST['skarte'])),strsave(htmlspecialchars(@$_POST['monitor'])),
-					strsave(htmlspecialchars(@$_POST['maus'])),strsave(htmlspecialchars(@$_POST['tastatur'])),strsave(htmlspecialchars(@$_POST['mauspad'])),
-					strsave(htmlspecialchars(@$_POST['internet'])),strsave(htmlspecialchars(@$_POST['festplatte'])),strsave(htmlspecialchars(@$_POST['headset'])),strsave(comment_save(@$_POST['aboutme'])), strsave(htmlspecialchars(@$_POST['wohnort'])), strsave(htmlspecialchars(@$_POST['aim'])));
+					strsave(charhtmlconvert(@$_POST['username'])), strsave(@$_POST['email']), strsave(@$_POST['country']), (@$_POST['sex'] == 'male' ? 'male' : 'female'), strsave(comment_save(@$_POST['signatur'])),
+					strsave(charhtmlconvert(@$_POST['realname'])), (int)@$geburtstag[2].'-'.(int)@$geburtstag[1].'-'.(int)@$geburtstag[0], strsave(charhtmlconvert(check_url(@$_POST['homepage']))),
+					strsave(charhtmlconvert(@$_POST['icq'])),strsave(charhtmlconvert(@$_POST['msn'])),strsave(charhtmlconvert(@$_POST['yahoo'])),
+					strsave(charhtmlconvert(@$_POST['skype'])),strsave(charhtmlconvert(@$_POST['xfire'])),strsave(charhtmlconvert(@$_POST['clanname'])),
+					strsave(charhtmlconvert(@$_POST['clanirc'])),strsave(charhtmlconvert(check_url(@$_POST['clanhomepage']))),strsave(charhtmlconvert(@$_POST['clanhistory'])),
+					strsave(charhtmlconvert(@$_POST['cpu'])),strsave(charhtmlconvert(@$_POST['mainboard'])),strsave(charhtmlconvert(@$_POST['ram'])),
+					strsave(charhtmlconvert(@$_POST['gkarte'])),strsave(charhtmlconvert(@$_POST['skarte'])),strsave(charhtmlconvert(@$_POST['monitor'])),
+					strsave(charhtmlconvert(@$_POST['maus'])),strsave(charhtmlconvert(@$_POST['tastatur'])),strsave(charhtmlconvert(@$_POST['mauspad'])),
+					strsave(charhtmlconvert(@$_POST['internet'])),strsave(charhtmlconvert(@$_POST['festplatte'])),strsave(charhtmlconvert(@$_POST['headset'])),strsave(comment_save(@$_POST['aboutme'])), strsave(charhtmlconvert(@$_POST['wohnort'])), strsave(charhtmlconvert(@$_POST['aim'])));
 			if($db->query($sql) AND $db->query('UPDATE '.DB_PRE.'ecp_user_stats SET comments = '.(int)$_POST['comments'].', money = '.(float)$_POST['money'].' WHERE userID = '.$id)) {
 				header1('?section=admin&site=user');
 			}
@@ -124,7 +124,7 @@ function admin_user_add() {
 				ob_end_clean();
 				main_content(REGISTER, $content, '',1);
 			} else {
-				$sql = sprintf('INSERT INTO '.DB_PRE.'ecp_user (`username`, `email`, `passwort`, `status`, `registerdate`, country) VALUES (\'%s\', \'%s\', \'%s\', %d, %d, \'%s\');', strsave(htmlspecialchars($_POST['username'])), strsave($_POST['email']), sha1($_POST['password1']), 1, time(), strsave($_POST['country']));
+				$sql = sprintf('INSERT INTO '.DB_PRE.'ecp_user (`username`, `email`, `passwort`, `status`, `registerdate`, country) VALUES (\'%s\', \'%s\', \'%s\', %d, %d, \'%s\');', strsave(charhtmlconvert($_POST['username'])), strsave($_POST['email']), sha1($_POST['password1']), 1, time(), strsave($_POST['country']));
 				if($db->query($sql)) {
 					$userid = $db->last_id();				
 					$db->query('INSERT INTO '.DB_PRE.'ecp_user_config (userID) VALUES ('.$userid.')');

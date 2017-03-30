@@ -1,0 +1,26 @@
+<div>
+	<table width="100%" border="0" cellspacing="0" cellpadding="1" id="buddy_table" style="table-layout:fixed">
+		<form action="?section=account&amp;action=user_games" method="post">
+			<center>
+				<select  name="addgame">
+					{foreach from=$games_list item=gl key=key_gl}                   
+                       <option value="{$gl.gameID}">{$gl.gamename}</option>
+					{/foreach}
+				</select>
+				<input type="submit" name="submit" value="Spiel eintragen">
+			</center>
+		</form>
+
+		{foreach from=$user_games item=u key=key_ug}
+			<tr class="{cycle values="row_odd, row_even"}" id="game_{$u.id}">
+				<td width="5%">
+					<img src="images/games/{$u.icon}" alt="{$u.gamename}" title="{$u.gamename}"></img>
+				</td>
+				<td width="85%">
+					{$u.gamename}
+				</td>
+				<td align="left" width="10%"><a href="?section=account&amp;action=user_games&amp;delgame={$u.game_id}">Del</a></td>
+			</tr>
+		{/foreach}
+	</table>
+</div>

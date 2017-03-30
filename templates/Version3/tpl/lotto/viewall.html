@@ -9,7 +9,7 @@
   </tr>
   {foreach from=$runden item=r}
   <tr class="{cycle values="row_odd, row_even"}">
-    <td><a href="?section=lotto&action=winlist&runde={$r.rundenID}">{$r.ende}</a></td>
+    <td><a href="?section=lotto&amp;action=winlist&amp;runde={$r.rundenID}">{$r.ende}</a></td>
     <td>{$r.zahl1}, {$r.zahl2}, {$r.zahl3}, {$r.zahl4}</td>
     <td>{$r.rundenjackpot} {$smarty.const.VIRTUELL_MONEY_UNIT}</td>
     <td>{$r.winner}</td>

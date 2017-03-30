@@ -37,8 +37,8 @@ function awards_view($id) {
 		$row['eventdatum'] = date('d.m.Y', $row['eventdatum']);
 		$report = json_decode($row['bericht'], true);
 		$spieler = explode(',', $row['spieler']);
-		$row['preis'] = htmlentities($row['preis'], ENT_QUOTES, "UTF-8");
-		$row['eventname'] = htmlentities($row['eventname'], ENT_QUOTES, "UTF-8");
+		$row['preis'] = htmlconvert($row['preis']);
+		$row['eventname'] = htmlconvert($row['eventname']);
 		foreach($spieler AS $value) {
 			if((int)$value) {
 				@$ids .= ' OR ID = '.$value;

@@ -1,4 +1,4 @@
-<form action="?section=account&action=newmsg" method="post" id="new_msg">
+<form action="?section=account&amp;action=newmsg" method="post" id="new_msg">
 <fieldset>
 	<div><label for="username">{$smarty.const.TO_USER}:</label><input type="text" id="username" class="required" name="username" value="{$smarty.post.username}" maxlength="30" /> <img src="templates/{$smarty.const.DESIGN}/images/spinner.gif" alt="" style="visibility:hidden" id="user_spinner" title="{$smarty.const.LOADING}" /></div>
 	<div><label for="title">{$smarty.const.MSG_SUBJECT}:</label><input type="text" id="title" name="title" value="{$smarty.post.title}" maxlength="40" /></div>    

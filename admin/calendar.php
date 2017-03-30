@@ -23,8 +23,8 @@ function admin_calendar_edit($id) {
 				$lang[substr($key,strpos($key, '_')+1)] = $value;
 			}
 		}						
-		if($db->query(sprintf('UPDATE '.DB_PRE.'ecp_calendar SET `eventname` = \'%s\', `inhalt` = \'%s\', `access` = \'%s\', `datum` = %d, userID = %d WHERE calID = %d',
-								strsave($_POST['eventname']), strsave(json_encode($lang)), strsave(admin_make_rights($_POST['rights'])), strtotime($_POST['datum']), $_SESSION['userID'], (int)$_GET['id']))) {
+		if($db->query(sprintf('UPDATE '.DB_PRE.'ecp_calendar SET `eventname` = \'%s\', `inhalt` = \'%s\', `access` = \'%s\', `datum` = %d, `datum2` = %d, userID = %d WHERE calID = %d',
+								strsave($_POST['eventname']), strsave(json_encode($lang)), strsave(admin_make_rights($_POST['rights'])), strtotime($_POST['datum']), time(), $_SESSION['userID'], (int)$_GET['id']))) {
 			echo 'ok';
 		}
 	} else {
@@ -44,9 +44,9 @@ function admin_calendar_add() {
 				$lang[substr($key,strpos($key, '_')+1)] = $value;
 			}
 		}						
-		if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_calendar (`eventname`, `inhalt`, `access`, `datum`, `userID`) 
-								VALUES (\'%s\', \'%s\', \'%s\', %d, %d)', 
-								strsave($_POST['eventname']), strsave(json_encode($lang)), strsave(admin_make_rights($_POST['rights'])), strtotime($_POST['datum']), $_SESSION['userID']))) {
+		if($db->query(sprintf('INSERT INTO '.DB_PRE.'ecp_calendar (`eventname`, `inhalt`, `access`, `datum`, `datum2`, `userID`) 
+								VALUES (\'%s\', \'%s\', \'%s\', %d, %d, %d)', 
+								strsave($_POST['eventname']), strsave(json_encode($lang)), strsave(admin_make_rights($_POST['rights'])), strtotime($_POST['datum']), time(), $_SESSION['userID']))) {
 			echo 'ok';
 		}
 	} else {

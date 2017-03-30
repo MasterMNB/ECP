@@ -1,6 +1,7 @@
      <div id="tabBoxExample">
         <ul class="tabSet">    
-			<li class="off"><a>{$smarty.const.PERSONAL_INFO}</a></li>
+	     <li class="off"><a>{$smarty.const.PERSONAL_INFO}</a></li>
+	     <li class="off"><a>{$smarty.const.USERGAMES}</a></li>
             <li class="off"><a>{$smarty.const.GUESTBOOK}</a></li>
             <li class="off"><a>{$smarty.const.BUDDYLIST}</a></li>
             <li class="off"><a>{$smarty.const.STATS}</a></li>
@@ -35,11 +36,11 @@
               </tr>
               <tr class="{cycle values="row_odd, row_even"}">
                 <td><strong>{$smarty.const.TOWN}:</strong></td>
-                <td>{$wohnort}</td>
+                <td>{if $smarty.session.groups1.4 != 1}{$wohnort}{/if}</td>
               </tr>
               <tr class="{cycle values="row_odd, row_even"}">
                 <td><strong>{$smarty.const.BIRTHDAY}:</strong></td>
-                <td>{$geburtstag}</td>
+                <td>{if $smarty.session.groups1.4 != 1}{$geburtstag}{/if}</td>
               </tr>
               <tr class="{cycle values="row_odd, row_even"}">
                 <td><strong>{$smarty.const.AGE}:</strong></td>
@@ -47,7 +48,7 @@
               </tr>
               <tr class="{cycle values="row_odd, row_even"}">
                 <td><strong>{$smarty.const.NEXT_BIRTHDAY}:</strong></td>
-                <td>{if $next}{$next}{/if}</td>
+                <td>{if $smarty.session.groups1.4 != 1}{if $next}{$next}{/if}{/if}</td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
@@ -187,7 +188,20 @@
                 <td colspan="2">{$headset}</td>
               </tr>
             </table>
-          </div>   
+          </div>
+	<div class="panel">
+		<div style="width: 99%">
+			<table width="100%" border="0" cellspacing="0" cellpadding="1" style="table-layout:fixed">
+				<tr>
+					<td>
+						{foreach from=$user_games item=ug}
+							<img src="images/games_big/{$ug.icon_big}" border="0" title="{$ug.gamename}">
+						{/foreach}
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>   
           <div class="panel">
           		<div style="width: 99%">
 				{$guestbook}

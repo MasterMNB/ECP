@@ -2,27 +2,48 @@
 	if(@$_SESSION['rights']['public']['teamspeak']['view'] OR @$_SESSION['rights']['superadmin']) {
 		global $db;
 		include_once('ts2status.php');
-		include_once('ts3/TeamSpeak3.php');
-		$result = $db->query('SELECT tsID, ip, port, qport, response, datum, serverart FROM '.DB_PRE.'ecp_teamspeak WHERE aktiv = 1 ORDER BY aktiv ASC');
-		while($row = mysql_fetch_assoc($result)) {
-			if($row['serverart'] == 1) {			//Teamspeak 2
-				if($row['datum'] + SERVER_CACHE_REFRESH < time()) {
-					
+		$row = $db->fetch_assoc('SELECT ip, port, qport FROM '.DB_PRE.'ecp_teamspeak WHERE tsID= 1');
+		$fp = @TSConn($row['ip'],$row['port'],$row['qport']);
+		if($fp) {
+			if(isset($_GET['ajax'])) {
+				ob_end_clean();
+				if(isset($_GET['cID'])) {
+					$err = false;
+					$cID 	= (int)$_GET['cID'];
+					$type	= (int)$_GET['type'];	
 				} else {
-					$response = unserialize($row['response']);
-				}				
-			} elseif ($row['serverart'] == 2) {		//Teamspeak 3
-				if($row['datum'] + SERVER_CACHE_REFRESH < time()) {
-					$ts3 = TeamSpeak3::factory("serverquery://$row[ip]:$row[qport]/?server_port=$row[port]");
-					$server['info'] = $ts3->getInfo();
-					$db->query('UPDATE '.DB_PRE.'ecp_teamspeak set datum = '.time().', response = \''.strsave(serialize($server)).'\' WHERE tsID = '.$row['tsID']);
-					print_r($server);
-				} else {
-					$response = unserialize($row['response']);
-					print_r($response);
+					$err = true;
 				}	
+				echo '<table cellpadding="0" cellspacing="0" width="98%" align="center">';			
+				if($type==0) {
+					echo defaultInfo($row['ip'],$row['qport'],$row['port']);
+				} else if($type==1) {
+					echo channelInfo($row['ip'],$row['qport'],$row['port'],$cID,1);
+				} else if($type==2) {
+					echo userInfo($row['ip'],$row['qport'],$row['port'], $cID);
+				}
+				echo '</table>';
+				die();
+			} else {
+				$tpl = new smarty;	
+				$tpl->assign('tsinfo', '<table cellpadding="0" cellspacing="0" width="98%" align="center">'.defaultInfo($row['ip'],$row['qport'],$row['port']).'</table>');
+				$info = getTSInfo($row['ip'],$row['port'],$row['qport']);
+				$users = getTSUsers($row['ip'],$row['port'],$row['qport']);
+				$tpl->assign('ip', $row['ip']);
+				$tpl->assign('port', $row['port']);
+				$channels = getTSChannelInfo($row['ip'],$row['port'],$row['qport']);
+				$tpl->assign('channels', $channels);
+				$tpl->assign('users', $users);
+				foreach($info AS $key=>$value) $tpl->assign($key, $value);
+				ob_start();
+				$tpl->display(DESIGN.'/tpl/teamspeak/teamspeak.html');
+				$content = ob_get_contents();
+				ob_end_clean();
+				main_content(TEAMSPEAK_2, $content, '',1);				
 			}
-		}		
+		} else {
+		 	table(ERROR, SERVER_OFFLINE);
+		}			
 	} else
 		echo table(ACCESS_DENIED, NO_ACCESS_RIGHTS);
 ?>
